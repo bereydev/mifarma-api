@@ -1,3 +1,4 @@
+from app.models import pharmacy
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, Column, Enum, Integer, String, Date, JSON
@@ -19,6 +20,7 @@ class Gender(enum.Enum):
     not_specified = 3
 
 class User(Base):
+    __tablename__='users'
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String)
     last_name = Column(String)
@@ -48,3 +50,5 @@ class User(Base):
     prescriptions = Column(MutableDict.as_mutable(JSON), default={'prescriptions':[]}, nullable=False)
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
+    # items = relationship("Item", back_populates="owner")
+    pharmacy_id = Column(Integer, ForeignKey('pharmacies.id'))

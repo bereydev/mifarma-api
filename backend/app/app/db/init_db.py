@@ -23,3 +23,8 @@ def init_db(db: Session) -> None:
             is_superuser=True,
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
+    
+    # TODO delete this after first migration
+    user.previous_diseases = {}
+    user.prescriptions = {"prescriptions":[]}
+    user.allergies = {}
