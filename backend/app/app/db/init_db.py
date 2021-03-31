@@ -14,6 +14,7 @@ def init_db(db: Session) -> None:
     # But if you don't want to use migrations, create
     # the tables un-commenting the next line
     # Base.metadata.create_all(bind=engine)
+    # pass
 
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:
@@ -24,7 +25,10 @@ def init_db(db: Session) -> None:
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
     
-    # TODO delete this after first migration
-    user.previous_diseases = {}
-    user.prescriptions = {"prescriptions":[]}
-    user.allergies = {}
+    for user in crud.user.get_multi(db):
+        # # TODO delete this after first migration
+        user.previous_diseases = {}
+        user.prescriptions = {"prescriptions":[]}
+        user.allergies = {}
+        db.commit()
+        print(f'Update user : {user.email}')

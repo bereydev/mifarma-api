@@ -30,7 +30,7 @@ class Pharmacy(Base):
     address2 = Column(String)
     country = Column(String)
     city = Column(String)
-    employees = relationship('User', backref='pharmacy', foreign_keys=['User.pharmacy_id'])
+    employees = relationship('User', backref='pharmacy', foreign_keys='User.pharmacy_id')
     products = relationship('Product', backref='pharmacy')
     schedule = Column(MutableDict.as_mutable(JSON), default=DEFAULT_SCHEDULE, nullable=False)
     # Schedule an available hours

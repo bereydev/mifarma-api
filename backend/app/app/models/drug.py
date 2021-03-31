@@ -1,8 +1,8 @@
+from app.models import pharmacy
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import null
 
 from app.db.base_class import Base
 
@@ -22,7 +22,7 @@ class Drug(Base):
     laboratory = Column(String)
     # legal_type =
     # indicationes Farmatic
-    products = relationship('Product', backref='reference', lazy='dynamic')
+    products = relationship('Product', backref='drug', lazy='dynamic')
 
 
 class Product(Base):
@@ -32,6 +32,7 @@ class Product(Base):
     price = Column(Float, nullable=False)
     discount = Column(Integer, default=0)
     reference_id = Column(Integer, ForeignKey('drugs.id'))
+    pharmacy_id = Column(Integer, ForeignKey('pharmacies.id'))
 
     @classmethod
     def create_product(cls, drug: Drug, name: str, price: float, discount: int = 0):
@@ -39,4 +40,5 @@ class Product(Base):
         price = drug.price if price is None else price
         return cls(name=name,
                    price=price,
-                   discount=discount)
+                   discount=discount,
+                   reference_id=drug.id)
