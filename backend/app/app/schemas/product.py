@@ -1,20 +1,22 @@
 from typing import Optional
 
+from .drug import Drug
 from pydantic import BaseModel
 
 
 # Shared properties
 class ProductBase(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
+    name: Optional[str] = None
+    price: Optional[float] = 0
+    discount: Optional[int] = 0
 
 
-# Properties to receive on drug creation
+# Properties to receive on product creation
 class ProductCreate(ProductBase):
-    title: str
+    name: str
 
 
-# Properties to receive on drug update
+# Properties to receive on product update
 class ProductUpdate(ProductBase):
     pass
 
@@ -22,8 +24,8 @@ class ProductUpdate(ProductBase):
 # Properties shared by models stored in DB
 class ProductInDBBase(ProductBase):
     id: int
-    title: str
-    owner_id: int
+    drug: Drug
+    pharmacy_id: int
 
     class Config:
         orm_mode = True

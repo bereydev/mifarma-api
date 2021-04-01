@@ -1,17 +1,28 @@
-from typing import Optional
+from typing import List, Optional
+from .product import Product
 
 from pydantic import BaseModel
+from sqlalchemy.util.compat import inspect_getfullargspec
 
 
 # Shared properties
 class DrugBase(BaseModel):
-    title: Optional[str] = None
+    ean_code: Optional[str]
+    name: Optional[str] = None
     description: Optional[str] = None
+    pharma_indications: Optional[str] = None
+    type_of_material: Optional[int] = None
+    magnitude: Optional[float] = None
+    laboratory: Optional[str] = None
+    price: float
+
 
 
 # Properties to receive on drug creation
 class DrugCreate(DrugBase):
-    title: str
+    ean_code: str
+    name: str
+    price: int
 
 
 # Properties to receive on drug update
@@ -22,8 +33,7 @@ class DrugUpdate(DrugBase):
 # Properties shared by models stored in DB
 class DrugInDBBase(DrugBase):
     id: int
-    title: str
-    owner_id: int
+    products: List[Product]
 
     class Config:
         orm_mode = True

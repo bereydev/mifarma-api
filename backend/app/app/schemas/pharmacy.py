@@ -1,20 +1,31 @@
-from typing import Optional
+from typing import List, Optional, 
 
 from pydantic import BaseModel
+from .user import User
 
 
 # Shared properties
 class PharmacyBase(BaseModel):
-    title: Optional[str] = None
+    name: Optional[str] = None
     description: Optional[str] = None
+    address: Optional[str] = None
+    address2: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    schedule: Optional[str] = None
 
 
-# Properties to receive on drug creation
+# Properties to receive on pharmacy creation
 class PharmacyCreate(PharmacyBase):
-    title: str
+    name: str
+    address: str
+    address2: str
+    country: str
+    city: str
+    schedule: str
 
 
-# Properties to receive on drug update
+# Properties to receive on pharmacy update
 class PharmacyUpdate(PharmacyBase):
     pass
 
@@ -23,7 +34,9 @@ class PharmacyUpdate(PharmacyBase):
 class PharmacyInDBBase(PharmacyBase):
     id: int
     title: str
-    owner_id: int
+    owner: User
+    customers: List[User]
+    employees: List[User]
 
     class Config:
         orm_mode = True
