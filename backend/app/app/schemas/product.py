@@ -9,6 +9,7 @@ from .drug import Drug
 # Shared properties
 class ProductBase(BaseModel):
     name: Optional[str] = None
+    ean_code: str
     price: Optional[float] = 0
     discount: Optional[int] = 0
 
@@ -26,7 +27,7 @@ class ProductUpdate(ProductBase):
 # Properties shared by models stored in DB
 class ProductInDBBase(ProductBase):
     id: UUID4
-    drug: Drug
+    drug: Optional[Drug] = None
     pharmacy_id: UUID4
 
     class Config:

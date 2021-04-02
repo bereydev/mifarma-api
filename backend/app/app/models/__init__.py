@@ -14,3 +14,5 @@ from .drug import Drug
 from .product import Product
 from .pharmacy import Pharmacy
 from .role  import Role
+from .image import Image
+from .abstract_product import AbstractProduct 

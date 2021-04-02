@@ -20,7 +20,7 @@ def read_drugs(
     """
     Retrieve drugs.
     """
-    if crud.user.is_superuser(current_user):
+    if crud.user.is_admin(current_user):
         drugs = crud.drug.get_multi(db, skip=skip, limit=limit)
     else:
         drugs = crud.drug.get_multi_by_owner(
@@ -57,7 +57,7 @@ def update_drug(
     drug = crud.drug.get(db=db, id=id)
     if not drug:
         raise HTTPException(status_code=404, detail="Drug not found")
-    if not crud.user.is_superuser(current_user) and (drug.owner_id != current_user.id):
+    if not crud.user.is_admin(current_user) and (drug.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     drug = crud.drug.update(db=db, db_obj=drug, obj_in=drug_in)
     return drug
@@ -76,7 +76,7 @@ def read_drug(
     drug = crud.drug.get(db=db, id=id)
     if not drug:
         raise HTTPException(status_code=404, detail="Drug not found")
-    if not crud.user.is_superuser(current_user) and (drug.owner_id != current_user.id):
+    if not crud.user.is_admin(current_user) and (drug.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return drug
 
@@ -94,7 +94,7 @@ def delete_drug(
     drug = crud.drug.get(db=db, id=id)
     if not drug:
         raise HTTPException(status_code=404, detail="Drug not found")
-    if not crud.user.is_superuser(current_user) and (drug.owner_id != current_user.id):
+    if not crud.user.is_admin(current_user) and (drug.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     drug = crud.drug.remove(db=db, id=id)
     return drug

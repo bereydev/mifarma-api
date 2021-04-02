@@ -1,3 +1,4 @@
+from app.models.role import RoleName
 from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
@@ -17,8 +18,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),
             first_name=obj_in.first_name,
-            last_name=obj_in.last_name,
-            is_superuser=obj_in.is_superuser,
+            last_name=obj_in.last_name
         )
         db.add(db_obj)
         db.commit()
@@ -49,8 +49,8 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def is_active(self, user: User) -> bool:
         return user.is_active
 
-    def is_superuser(self, user: User) -> bool:
-        return user.is_superuser
+    def is_admin(self, user: User) -> bool:
+        return user.role.name == RoleName.ADMIN
 
 
 user = CRUDUser(User)

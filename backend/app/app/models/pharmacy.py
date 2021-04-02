@@ -1,3 +1,4 @@
+from app.schemas import pharmacy
 from sqlalchemy.ext.mutable import MutableDict
 from app.schemas.user import UserInDB
 from typing import TYPE_CHECKING
@@ -8,11 +9,14 @@ from sqlalchemy.orm import backref, relationship
 
 from app.db.base_class import Base
 from .role import Role, RoleName
+from .drug import Drug
+from .product import Product
 import uuid
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
     from .drug import Product # noqa: F401
+    from .abstract_product import AbstractProduct # noqa: F401
 
 DEFAULT_SCHEDULE = {
     'monday':0,
@@ -34,7 +38,7 @@ class Pharmacy(Base):
     country = Column(String)
     city = Column(String)
     users = relationship('User', backref='pharmacy', lazy='dynamic')
-    products = relationship('Product', backref='pharmacy', lazy='dynamic')
+    abstract_products = relationship('AbstractProduct', backref='pharmacy', lazy='dynamic')
     schedule = Column(MutableDict.as_mutable(JSON), default=DEFAULT_SCHEDULE, nullable=False)
     # orders = 
     # pictures = 
@@ -48,3 +52,5 @@ class Pharmacy(Base):
     def get_customers(self):
         return self.users.join(Role).filter(Role.name == RoleName.CUSTOMER)
 
+    def get_catalog(self):
+        return self.abstract_products.filter(AbstractProduct.type == 'products').union(Drug.query.all().join(Product).filter(Product.pharmacy_id == self.id))

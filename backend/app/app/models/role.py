@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm.session import Session
 
 from app.db.base_class import Base
 import uuid
@@ -52,23 +53,5 @@ class Role(Base):
         return self.permissions & perm == perm
 
     @classmethod
-    def get_role_id(cls, role_name: RoleName) -> int:
-        return cls.query.filter(cls.name == role_name).first().id
-
-    # @staticmethod
-    # def insert_roles():
-    #     roles = {
-    #         RoleName.CUSTOMER: [Permission.BUY],
-    #         RoleName.EMPLOYEE: [Permission.SELL],
-    #         RoleName.OWNER: [Permission.SELL, Permission.OWN],
-    #         RoleName.ADMIN: [Permission.ADMIN]
-    #     }
-    #     for r in roles:
-    #         role = Role.query.filter_by(name=r).first()
-    #         if role is None:
-    #             role = Role(name=r)
-    #         role.reset_permission()
-    #         for perm in roles[r]:
-    #             role.add_permission(perm)
-    #         session.add(role)
-    #     session.commit()
+    def get_role_id(cls, role_name: RoleName, db: Session) -> int:
+        return db.query(cls).filter(cls.name == role_name).first().id

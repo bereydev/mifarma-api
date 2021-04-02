@@ -6,8 +6,9 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.mutable import MutableDict
 
 from app.db.base_class import Base
-import enum
+from .role import Role, RoleName
 import uuid
+from sqlalchemy.ext.hybrid import hybrid_property
 
 if TYPE_CHECKING:
     from .drug import Drug  # noqa: F401
@@ -40,7 +41,6 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
-    is_superuser = Column(Boolean(), default=False)
     address = Column(String)
     postcode = Column(String)
     city = Column(String)
@@ -51,3 +51,10 @@ class User(Base):
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
     # items = relationship("Item", back_populates="owner")
     pharmacy_id = Column(UUID, ForeignKey('pharmacies.id'))
+
+    @hybrid_property
+    def is_owner(self):
+        return self.role.name == RoleName.OWNER
+    @hybrid_property
+    def is_admin(self):
+        return self.role_id == RoleName.ADMIN

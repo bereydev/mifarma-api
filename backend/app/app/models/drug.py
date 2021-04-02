@@ -1,28 +1,24 @@
+from app.models.abstract_product import AbstractProduct
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import null
-import uuid
 
-from app.db.base_class import Base
+from sqlalchemy.sql.schema import ForeignKey
+
+from .abstract_product import AbstractProduct
 
 if TYPE_CHECKING:
     from .product import Product # noqa: F401
 
 
-class Drug(Base):
+class Drug(AbstractProduct):
     __tablename__ = 'drugs'
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    ean_code = Column(String, nullable=False, index=True)
-    name = Column(String, nullable=False, index=True)
-    description = Column(String)
-    pharma_indications = Column(String)
-    type_of_material = Column(Integer)
-    magnitude = Column(Float)
-    laboratory = Column(String)
-    price = Column(Float, nullable=False)
-    # pictures =
-    products = relationship('Product', backref='drug', lazy='dynamic')
+    id = Column(UUID(as_uuid=True), ForeignKey('abstract_products.id'), primary_key=True, index=True)
+    products = relationship('Product', backref='drug', lazy='dynamic', foreign_keys='Product.drug_id')
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'drugs'
+    }
 
