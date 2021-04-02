@@ -1,6 +1,7 @@
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -46,7 +47,7 @@ def create_drug(
 def update_drug(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
+    id: UUID4,
     drug_in: schemas.DrugUpdate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
@@ -66,7 +67,7 @@ def update_drug(
 def read_drug(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
+    id: UUID4,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
@@ -84,7 +85,7 @@ def read_drug(
 def delete_drug(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
+    id: UUID4,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """

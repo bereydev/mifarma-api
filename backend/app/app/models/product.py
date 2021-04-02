@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base_class import Base
+import uuid
 
 if TYPE_CHECKING:
     from .drug import Drug  # noqa: F401
@@ -10,12 +12,12 @@ if TYPE_CHECKING:
 
 class Product(Base):
     __tablename__ = 'products'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, nullable=False, index=True)
     price = Column(Float, nullable=False, default=0)
     discount = Column(Integer, default=0)
-    drug_id = Column(Integer, ForeignKey('drugs.id'))
-    pharmacy_id = Column(Integer, ForeignKey('pharmacies.id'))
+    drug_id = Column(UUID, ForeignKey('drugs.id'))
+    pharmacy_id = Column(UUID, ForeignKey('pharmacies.id'))
 
     @classmethod
     def create_product(cls, drug: 'Drug', pharmacy: 'Pharmacy', name: str, price: float, discount: int = 0):

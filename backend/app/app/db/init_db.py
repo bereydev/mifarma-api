@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app import crud, schemas
 from app.core.config import settings
 from app.db import base  # noqa: F401
+from app.db.session import engine
 
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
 # otherwise, SQL Alchemy might fail to initialize relationships properly
@@ -13,8 +14,10 @@ def init_db(db: Session) -> None:
     # Tables should be created with Alembic migrations
     # But if you don't want to use migrations, create
     # the tables un-commenting the next line
-    # Base.metadata.create_all(bind=engine)
-    pass
+    # base.Base.metadata.drop_all(bind=engine)
+    base.Base.metadata.create_all(bind=engine)
+    print('############################NICKEL############################')
+    # pass
 
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:
@@ -24,11 +27,3 @@ def init_db(db: Session) -> None:
             is_superuser=True,
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
-    
-    # TODO delete this after first migration
-    for user in crud.user.get_multi(db):
-        user.previous_diseases = {}
-        user.prescriptions = {"prescriptions":[]}
-        user.allergies = {}
-        db.commit()
-        print(f'Update user : {user.email}')

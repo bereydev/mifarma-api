@@ -3,10 +3,12 @@ from app.schemas.user import UserInDB
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, JSON
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref, relationship
 
 from app.db.base_class import Base
 from .role import Role, RoleName
+import uuid
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
@@ -24,7 +26,7 @@ DEFAULT_SCHEDULE = {
 
 class Pharmacy(Base):
     __tablename__='pharmacies'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, index=True, nullable=False)
     description = Column(String)
     address = Column(String)

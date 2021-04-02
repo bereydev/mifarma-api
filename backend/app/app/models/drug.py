@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import null
+import uuid
 
 from app.db.base_class import Base
 
@@ -12,7 +14,7 @@ if TYPE_CHECKING:
 
 class Drug(Base):
     __tablename__ = 'drugs'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     ean_code = Column(String, nullable=False, index=True)
     name = Column(String, nullable=False, index=True)
     description = Column(String)

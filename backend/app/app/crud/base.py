@@ -2,6 +2,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
 from app.db.base_class import Base
@@ -59,7 +60,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
-    def remove(self, db: Session, *, id: int) -> ModelType:
+    def remove(self, db: Session, *, id: UUID4) -> ModelType:
         obj = db.query(self.model).get(id)
         db.delete(obj)
         db.commit()

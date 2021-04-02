@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+from pydantic import BaseModel
+from pydantic.types import UUID4
 
 from .drug import Drug
-from pydantic import BaseModel
 
 
 # Shared properties
@@ -23,9 +25,9 @@ class ProductUpdate(ProductBase):
 
 # Properties shared by models stored in DB
 class ProductInDBBase(ProductBase):
-    id: int
+    id: UUID4
     drug: Drug
-    pharmacy_id: int
+    pharmacy_id: UUID4
 
     class Config:
         orm_mode = True

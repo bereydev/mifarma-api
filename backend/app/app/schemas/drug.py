@@ -1,7 +1,7 @@
 from typing import List, Optional
-from .product import Product
 
 from pydantic import BaseModel
+from pydantic.types import UUID4
 from sqlalchemy.util.compat import inspect_getfullargspec
 
 
@@ -32,8 +32,7 @@ class DrugUpdate(DrugBase):
 
 # Properties shared by models stored in DB
 class DrugInDBBase(DrugBase):
-    id: int
-    products: List[Product]
+    id: UUID4
 
     class Config:
         orm_mode = True

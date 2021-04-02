@@ -2,8 +2,10 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base_class import Base
+import uuid
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
@@ -27,7 +29,7 @@ class RoleName:
 
 class Role(Base):
     __tablename__ = 'roles'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String(64), unique=True)
     permissions = Column(Integer, default=0)
     users = relationship('User', backref='role', lazy='dynamic')

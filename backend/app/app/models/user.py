@@ -1,19 +1,18 @@
-from app.models import pharmacy
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, Column, Enum, Integer, String, Date, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, Integer, String, Date, JSON
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Float
 from sqlalchemy.ext.mutable import MutableDict
 
 from app.db.base_class import Base
 import enum
+import uuid
 
 if TYPE_CHECKING:
     from .drug import Drug  # noqa: F401
 
-class Gender(enum.Enum):
+class Gender():
     male = 0
     female = 1
     non_binary = 2
@@ -21,10 +20,10 @@ class Gender(enum.Enum):
 
 class User(Base):
     __tablename__='users'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     first_name = Column(String)
     last_name = Column(String)
-    role_id = Column(Integer, ForeignKey('roles.id'))
+    role_id = Column(UUID, ForeignKey('roles.id'))
     phone = Column(String)
     gender = Column(Integer, default=Gender.not_specified, nullable=False)
     pregnant = Column(Boolean(), default=False)
@@ -51,4 +50,4 @@ class User(Base):
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
     # items = relationship("Item", back_populates="owner")
-    pharmacy_id = Column(Integer, ForeignKey('pharmacies.id'))
+    pharmacy_id = Column(UUID, ForeignKey('pharmacies.id'))
