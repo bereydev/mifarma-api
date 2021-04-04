@@ -1,4 +1,4 @@
-from app.models.role import RoleName
+from app.models.role import Role, RoleName
 from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
@@ -18,8 +18,11 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),
             first_name=obj_in.first_name,
-            last_name=obj_in.last_name
+            last_name=obj_in.last_name,
+            role_id=obj_in.role_id
         )
+        # db_obj.role_id = role.id
+        # role.users.append(db_obj)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

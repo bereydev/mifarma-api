@@ -39,11 +39,15 @@ def init_db(db: Session) -> None:
     print('############################NICKEL############################')
     # pass
     insert_roles(db)
+    print('############################ROOOOOOLLLLLLEEEEE############################')
+    role = db.query(Role).filter_by(name=RoleName.ADMIN).first()
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:
         user_in = schemas.UserCreate(
             email=settings.FIRST_SUPERUSER,
             password=settings.FIRST_SUPERUSER_PASSWORD,
+            first_name='Jonathan',
+            last_name='Bereyziat',
             role_id=Role.get_role_id(RoleName.ADMIN, db)
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841

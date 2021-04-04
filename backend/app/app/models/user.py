@@ -6,7 +6,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.mutable import MutableDict
 
 from app.db.base_class import Base
-from .role import Role, RoleName
+from .role import Permission, Role, RoleName
 import uuid
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -24,7 +24,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     first_name = Column(String)
     last_name = Column(String)
-    role_id = Column(UUID, ForeignKey('roles.id'))
+    role_id = Column(UUID(as_uuid=True), ForeignKey('roles.id'))
     phone = Column(String)
     gender = Column(Integer, default=Gender.not_specified, nullable=False)
     pregnant = Column(Boolean(), default=False)
@@ -50,11 +50,23 @@ class User(Base):
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
     # items = relationship("Item", back_populates="owner")
-    pharmacy_id = Column(UUID, ForeignKey('pharmacies.id'))
+    pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
+    
+    def can(self, perm):
+        return self.role is not None and self.role.has_permission(perm)
 
     @hybrid_property
     def is_owner(self):
-        return self.role.name == RoleName.OWNER
+        return self.can(Permission.OWN)
+
     @hybrid_property
     def is_admin(self):
-        return self.role_id == RoleName.ADMIN
+        return self.can(Permission.ADMIN)
+    
+    @hybrid_property
+    def is_customer(self):
+        return self.can(Permission.BUY)
+
+    @hybrid_property
+    def is_employee(self):
+        return self.can(Permission.SELL)

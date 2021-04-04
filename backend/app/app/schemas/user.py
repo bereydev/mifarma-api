@@ -2,6 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 from pydantic.types import UUID4
+from .role import Role
 
 
 # Shared properties
@@ -16,6 +17,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     email: EmailStr
     password: str
+    role_id: UUID4
 
 
 # Properties to receive via API on update
@@ -25,6 +27,7 @@ class UserUpdate(UserBase):
 
 class UserInDBBase(UserBase):
     id: Optional[UUID4] = None
+    role: Role
 
     class Config:
         orm_mode = True

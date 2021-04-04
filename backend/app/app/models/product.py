@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class Product(AbstractProduct):
     __tablename__ = 'products'
     id = Column(UUID(as_uuid=True), ForeignKey('abstract_products.id'), primary_key=True, index=True)
-    drug_id = Column(UUID, ForeignKey('drugs.id')) 
+    drug_id = Column(UUID(as_uuid=True), ForeignKey('drugs.id')) 
 
     __mapper_args__ = {
         'polymorphic_identity': 'products'

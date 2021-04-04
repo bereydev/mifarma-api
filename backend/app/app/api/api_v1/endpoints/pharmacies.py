@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
@@ -15,31 +15,32 @@ def read_pharmacys(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Retrieve pharmacies.
+    Retrieve available pharmacies.
     """
-    if crud.user.is_admin(current_user):
-        pharmacies = crud.pharmacy.get_multi(db, skip=skip, limit=limit)
-    else:
-        pharmacies = crud.pharmacy.get_multi_by_owner(
-            db=db, owner_id=current_user.id, skip=skip, limit=limit
-        )
+    pharmacies = crud.pharmacy.get_multi(db, skip=skip, limit=limit)
+
     return pharmacies
 
 
 @router.post("/", response_model=schemas.Pharmacy)
-def create_pharmacy(
+def create_pharmacy_with_owner(
     *,
     db: Session = Depends(deps.get_db),
     pharmacy_in: schemas.PharmacyCreate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Create new pharmacy.
+    Create new pharmacy with owner.
     """
-    pharmacy = crud.pharmacy.create_with_owner(db=db, obj_in=pharmacy_in, owner_id=current_user.id)
+    if current_user.is_owner:
+        pharmacy = crud.pharmacy.create_with_owner(db=db, obj_in=pharmacy_in, owner=current_user)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User is not owner",
+        )
     return pharmacy
 
 

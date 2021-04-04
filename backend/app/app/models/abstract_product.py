@@ -18,7 +18,7 @@ class AbstractProduct(Base):
     type_of_material = Column(Integer)
     magnitude = Column(Float)
     laboratory = Column(String)
-    pharmacy_id = Column(UUID, ForeignKey('pharmacies.id'))
+    pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
     # pictures =
     type = Column(String)
 
