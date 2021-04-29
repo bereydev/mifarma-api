@@ -17,17 +17,14 @@ def read_products(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Retrieve products.
+    Retrieve products of a user's pharmacy
     """
-    if crud.user.is_admin(current_user):
-        products = crud.product.get_multi(db, skip=skip, limit=limit)
-    else:
-        products = crud.product.get_multi_by_owner(
-            db=db, owner_id=current_user.id, skip=skip, limit=limit
-        )
+    products = crud.product.get_multi_by_pharmacy(
+        db=db, pharmacy_id=current_user.pharmacy_id, skip=skip, limit=limit
+    )
     return products
 
 
@@ -36,12 +33,12 @@ def create_product(
     *,
     db: Session = Depends(deps.get_db),
     product_in: schemas.ProductCreate,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Create new product in the catalog.
     """
-    if not current_user.is_owner():
+    if not current_user.is_owner:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Don't have enaught permission to add product to the catalog",
@@ -62,7 +59,7 @@ def update_product(
     db: Session = Depends(deps.get_db),
     id: UUID4,
     product_in: schemas.ProductUpdate,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Update an product.
@@ -70,7 +67,7 @@ def update_product(
     product = crud.product.get(db=db, id=id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    if not crud.user.is_admin(current_user) and (product.owner_id != current_user.id):
+    if not current_user.is_owner:
         raise HTTPException(status_code=400, detail="Not enough permissions")
     product = crud.product.update(db=db, db_obj=product, obj_in=product_in)
     return product
@@ -81,7 +78,7 @@ def read_product(
     *,
     db: Session = Depends(deps.get_db),
     id: UUID4,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Get product by ID.
@@ -99,7 +96,7 @@ def delete_product(
     *,
     db: Session = Depends(deps.get_db),
     id: UUID4,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Delete an product.

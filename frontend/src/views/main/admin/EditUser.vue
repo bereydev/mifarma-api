@@ -128,7 +128,6 @@ export default class EditUser extends Vue {
     if (this.user) {
       this.fullName = this.user.full_name;
       this.email = this.user.email;
-      this.isActive = this.user.is_active;
       this.isSuperuser = this.user.is_superuser;
     }
   }
@@ -146,7 +145,6 @@ export default class EditUser extends Vue {
       if (this.email) {
         updatedProfile.email = this.email;
       }
-      updatedProfile.is_active = this.isActive;
       updatedProfile.is_superuser = this.isSuperuser;
       if (this.setPassword) {
         updatedProfile.password = this.password1;

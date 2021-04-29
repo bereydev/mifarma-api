@@ -9,7 +9,7 @@ from .drug import Drug
 # Shared properties
 class RoleBase(BaseModel):
     name: Optional[str] = None
-    premissions: Optional[int] = 0
+    permissions: Optional[int] = 0
 
 
 # Properties to receive on role creation

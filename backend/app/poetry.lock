@@ -374,6 +374,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "httplib2"
+version = "0.19.1"
+description = "A comprehensive HTTP client library."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pyparsing = ">=2.4.2,<3"
+
+[[package]]
 name = "httptools"
 version = "0.1.1"
 description = "A collection of framework independent HTTP protocol utils."
@@ -892,6 +903,18 @@ six = ">=1.9.0"
 doc = ["reno", "sphinx", "tornado (>=4.5)"]
 
 [[package]]
+name = "textmagic"
+version = "2.0.3"
+description = "TextMagic APIv2 client"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+httplib2 = "*"
+six = "*"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -998,10 +1021,11 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "6fba0807881718a2f00a560c6505a35ba807c71ffd7818fe7954f8a8f28dcff4"
+content-hash = "26b6f6efc9ab473db53d23e3040a89665bc2bfc047f74a9dd6688a09591bd15f"
 
 [metadata.files]
 alembic = [
+    {file = "alembic-1.5.6-py2.py3-none-any.whl", hash = "sha256:bcb9b6cd58761a517e19d927642cd8364f37cd2db4d28dd04ffad9cf70079ddf"},
     {file = "alembic-1.5.6.tar.gz", hash = "sha256:8a8ccd58a262b1e3ac79b7224d0f9a4ac3bf96ace149972feb3ef9d7a06ac8b5"},
 ]
 amqp = [
@@ -1215,6 +1239,10 @@ h11 = [
     {file = "h11-0.9.0-py2.py3-none-any.whl", hash = "sha256:4bc6d6a1238b7615b266ada57e0618568066f57dd6fa967d1290ec9309b2f2f1"},
     {file = "h11-0.9.0.tar.gz", hash = "sha256:33d4bca7be0fa039f4e84d50ab00531047e53d6ee8ffbc83501ea602c169cae1"},
 ]
+httplib2 = [
+    {file = "httplib2-0.19.1-py3-none-any.whl", hash = "sha256:2ad195faf9faf079723f6714926e9a9061f694d07724b846658ce08d40f522b4"},
+    {file = "httplib2-0.19.1.tar.gz", hash = "sha256:0b12617eeca7433d4c396a100eaecfa4b08ee99aa881e6df6e257a7aad5d533d"},
+]
 httptools = [
     {file = "httptools-0.1.1-cp35-cp35m-macosx_10_13_x86_64.whl", hash = "sha256:a2719e1d7a84bb131c4f1e0cb79705034b48de6ae486eb5297a139d6a3296dce"},
     {file = "httptools-0.1.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:fa3cd71e31436911a44620473e873a256851e1f53dee56669dae403ba41756a4"},
@@ -1289,6 +1317,7 @@ lxml = [
     {file = "lxml-4.6.2.tar.gz", hash = "sha256:cd11c7e8d21af997ee8079037fff88f16fda188a9776eb4b81c7e4c9c0a7d7fc"},
 ]
 mako = [
+    {file = "Mako-1.1.4-py2.py3-none-any.whl", hash = "sha256:aea166356da44b9b830c8023cd9b557fa856bd8b4035d6de771ca027dfc5cc6e"},
     {file = "Mako-1.1.4.tar.gz", hash = "sha256:17831f0b7087c313c0ffae2bcbbd3c1d5ba9eeac9c38f2eb7b50e8c99fe9d5ab"},
 ]
 markupsafe = [
@@ -1629,6 +1658,10 @@ starlette = [
 tenacity = [
     {file = "tenacity-6.3.1-py2.py3-none-any.whl", hash = "sha256:baed357d9f35ec64264d8a4bbf004c35058fad8795c5b0d8a7dc77ecdcbb8f39"},
     {file = "tenacity-6.3.1.tar.gz", hash = "sha256:e14d191fb0a309b563904bbc336582efe2037de437e543b38da749769b544d7f"},
+]
+textmagic = [
+    {file = "textmagic-2.0.3-py2.py3-none-any.whl", hash = "sha256:bf1a1daa6e1d06f43665f360f386af87ceb66861287497cd399accd8cbd96c8b"},
+    {file = "textmagic-2.0.3.tar.gz", hash = "sha256:dfbcfd86902bfe5534740ba4ac09ba5aa6f6c03dab0740e8a0d9f7ba75684d8a"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

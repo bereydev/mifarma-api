@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, Column, Integer, String, Date, JSON
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -12,6 +13,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 if TYPE_CHECKING:
     from .drug import Drug  # noqa: F401
+    from .order_record import OrderRecord
 
 class Gender():
     male = 0
@@ -22,6 +24,7 @@ class Gender():
 class User(Base):
     __tablename__='users'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
     first_name = Column(String)
     last_name = Column(String)
     role_id = Column(UUID(as_uuid=True), ForeignKey('roles.id'))
@@ -38,9 +41,7 @@ class User(Base):
     smoker = Column(Boolean(), default=False)
     addict = Column(Boolean(), default=False)
     alcoholic = Column(Boolean(), default=False) 
-    email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    is_active = Column(Boolean(), default=True)
     address = Column(String)
     postcode = Column(String)
     city = Column(String)
@@ -50,7 +51,18 @@ class User(Base):
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
     # items = relationship("Item", back_populates="owner")
+    # None if the user is not Owner, has to be checked manualy by a MiFarmacia staff before activating the account
+    pharmacist_number = Column(String)
     pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
+    orders = relationship('OrderRecord', backref='user', lazy='dynamic')
+    # Account validation elements
+    # Adress mail confirmed
+    confirmed = Column(Boolean(), default=False, nullable=False)
+    # Owner account validated by a staff (with ID image and pharmacist_number verification)
+    verified= Column(Boolean(), default=True, nullable=False)
+    # Owner account and physical address validated by letter with a 15 days valid token
+    activated = Column(Boolean(), default=True, nullable=False)
+
     
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)

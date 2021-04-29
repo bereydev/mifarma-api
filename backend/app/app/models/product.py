@@ -1,3 +1,5 @@
+from sqlalchemy.orm import relationship
+from app.models.order_record import OrderRecord
 from app.models.abstract_product import AbstractProduct
 from typing import TYPE_CHECKING
 
@@ -13,7 +15,9 @@ if TYPE_CHECKING:
 class Product(AbstractProduct):
     __tablename__ = 'products'
     id = Column(UUID(as_uuid=True), ForeignKey('abstract_products.id'), primary_key=True, index=True)
+    pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
     drug_id = Column(UUID(as_uuid=True), ForeignKey('drugs.id')) 
+    order_record = relationship('OrderRecord', backref='product', uselist=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'products'

@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
+import uuid
 
 import emails
 from emails.template import JinjaTemplate
@@ -16,7 +17,6 @@ def send_email(
     html_template: str = "",
     environment: Dict[str, Any] = {},
 ) -> None:
-    assert settings.EMAILS_ENABLED, "no provided configuration for email variables"
     message = emails.Message(
         subject=JinjaTemplate(subject_template),
         html=JinjaTemplate(html_template),
@@ -69,6 +69,26 @@ def send_reset_password_email(email_to: str, email: str, token: str) -> None:
     )
 
 
+def send_employee_invitation_email(email_to: str, token: str) -> None:
+    project_name = settings.PROJECT_NAME
+    subject = f"{project_name} - Join your employer"
+    with open(Path(settings.EMAIL_TEMPLATES_DIR) / "employee_invitation.html") as f:
+        template_str = f.read()
+    server_host = settings.SERVER_HOST
+    link = f"{server_host}/accept-invitation?token={token}"
+    send_email(
+        email_to=email_to,
+        subject_template=subject,
+        html_template=template_str,
+        environment={
+            "project_name": settings.PROJECT_NAME,
+            "email": email_to,
+            "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
+            "link": link,
+        },
+    )
+
+
 def send_new_account_email(email_to: str, username: str, password: str) -> None:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New account for user {username}"
@@ -104,5 +124,20 @@ def verify_password_reset_token(token: str) -> Optional[str]:
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         return decoded_token["sub"]
+    except jwt.JWTError:
+        return None
+
+
+def generate_employee_invitation_token(pharmacy_id: str) -> str:
+    now = datetime.utcnow()
+    encoded_jwt = jwt.encode(
+        {"nbf": now, "sub": str(pharmacy_id)}, settings.SECRET_KEY, algorithm="HS256",
+    )
+    return encoded_jwt
+
+def verify_employee_invitation_token(token: str) -> Optional[str]:
+    try:
+        decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        return uuid.UUID(decoded_token["sub"])
     except jwt.JWTError:
         return None

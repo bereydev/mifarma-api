@@ -1,3 +1,4 @@
+from sqlalchemy.ext.hybrid import hybrid_property
 from app.schemas import pharmacy
 from sqlalchemy.ext.mutable import MutableDict
 from app.schemas.user import UserInDB
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
     from .user import User  # noqa: F401
     from .drug import Product # noqa: F401
     from .abstract_product import AbstractProduct # noqa: F401
+    from .order_record import OrderRecord #noqa: F401
 
 DEFAULT_SCHEDULE = {
     'monday':0,
@@ -38,14 +40,15 @@ class Pharmacy(Base):
     country = Column(String)
     city = Column(String)
     users = relationship('User', backref='pharmacy', lazy='dynamic')
-    abstract_products = relationship('AbstractProduct', backref='pharmacy', lazy='dynamic')
+    products = relationship('Product', backref='pharmacy', lazy='dynamic')
+    orders = relationship('OrderRecord', backref='pharmacy', lazy='dynamic')
     schedule = Column(MutableDict.as_mutable(JSON), default=DEFAULT_SCHEDULE, nullable=False)
     # orders = 
     # pictures = 
 
     def get_owner(self):
         return self.users.join(Role).filter(Role.name == RoleName.OWNER).first()
-
+    
     def get_employees(self):
         return self.users.join(Role).filter(Role.name == RoleName.EMPLOYEE)
 

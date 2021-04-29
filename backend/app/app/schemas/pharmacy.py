@@ -13,7 +13,7 @@ class PharmacyBase(BaseModel):
     address2: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None
-    schedule: Optional[str] = None
+    schedule: Optional[dict] = None
 
 
 # Properties to receive on pharmacy creation
@@ -23,7 +23,7 @@ class PharmacyCreate(PharmacyBase):
     address2: str
     country: str
     city: str
-    schedule: str
+    schedule: dict
 
 
 # Properties to receive on pharmacy update
@@ -34,10 +34,12 @@ class PharmacyUpdate(PharmacyBase):
 # Properties shared by models stored in DB
 class PharmacyInDBBase(PharmacyBase):
     id: UUID4
-    title: str
-    owner: User
-    customers: List[User]
-    employees: List[User]
+    name: str
+    address: str
+    address2: str
+    country: str
+    city: str
+    schedule: dict
 
     class Config:
         orm_mode = True

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi.encoders import jsonable_encoder
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
@@ -14,6 +15,15 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+     def get_multi_by_pharmacy(self, db: Session, *, skip: int, limit: int, pharmacy_id: UUID4) -> List[Product]:
+        return (
+            db.query(self.model)
+            .filter(Product.pharmacy_id == pharmacy_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
 
 product = CRUDProduct(Product)

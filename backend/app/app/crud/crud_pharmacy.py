@@ -1,15 +1,17 @@
-from sqlalchemy.orm import session
-from app.models.user import User
-from .base import CRUDBase, CreateSchemaType, ModelType
-from app.models import Pharmacy, pharmacy
+from typing import List
+from sqlalchemy.orm import Session
+from sqlalchemy.sql.expression import false, true
+from .base import CRUDBase
+from app.models import Pharmacy
 from app.schemas import PharmacyCreate, PharmacyUpdate
+from fastapi.encoders import jsonable_encoder
 
 class CRUDPharmacy(CRUDBase[Pharmacy, PharmacyCreate, PharmacyUpdate]):
-    def create_with_owner(self, db: session, *, obj_in: CreateSchemaType, owner: User) -> ModelType:
-        db_pharmacy = super().create(db, obj_in=obj_in)
-        db_pharmacy.users.append(owner)
-        db.commit()
-        db.refresh(db_pharmacy)
-        return db_pharmacy
+    def get_multi_active(self, db: Session, *, skip: int, limit: int) -> List[Pharmacy]:
+        return db.query(Pharmacy).offset(skip).limit(limit).all()
+    
+    def get_multi_inactive(self, db: Session, *, skip: int, limit: int) -> List[Pharmacy]:
+        return db.query(Pharmacy).offset(skip).limit(limit).all()
+
 
 pharmacy = CRUDPharmacy(Pharmacy)
