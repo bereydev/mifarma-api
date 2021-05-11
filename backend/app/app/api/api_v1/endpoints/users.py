@@ -11,6 +11,7 @@ from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
 from app.utils import generate_employee_invitation_token, send_employee_invitation_email, send_new_account_email, verify_employee_invitation_token
+from random import randint
 
 router = APIRouter()
 
@@ -112,7 +113,7 @@ def create_owner(
     return user
 
 
-@router.put("/activate-owner/{id}", response_model=schemas.User)
+@router.put("/activate-owner/{id}")
 def activate_owner(
     *,
     db: Session = Depends(deps.get_db),
@@ -130,7 +131,8 @@ def activate_owner(
     # TODO send a letter to check the address (with a token to be sure that the user is the pharmacist)
     user = crud.user.get(db, id)
     user = crud.user.activate(db, user)
-    return user
+    return {'user': user.email,
+    'verification_token': randint(1_000_000_000, 9_999_999_999)}
 
 
 @router.post("/employee/accept-invitation", response_model=schemas.User)

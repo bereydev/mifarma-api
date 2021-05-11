@@ -18,7 +18,6 @@ def insert_roles(db: Session):
         RoleName.OWNER: [Permission.SELL, Permission.OWN],
         RoleName.ADMIN: [Permission.BUY, Permission.SELL, Permission.OWN, Permission.ADMIN]
     }
-    print(type(Role))
     for r in roles:
         role = db.query(Role).filter_by(name=r).first()
         if role is None:
@@ -34,11 +33,12 @@ def init_db(db: Session) -> None:
     # Tables should be created with Alembic migrations
     # But if you don't want to use migrations, create
     # the tables un-commenting the next line
-    base.Base.metadata.drop_all(bind=engine)
-    base.Base.metadata.create_all(bind=engine)
+
+    # base.Base.metadata.drop_all(bind=engine)
+    # base.Base.metadata.create_all(bind=engine)
+
     # pass
     insert_roles(db)
-    role = db.query(Role).filter_by(name=RoleName.ADMIN).first()
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:
         user_in = schemas.UserCreate(

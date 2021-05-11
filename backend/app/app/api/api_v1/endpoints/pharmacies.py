@@ -111,7 +111,6 @@ def read_pharmacy_owner(
     Get owner of the current_user's pharmacy [only available for the owner of the pharmacy].
     """
     pharmacy = crud.user.get(db=db, id=current_user.id).pharmacy
-    print(pharmacy)
     if not pharmacy:
         raise HTTPException(status_code=404, detail="User has no pharmacy")
     if not current_user.is_owner:

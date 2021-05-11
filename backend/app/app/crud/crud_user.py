@@ -28,7 +28,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def create_customer(self, db: Session, user_in: UserCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.CUSTOMER)
         user.confirmed = False
-        user.validated = True
+        user.verified = True
         user.activated = True
         db.commit()
         return user
@@ -36,7 +36,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def create_owner(self, db: Session, user_in: User) -> User:
         user = self.create_with_role(db, user_in, RoleName.OWNER)
         user.confirmed = False
-        user.validated = False
+        user.verified = False
         user.activated = False
         db.commit()
         return user
@@ -44,7 +44,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def create_employee(self, db: Session, *, user_in: User) -> User:
         user = self.create_with_role(db, user_in, RoleName.EMPLOYEE)
         user.confirmed = False
-        user.validated = False
+        user.verified = False
         user.activated = False
         db.commit()
         return user
@@ -70,18 +70,18 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             return None
         return user
     
-    def confirm(self, user: User, db: Session) -> User:
+    def confirm(self, db: Session, user: User) -> User:
         user.confirmed = True
         db.commit()
         return user
     
-    def validate(self, user: User, db: Session) -> User:
-        user.is_valid = True
+    def validate(self, db: Session, user: User) -> User:
+        user.verified = True
         db.commit()
         return user
     
-    def activate(self, user: User, db: Session) -> User:
-        user.is_active = True
+    def activate(self, db: Session, user: User) -> User:
+        user.activated = True
         db.commit()
         return user
 

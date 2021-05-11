@@ -1,35 +1,29 @@
-from sqlalchemy.orm import relationship
-from app.models.order_record import OrderRecord
-from app.models.abstract_product import AbstractProduct
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String, Float
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
-from .abstract_product import AbstractProduct
+from app.db.base_class import Base
+import uuid
 
-if TYPE_CHECKING:
-    from .drug import Drug  # noqa: F401
-    from .pharmacy import Pharmacy #noqa: F401 
-
-class Product(AbstractProduct):
+class Product(Base):
     __tablename__ = 'products'
-    id = Column(UUID(as_uuid=True), ForeignKey('abstract_products.id'), primary_key=True, index=True)
-    pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
-    drug_id = Column(UUID(as_uuid=True), ForeignKey('drugs.id')) 
-    order_record = relationship('OrderRecord', backref='product', uselist=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    ean_code = Column(String, nullable=False, index=True)
+    classification_number = Column(String)
+    name = Column(String, nullable=False, index=True)
+    description = Column(String)
+    price = Column(Float, nullable=False, default=0)
+    pharma_indications = Column(String)
+    type_of_material = Column(Integer)
+    magnitude = Column(Float)
+    laboratory = Column(String)
+    order_content = relationship('OrderContent', backref='product')
+    # pictures =
+    type = Column(String)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'products'
+        'polymorphic_identity': 'products',
+        'polymorphic_on': type
     }
-
-
-    @classmethod
-    def create_product(cls, drug: 'Drug', pharmacy: 'Pharmacy', name: str, price: float, discount: int = 0):
-        name = drug.name if name is None else name
-        price = drug.price if price is None else price
-        return cls(name=name,
-                   price=price,
-                   discount=discount,
-                   drug_id=drug.id,
-                   pharmacy_id=pharmacy.id)

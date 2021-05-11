@@ -1,24 +1,17 @@
-from sqlalchemy.ext.hybrid import hybrid_property
-from app.schemas import pharmacy
 from sqlalchemy.ext.mutable import MutableDict
-from app.schemas.user import UserInDB
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, JSON
+from sqlalchemy import Column, String, JSON
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 from .role import Role, RoleName
-from .drug import Drug
-from .product import Product
 import uuid
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
-    from .drug import Product # noqa: F401
-    from .abstract_product import AbstractProduct # noqa: F401
-    from .order_record import OrderRecord #noqa: F401
+    from .order import Order #noqa: F401
 
 DEFAULT_SCHEDULE = {
     'monday':0,
@@ -40,10 +33,9 @@ class Pharmacy(Base):
     country = Column(String)
     city = Column(String)
     users = relationship('User', backref='pharmacy', lazy='dynamic')
-    products = relationship('Product', backref='pharmacy', lazy='dynamic')
-    orders = relationship('OrderRecord', backref='pharmacy', lazy='dynamic')
+    stock_items = relationship('StockItem', backref='pharmacy', cascade="all,delete", lazy='dynamic')
+    orders = relationship('Order', backref='pharmacy', cascade="all,delete", lazy='dynamic')
     schedule = Column(MutableDict.as_mutable(JSON), default=DEFAULT_SCHEDULE, nullable=False)
-    # orders = 
     # pictures = 
 
     def get_owner(self):
@@ -55,5 +47,3 @@ class Pharmacy(Base):
     def get_customers(self):
         return self.users.join(Role).filter(Role.name == RoleName.CUSTOMER)
 
-    def get_catalog(self):
-        return self.abstract_products.filter(AbstractProduct.type == 'products').union(Drug.query.all().join(Product).filter(Product.pharmacy_id == self.id))

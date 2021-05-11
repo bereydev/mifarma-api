@@ -1,4 +1,4 @@
-from app.models.abstract_product import AbstractProduct
+from app.models import stock_item
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column
@@ -7,16 +7,16 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy.sql.schema import ForeignKey
 
-from .abstract_product import AbstractProduct
+from .product import Product
 
 if TYPE_CHECKING:
-    from .product import Product # noqa: F401
+    from .stock_item import StockItem # noqa: F401
 
 
-class Drug(AbstractProduct):
+class Drug(Product):
     __tablename__ = 'drugs'
-    id = Column(UUID(as_uuid=True), ForeignKey('abstract_products.id'), primary_key=True, index=True)
-    products = relationship('Product', backref='drug', lazy='dynamic', foreign_keys='Product.drug_id')
+    id = Column(UUID(as_uuid=True), ForeignKey('products.id'), primary_key=True, index=True)
+    stock_items = relationship('StockItem', backref='drug', lazy='dynamic', cascade="all,delete", foreign_keys='StockItem.drug_id')
 
     __mapper_args__ = {
         'polymorphic_identity': 'drugs'

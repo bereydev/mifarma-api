@@ -12,8 +12,7 @@ import uuid
 from sqlalchemy.ext.hybrid import hybrid_property
 
 if TYPE_CHECKING:
-    from .drug import Drug  # noqa: F401
-    from .order_record import OrderRecord
+    from .order import Order
 
 class Gender():
     male = 0
@@ -54,7 +53,7 @@ class User(Base):
     # None if the user is not Owner, has to be checked manualy by a MiFarmacia staff before activating the account
     pharmacist_number = Column(String)
     pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
-    orders = relationship('OrderRecord', backref='user', lazy='dynamic')
+    orders = relationship('Order', backref='user', lazy='dynamic')
     # Account validation elements
     # Adress mail confirmed
     confirmed = Column(Boolean(), default=False, nullable=False)
