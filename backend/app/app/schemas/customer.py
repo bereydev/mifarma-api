@@ -7,7 +7,7 @@ from datetime import date
 
 
 # Shared properties
-class UserBase(BaseModel):
+class CustomerBase(BaseModel):
     email: Optional[EmailStr] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -23,22 +23,27 @@ class UserBase(BaseModel):
     address: Optional[str] = None
     city: Optional[str] = None
     country: Optional[str] = None
+    postcode: Optional[str] = None
     prescriptions: Optional[dict] = None
     previous_diseases: Optional[dict] = None
 
 
 # Properties to receive via API on creation
-class UserCreate(UserBase):
-    email: EmailStr
+class CustomerCreate(CustomerBase):
+    # Phone or email is mandatory
     password: str
 
 
+class OwnerCreate(CustomerCreate):
+    pharmacist_number: str
+
+
 # Properties to receive via API on update
-class UserUpdate(UserBase):
+class CustomerUpdate(CustomerBase):
     pass
 
 
-class UserInDBBase(UserBase):
+class CustomerInDBBase(CustomerBase):
     id: Optional[UUID4] = None
     role: Role
     confirmed: bool
@@ -51,10 +56,10 @@ class UserInDBBase(UserBase):
 
 
 # Additional properties to return via API
-class User(UserInDBBase):
+class Customer(CustomerInDBBase):
     pass
 
 
 # Additional properties stored in DB
-class UserInDB(UserInDBBase):
+class CustomerInDB(CustomerInDBBase):
     hashed_password: str

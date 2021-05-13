@@ -73,11 +73,11 @@ def read_user_me(
     return current_user
 
 
-@router.post("/customer", response_model=schemas.User)
+@router.post("/customer", response_model=schemas.Customer)
 def create_customer(
     *,
     db: Session = Depends(deps.get_db),
-    user_in: schemas.UserCreate
+    user_in: schemas.CustomerCreate
 ) -> Any:
     """
     Create new user without the need to be logged in.
@@ -138,12 +138,9 @@ def activate_owner(
 @router.post("/employee/accept-invitation", response_model=schemas.User)
 def create_employee(
     *,
-    token: str = Body(...),
+    token: str,
     db: Session = Depends(deps.get_db),
-    password: str = Body(...),
-    email: EmailStr = Body(...),
-    first_name: str = Body(None),
-    last_name: str = Body(None),
+    user_in: schemas.EmployeeCreate
 ) -> Any:
     """
     Create new employee if its invitation is valid.
@@ -152,14 +149,12 @@ def create_employee(
     if not pharmacy_id:
         raise HTTPException(status_code=400, detail="Invalid token")
 
-    user = crud.user.get_by_email(db, email=email)
+    user = crud.user.get_by_email(db, email=user_in.email)
     if user:
         raise HTTPException(
             status_code=400,
             detail="The user with this username already exists in the system",
         )
-    user_in = schemas.UserCreate(password=password, email=email, first_name=first_name,
-                                 last_name=last_name, role_id=Role.get_role_id(RoleName.EMPLOYEE, db))
     user = crud.user.create_employee(db, obj_in=user_in)
     pharmacy = crud.pharmacy.get(db, pharmacy_id)
     pharmacy.users.append(user)

@@ -7,38 +7,27 @@ from datetime import date
 
 
 # Shared properties
-class UserBase(BaseModel):
+class EmployeeBase(BaseModel):
     email: Optional[EmailStr] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone: Optional[str] = None
     gender: Optional[int] = None
-    pregnant: Optional[bool] = None
     birthdate: Optional[date] = None
-    weight: Optional[int] = None
-    height: Optional[int] = None
-    allergies: Optional[dict] = None
-    smoker: Optional[bool] = None
-    alcoholic: Optional[bool] = None
-    address: Optional[str] = None
-    city: Optional[str] = None
-    country: Optional[str] = None
-    prescriptions: Optional[dict] = None
-    previous_diseases: Optional[dict] = None
 
 
 # Properties to receive via API on creation
-class UserCreate(UserBase):
+class EmployeeCreate(EmployeeBase):
     email: EmailStr
     password: str
 
 
 # Properties to receive via API on update
-class UserUpdate(UserBase):
+class EmployeeUpdate(EmployeeBase):
     pass
 
 
-class UserInDBBase(UserBase):
+class EmployeeInDBBase(EmployeeBase):
     id: Optional[UUID4] = None
     role: Role
     confirmed: bool
@@ -51,10 +40,10 @@ class UserInDBBase(UserBase):
 
 
 # Additional properties to return via API
-class User(UserInDBBase):
+class Employee(EmployeeInDBBase):
     pass
 
 
 # Additional properties stored in DB
-class UserInDB(UserInDBBase):
+class EmployeeInDB(EmployeeInDBBase):
     hashed_password: str
