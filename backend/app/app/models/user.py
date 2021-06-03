@@ -49,7 +49,6 @@ class User(Base):
     prescriptions = Column(MutableDict.as_mutable(JSON), default={'prescriptions':[]}, nullable=False)
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
-    # items = relationship("Item", back_populates="owner")
     # None if the user is not Owner, has to be checked manualy by a MiFarmacia staff before activating the account
     pharmacist_number = Column(String)
     pharmacy_id = Column(UUID(as_uuid=True), ForeignKey('pharmacies.id'))
@@ -61,6 +60,8 @@ class User(Base):
     verified= Column(Boolean(), default=True, nullable=False)
     # Owner account and physical address validated by letter with a 15 days valid token
     activated = Column(Boolean(), default=True, nullable=False)
+    # hashed_activation_token = Column(String)
+    
 
     
     def can(self, perm):

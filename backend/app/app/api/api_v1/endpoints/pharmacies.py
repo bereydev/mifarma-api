@@ -10,7 +10,7 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.Pharmacy])
+@router.get("/active", response_model=List[schemas.Pharmacy])
 def read_active_pharmacys(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -23,15 +23,21 @@ def read_active_pharmacys(
     return pharmacies
 
 
-@router.get("/", response_model=List[schemas.Pharmacy])
+@router.get("/inactive", response_model=List[schemas.Pharmacy])
 def read_inactive_pharmacys(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Retrieve active pharmacies.
     """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges"
+        )
     pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
 
     return pharmacies
@@ -75,7 +81,9 @@ def update_pharmacy(
     Update an pharmacy.
     """
     if not current_user.is_owner:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions")
         
     if current_user.pharmacy_id is None:
         raise HTTPException(status_code=422, detail="User has no linked pharmacy")
@@ -86,8 +94,8 @@ def update_pharmacy(
     return pharmacy
 
 
-@router.get("/", response_model=schemas.Pharmacy)
-def read_pharmacy(
+@router.get("/me", response_model=schemas.Pharmacy)
+def read_pharmacy_me(
     *,
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
@@ -95,7 +103,7 @@ def read_pharmacy(
     """
     Get pharmacy of the current_user.
     """
-    pharmacy = crud.user.get(db=db, id=current_user.id).pharmacy
+    pharmacy = current_user.pharmacy
     if not pharmacy:
         raise HTTPException(status_code=404, detail="User has no pharmacy")
     return pharmacy
@@ -114,7 +122,10 @@ def read_pharmacy_owner(
     if not pharmacy:
         raise HTTPException(status_code=404, detail="User has no pharmacy")
     if not current_user.is_owner:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+            )
     
     return pharmacy.get_owner()
 
@@ -147,7 +158,31 @@ def read_pharmacy_customers(
     if not pharmacy:
         raise HTTPException(status_code=404, detail="User has no pharmacy")
     if not current_user.is_owner or not current_user.is_employee :
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+            )
 
     return pharmacy.get_customers().all()
+
+
+@router.post("/selection", response_model=schemas.Pharmacy)    
+def select_pharmacy_customer(
+    pharmacy_id: UUID4,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Select a pharmacy as a customer
+    """
+    if not current_user.is_customer:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User has to be a customer to select a pharmacy"
+            )
+    pharmacy = crud.pharmacy.get(db=db, id=pharmacy_id)
+    if pharmacy is None:
+        raise HTTPException(status_code=404, detail="No such pharmacy")
+    crud.user.select_pharmacy(db=db, db_user=current_user, db_pharmacy=pharmacy)
+    return pharmacy
 

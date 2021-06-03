@@ -46,6 +46,10 @@ class Owner(OwnerInDBBase):
     pass
 
 
+class OwnerActivation(Owner):
+    activation_token: int
+
+
 # Additional properties stored in DB
 class OwnerInDB(OwnerInDBBase):
     hashed_password: str

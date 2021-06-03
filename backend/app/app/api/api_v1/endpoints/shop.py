@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import current_date, current_user
@@ -36,7 +36,7 @@ def add_to_cart(
     """
     if not current_user.is_customer:
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="The user does not have the requested permissions",
         )
     product = crud.product.get(db, product_id)

@@ -72,6 +72,9 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 
+    OWNER_ACTIVATION_TOKEN_EXPIRE_DAYS: int = 30
+    EMPLOYEE_INVITATION_TOKEN_EXPIRE_DAYS: int = 5
+
     class Config:
         case_sensitive = True
 

@@ -25,6 +25,7 @@ class UserBase(BaseModel):
     country: Optional[str] = None
     prescriptions: Optional[dict] = None
     previous_diseases: Optional[dict] = None
+    postcode: Optional[str] = None
 
 
 # Properties to receive via API on creation

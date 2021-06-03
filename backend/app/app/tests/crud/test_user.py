@@ -38,7 +38,7 @@ def test_check_if_user_is_admin(db: Session) -> None:
     password = random_lower_string()
     user_in = UserCreate(email=email, password=password, is_admin=True)
     user = crud.user.create(db, obj_in=user_in)
-    is_admin = crud.user.is_admin(user)
+    is_admin = user.is_admin
     assert is_admin is True
 
 
@@ -47,7 +47,7 @@ def test_check_if_user_is_admin_normal_user(db: Session) -> None:
     password = random_lower_string()
     user_in = UserCreate(email=username, password=password)
     user = crud.user.create(db, obj_in=user_in)
-    is_admin = crud.user.is_admin(user)
+    is_admin = user.is_admin
     assert is_admin is False
 
 

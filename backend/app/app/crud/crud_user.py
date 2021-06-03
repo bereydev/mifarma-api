@@ -1,3 +1,4 @@
+from app.schemas.pharmacy import Pharmacy
 from app.models.role import Role, RoleName
 from typing import Any, Dict, Optional, Union
 
@@ -7,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from app.core.security import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 from app.models import User, Role
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas import UserCreate, UserUpdate, OwnerUpdate, OwnerCreate, EmployeeCreate, CustomerCreate
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
@@ -25,7 +26,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.refresh(db_obj)
         return db_obj
     
-    def create_customer(self, db: Session, user_in: UserCreate) -> User:
+    def create_customer(self, db: Session, user_in: CustomerCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.CUSTOMER)
         user.confirmed = False
         user.verified = True
@@ -33,7 +34,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         return user
     
-    def create_owner(self, db: Session, user_in: User) -> User:
+    def create_owner(self, db: Session, user_in: OwnerCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.OWNER)
         user.confirmed = False
         user.verified = False
@@ -41,7 +42,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         return user
     
-    def create_employee(self, db: Session, *, user_in: User) -> User:
+    def create_employee(self, db: Session, *, user_in: EmployeeCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.EMPLOYEE)
         user.confirmed = False
         user.verified = False
@@ -70,23 +71,24 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             return None
         return user
     
-    def confirm(self, db: Session, user: User) -> User:
-        user.confirmed = True
+    def confirm(self, db: Session, db_user: User) -> User:
+        db_user.confirmed = True
         db.commit()
-        return user
+        return db_user
     
-    def validate(self, db: Session, user: User) -> User:
-        user.verified = True
+    def verify(self, db: Session, db_user: User) -> User:
+        db_user.verified = True
         db.commit()
-        return user
+        return db_user
     
-    def activate(self, db: Session, user: User) -> User:
-        user.activated = True
+    def activate(self, db: Session, db_user: User) -> User:
+        db_user.activated = True
         db.commit()
-        return user
+        return db_user
 
-    def is_admin(self, user: User) -> bool:
-        return user.role.name == RoleName.ADMIN
-
+    def select_pharmacy(self, db: Session, db_user: User, db_pharmacy: Pharmacy) -> Pharmacy:
+        db_user.pharmacy_id = db_pharmacy.id
+        db.commit()
+        return db_user
 
 user = CRUDUser(User)

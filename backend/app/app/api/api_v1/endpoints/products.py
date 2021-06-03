@@ -68,7 +68,10 @@ def update_product(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     if not current_user.is_owner:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+            )
     product = crud.product.update(db=db, db_obj=product, obj_in=product_in)
     return product
 
@@ -86,8 +89,11 @@ def read_product(
     product = crud.product.get(db=db, id=id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    if not crud.user.is_admin(current_user) and (product.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+    if not current_user.is_admin and (product.owner_id != current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+            )
     return product
 
 
@@ -105,6 +111,9 @@ def delete_product(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     if not crud.user.is_admin(current_user) and (product.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+            )
     product = crud.product.remove(db=db, id=id)
     return product
