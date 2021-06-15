@@ -37,15 +37,15 @@ def init_db(db: Session) -> None:
     # base.Base.metadata.drop_all(bind=engine)
     # base.Base.metadata.create_all(bind=engine)
 
-    # pass
-    insert_roles(db)
-    user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
-    if not user:
-        user_in = schemas.UserCreate(
-            email=settings.FIRST_SUPERUSER,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
-            first_name='Jonathan',
-            last_name='Bereyziat'
-        )
-        user = crud.user.create_with_role(db, obj_in=user_in, role=RoleName.ADMIN)  # noqa: F841
+    pass
+    # insert_roles(db)
+    # user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
+    # if not user:
+    #     user_in = schemas.UserCreate(
+    #         email=settings.FIRST_SUPERUSER,
+    #         password=settings.FIRST_SUPERUSER_PASSWORD,
+    #         first_name='Jonathan',
+    #         last_name='Bereyziat'
+    #     )
+    #     user = crud.user.create_with_role(db, obj_in=user_in, role=RoleName.ADMIN)  # noqa: F841
 
