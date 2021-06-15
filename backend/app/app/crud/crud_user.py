@@ -42,7 +42,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         return user
     
-    def create_employee(self, db: Session, *, user_in: EmployeeCreate) -> User:
+    def create_employee(self, db: Session, user_in: EmployeeCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.EMPLOYEE)
         user.confirmed = False
         user.verified = False
@@ -50,7 +50,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         return user
 
-    def create_admin(self, db: Session, *, user_in: EmployeeCreate) -> User:
+    def create_admin(self, db: Session, user_in: EmployeeCreate) -> User:
         user = self.create_with_role(db, user_in, RoleName.ADMIN)
         user.confirmed = False
         user.verified = True
