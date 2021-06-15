@@ -14,36 +14,6 @@ from random import randint
 router = APIRouter()
 
 
-@router.post("/", response_model=schemas.User)
-def create_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.UserCreate,
-    role: str,
-    current_user: models.User = Depends(deps.get_current_superuser),
-) -> Any:
-    """
-    Create new user.
-    """
-    user = crud.user.get_by_email(db, email=user_in.email)
-    if user:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user with this username already exists in the system.",
-        )
-    if role not in vars(RoleName).values():
-        raise HTTPException(
-            status_code=404,
-            detail="Requested Role does not exist in db",
-        )
-    user = crud.user.create_with_role(db, obj_in=user_in, role=role)
-
-    send_new_account_email(
-        email_to=user_in.email, username=user_in.email, password=user_in.password
-    )
-    return user
-
-
 @router.put("/me", response_model=schemas.User)
 def update_user_me(
     *,
@@ -109,63 +79,6 @@ def create_owner(
     return user
 
 
-@router.put("/verify-owner/{id}", response_model=schemas.OwnerActivation)
-def verify_owner(
-    *,
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-    id: UUID4,
-) -> Any:
-    """
-    Verify the user after a manual check for its identity and its pharmacy_number
-    """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user has not enaught privileges",
-        )
-    # TODO send a letter to check the address (with a token to be sure that the user is the pharmacist)
-    user = crud.user.get(db, id)
-    if user is None:
-        raise HTTPException(
-            status_code=404,
-            detail="No user linked to the requested id",
-        )
-    if not user.is_owner:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The requested user is not an owner",
-        )
-    if user.verified:
-        activation_token = 1234
-    else:
-        activation_token = randint(1_000,9_999)
-        
-    user = crud.user.verify(db, user)
-    print(user.email)
-    data_user = jsonable_encoder(user)
-
-    return schemas.OwnerActivation(**data_user, role=user.role, activation_token=activation_token)
-
-
-@router.put("/verify-owner", response_model=schemas.Owner)
-def verify_owner(
-    *,
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-) -> Any:
-    """
-    Verify the user after a manual check for its identity and its pharmacy_number
-    """
-    if not current_user.is_owner:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The current user is not an owner",
-        )
-    user = crud.user.activate(db, current_user)
-    return user
-
-
 @router.post("/employee/accept-invitation", response_model=schemas.Employee)
 def create_employee(
     *,
@@ -211,34 +124,11 @@ def read_user_by_id(
         return user
     # Employee and owners can read their clients
     # TODO can they read their previous clients ?
-    if user.pharmacy_id == current_user.pharmacy_id and (current_user.is_owner or current_user.is_employee):
-        return user
-    if not current_user.is_admin:
+    if not user.pharmacy_id == current_user.pharmacy_id or not (current_user.is_owner or current_user.is_employee):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
+            detail="The user doesn't have enough privileges to read this user data"
         )
-    return user
-
-
-@router.put("/{user_id}", response_model=schemas.User)
-def update_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_id: UUID4,
-    user_in: schemas.UserUpdate,
-    current_user: models.User = Depends(deps.get_current_superuser),
-) -> Any:
-    """
-    Update a user.
-    """
-    user = crud.user.get(db, id=user_id)
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="The user with this username does not exist in the system",
-        )
-    user = crud.user.update(db, db_obj=user, obj_in=user_in)
     return user
 
 

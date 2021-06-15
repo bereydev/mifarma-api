@@ -7,7 +7,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.mutable import MutableDict
 
 from app.db.base_class import Base
-from .role import Permission, Role, RoleName
+from .role import Permission
 import uuid
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -29,7 +29,7 @@ class User(Base):
     role_id = Column(UUID(as_uuid=True), ForeignKey('roles.id'))
     phone = Column(String)
     gender = Column(Integer, default=Gender.not_specified, nullable=False)
-    pregnant = Column(Boolean(), default=False)
+    pregnant = Column(Boolean())
     birthdate = Column(Date)
     # Weight in kg
     weight = Column(Integer)
@@ -37,9 +37,9 @@ class User(Base):
     height = Column(Integer)
     # List of Allergies with the following format "{<name of the allergie>:<true or false>,...}"
     allergies = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
-    smoker = Column(Boolean(), default=False)
-    addict = Column(Boolean(), default=False)
-    alcoholic = Column(Boolean(), default=False) 
+    smoker = Column(Boolean())
+    addict = Column(Boolean())
+    alcoholic = Column(Boolean())
     hashed_password = Column(String, nullable=False)
     address = Column(String)
     postcode = Column(String)

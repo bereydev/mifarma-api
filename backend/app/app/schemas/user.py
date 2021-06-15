@@ -19,13 +19,14 @@ class UserBase(BaseModel):
     height: Optional[int] = None
     allergies: Optional[dict] = None
     smoker: Optional[bool] = None
+    addict: Optional[bool] = None
     alcoholic: Optional[bool] = None
     address: Optional[str] = None
+    postcode: Optional[str] = None
     city: Optional[str] = None
     country: Optional[str] = None
     prescriptions: Optional[dict] = None
     previous_diseases: Optional[dict] = None
-    postcode: Optional[str] = None
 
 
 # Properties to receive via API on creation

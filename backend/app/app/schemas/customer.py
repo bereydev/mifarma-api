@@ -34,10 +34,6 @@ class CustomerCreate(CustomerBase):
     password: str
 
 
-class OwnerCreate(CustomerCreate):
-    pharmacist_number: str
-
-
 # Properties to receive via API on update
 class CustomerUpdate(CustomerBase):
     pass

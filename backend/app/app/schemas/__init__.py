@@ -7,3 +7,4 @@ from .employee import Employee, EmployeeCreate, EmployeeInDB, EmployeeUpdate
 from .drug import Drug, DrugCreate, DrugInDB, DrugUpdate
 from .pharmacy import Pharmacy, PharmacyCreate, PharmacyInDB, PharmacyUpdate
 from .product import Product, ProductCreate, ProductInDB, ProductUpdate
+from .stock_item import StockItem, StockItemCreate, StockItemInDB, StockItemUpdate

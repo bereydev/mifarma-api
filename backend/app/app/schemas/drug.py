@@ -1,20 +1,12 @@
-from typing import List, Optional
+from typing import Optional
 
-from pydantic import BaseModel
 from pydantic.types import UUID4
-from sqlalchemy.util.compat import inspect_getfullargspec
+from .product import ProductBase
 
 
 # Shared properties
-class DrugBase(BaseModel):
-    ean_code: Optional[str]
-    name: Optional[str] = None
-    description: Optional[str] = None
-    pharma_indications: Optional[str] = None
-    type_of_material: Optional[int] = None
-    magnitude: Optional[float] = None
-    laboratory: Optional[str] = None
-    price: float
+class DrugBase(ProductBase):
+    with_prescription: Optional[bool] = False
 
 
 

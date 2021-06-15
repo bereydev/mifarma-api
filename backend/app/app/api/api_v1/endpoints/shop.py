@@ -1,3 +1,5 @@
+from app.models import pharmacy
+from app.models.pharmacy import Pharmacy
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -11,8 +13,10 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get("/customer/products", response_model=List[schemas.Product])
-def read_products(
+@router.get("/catalog/{pharmacy_id}", response_model=List[schemas.StockItem])
+def read_catalog(
+    pharmacy_id: UUID4,
+    filter: str = "",
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -21,8 +25,8 @@ def read_products(
     """
     Get the catalog of product from the customer's pharamcy
     """
-    products = crud.product.get_multi()
-    return
+    pharmacy = crud.pharmacy.get(db, pharmacy_id)
+    return pharmacy.stock_items.all()
 
 
 @router.post("/add-to-cart/{product_id}", response_model=List[schemas.Product])

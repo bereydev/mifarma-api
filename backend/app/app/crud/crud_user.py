@@ -50,6 +50,14 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         return user
 
+    def create_admin(self, db: Session, *, user_in: EmployeeCreate) -> User:
+        user = self.create_with_role(db, user_in, RoleName.ADMIN)
+        user.confirmed = False
+        user.verified = True
+        user.activated = True
+        db.commit()
+        return user
+
     def update(
         self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
     ) -> User:

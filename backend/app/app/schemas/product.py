@@ -1,18 +1,20 @@
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
 
 from pydantic import BaseModel
 from pydantic.types import UUID4
 
-from .drug import Drug
-
 
 # Shared properties
 class ProductBase(BaseModel):
-    name: Optional[str] = None
     ean_code: str
+    classification_number: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
     price: Optional[float] = 0
-    discount: Optional[int] = 0
-
+    pharma_indications: Optional[str] = None
+    type_of_material: Optional[int] = None
+    magnitude: Optional[float] = None
+    laboratory: Optional[str] = None
 
 # Properties to receive on product creation
 class ProductCreate(ProductBase):
@@ -27,8 +29,7 @@ class ProductUpdate(ProductBase):
 # Properties shared by models stored in DB
 class ProductInDBBase(ProductBase):
     id: UUID4
-    drug: Optional[Drug] = None
-    pharmacy_id: UUID4
+    type: str
 
     class Config:
         orm_mode = True
