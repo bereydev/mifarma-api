@@ -1,16 +1,35 @@
 from typing import List
 from sqlalchemy.orm import Session
-from sqlalchemy import true, false
+from sqlalchemy import true, false, or_, and_
 from .base import CRUDBase
-from app.models import Pharmacy, User
+from app.models import Pharmacy, User, Role
+from app.models.role import RoleName
 from app.schemas import PharmacyCreate, PharmacyUpdate
 
 class CRUDPharmacy(CRUDBase[Pharmacy, PharmacyCreate, PharmacyUpdate]):
     def get_multi_active(self, db: Session, *, skip: int, limit: int) -> List[Pharmacy]:
-        return db.query(Pharmacy).join(User).filter(User.activated == true()).offset(skip).limit(limit).all()
+        return (
+            db.query(Pharmacy)
+            .join(User)
+            .filter(and_(User.confirmed == true(), User.verified == true(), User.activated == true()))
+            .join(Role)
+            .filter(Role.name == RoleName.OWNER)
+            .offset(skip)
+            .limit(limit)
+            .all()
+            )
     
     def get_multi_inactive(self, db: Session, *, skip: int, limit: int) -> List[Pharmacy]:
-        return db.query(Pharmacy).join(User).filter(User.activated == false()).offset(skip).limit(limit).all()
+        return (
+            db.query(Pharmacy)
+            .join(User)
+            .filter(or_(User.confirmed == false(), User.verified == false(), User.activated == false()))
+            .join(Role)
+            .filter(Role.name == RoleName.OWNER)
+            .offset(skip)
+            .limit(limit)
+            .all()
+            )
 
 
 pharmacy = CRUDPharmacy(Pharmacy)

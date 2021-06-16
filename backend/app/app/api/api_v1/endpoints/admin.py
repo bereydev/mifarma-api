@@ -143,6 +143,36 @@ def verify_owner(
 
     return schemas.OwnerActivation(**data_user, role=user.role, activation_token=activation_token)
 
+@router.put("/full-activate-owner/{id}", response_model=schemas.User)
+def full_activate_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_user),
+    id: UUID4,
+) -> Any:
+    """
+    [ADMIN] Set three verification status of a user to true (verified, confirmed, activated)
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user has not enaught privileges",
+        )
+
+    user = crud.user.get(db, id)
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No user linked to the requested id",
+        )
+
+        
+    user = crud.user.verify(db, user)
+    user = crud.user.activate(db, user)
+    user = crud.user.confirm(db, user)
+
+    return user
+
 
 @router.post("/pharmacy/{user_id}", response_model=schemas.Pharmacy)
 def create_pharmacy(
@@ -169,7 +199,7 @@ def create_pharmacy(
         )
     if user.is_owner and user.pharmacy_id is None:
         pharmacy = crud.pharmacy.create(db=db, obj_in=pharmacy_in)
-        pharmacy.users.append(crud.user.get(db, current_user.id))
+        pharmacy.users.append(crud.user.get(db, user.id))
         db.commit()
     elif user.pharmacy_id is not None:
         raise HTTPException(
