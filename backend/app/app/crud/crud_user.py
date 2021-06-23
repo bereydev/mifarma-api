@@ -32,6 +32,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         user.verified = True
         user.activated = True
         db.commit()
+        db.refresh(user)
         return user
     
     def create_owner(self, db: Session, user_in: OwnerCreate) -> User:
@@ -40,6 +41,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         user.verified = False
         user.activated = False
         db.commit()
+        db.refresh(user)
         return user
     
     def create_employee(self, db: Session, user_in: EmployeeCreate) -> User:
@@ -48,6 +50,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         user.verified = False
         user.activated = False
         db.commit()
+        db.refresh(user)
         return user
 
     def create_admin(self, db: Session, user_in: EmployeeCreate) -> User:
@@ -56,6 +59,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         user.verified = True
         user.activated = True
         db.commit()
+        db.refresh(user)
         return user
 
     def update(
@@ -82,21 +86,25 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def confirm(self, db: Session, db_user: User) -> User:
         db_user.confirmed = True
         db.commit()
+        db.refresh(db_user)
         return db_user
     
     def verify(self, db: Session, db_user: User) -> User:
         db_user.verified = True
         db.commit()
+        db.refresh(db_user)
         return db_user
     
     def activate(self, db: Session, db_user: User) -> User:
         db_user.activated = True
         db.commit()
+        db.refresh(db_user)
         return db_user
 
     def select_pharmacy(self, db: Session, db_user: User, db_pharmacy: Pharmacy) -> Pharmacy:
         db_user.pharmacy_id = db_pharmacy.id
         db.commit()
+        db.refresh(db_user)
         return db_user
 
 user = CRUDUser(User)

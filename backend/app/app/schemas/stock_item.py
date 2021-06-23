@@ -1,4 +1,4 @@
-from app.models import stock_item
+from app.models import pharmacy, stock_item
 from typing import List, Optional
 from pydantic.main import BaseModel
 
@@ -8,10 +8,12 @@ from .product import Product
 
 # Shared properties
 class StockItemBase(BaseModel):
-    amount: Optional[int]
+    amount: Optional[int] = 0
     name: Optional[str]
-    discount: Optional[float]
-    price: Optional[int]
+    discount: Optional[float] = 0
+    price: Optional[int] = 0
+    product_id: UUID4
+    pharmacy_id: UUID4
 
 
 # Properties to receive on stock_item creation

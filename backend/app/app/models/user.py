@@ -5,10 +5,12 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy import true
 
 from app.db.base_class import Base
 from .role import Permission
 import uuid
+from .order import Order, OrderStatus
 from sqlalchemy.ext.hybrid import hybrid_property
 
 if TYPE_CHECKING:
@@ -82,3 +84,6 @@ class User(Base):
     @hybrid_property
     def is_employee(self):
         return self.can(Permission.SELL)
+
+    def get_cart(self) -> Order:
+        return self.orders.filter(Order.status == OrderStatus.in_cart).first()

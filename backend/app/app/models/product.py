@@ -2,7 +2,6 @@ from app.db.base_class import Base
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-# import unidecode
 from sqlalchemy.orm import validates
 
 import uuid
@@ -14,7 +13,6 @@ class Product(Base):
     ean_code = Column(String, nullable=False, index=True)
     classification_number = Column(String)
     name = Column(String, nullable=False, index=True)
-    name_unaccented = Column(String(100), index=True)
     description = Column(String)
     price = Column(Float, nullable=False, default=0)
     pharma_indications = Column(String)
@@ -25,11 +23,6 @@ class Product(Base):
     stock_items = relationship('StockItem', backref='product', lazy='dynamic', cascade="all,delete")
     # pictures =
     type = Column(String)
-
-    @validates('name')
-    def update_name_unaccented(self, key, name):
-        # self.name_unaccented = unidecode.unidecode(name)
-        return name
 
     __mapper_args__ = {
         'polymorphic_identity': 'products',

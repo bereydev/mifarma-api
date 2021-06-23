@@ -17,6 +17,7 @@ from app.models.role import Role, RoleName
 
 router = APIRouter()
 
+
 @router.post("/user", response_model=schemas.User)
 def create_user(
     *,
@@ -118,7 +119,7 @@ def verify_owner(
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user has not enaught privileges",
+            detail="The user has not enough privileges",
         )
     # TODO send a letter to check the address (with a token to be sure that the user is the pharmacist)
     user = crud.user.get(db, id)
@@ -135,13 +136,14 @@ def verify_owner(
     if user.verified:
         activation_token = 1234
     else:
-        activation_token = randint(1_000,9_999)
-        
+        activation_token = randint(1_000, 9_999)
+
     user = crud.user.verify(db, user)
     print(user.email)
     data_user = jsonable_encoder(user)
 
     return schemas.OwnerActivation(**data_user, role=user.role, activation_token=activation_token)
+
 
 @router.put("/full-activate-owner/{id}", response_model=schemas.User)
 def full_activate_user(
@@ -156,7 +158,7 @@ def full_activate_user(
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user has not enaught privileges",
+            detail="The user has not enough privileges",
         )
 
     user = crud.user.get(db, id)
@@ -166,7 +168,6 @@ def full_activate_user(
             detail="No user linked to the requested id",
         )
 
-        
     user = crud.user.verify(db, user)
     user = crud.user.activate(db, user)
     user = crud.user.confirm(db, user)
@@ -183,7 +184,7 @@ def create_pharmacy(
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Create new pharmacy with owner.
+    [ADMIN] Create new pharmacy with owner.
     """
     if not current_user.is_admin:
         raise HTTPException(
@@ -220,7 +221,7 @@ def update_catalog(
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Update the drug catalog from a CSV/EXCEL file
+    [ADMIN] Update the drug catalog from a CSV/EXCEL file
     """
     if not current_user.is_admin:
         raise HTTPException(
@@ -238,58 +239,77 @@ def create_drug(
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Create new drug in the catalog [only for test purposes].
+    [ADMIN] Create new drug in the catalog [only for test purposes].
     """
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enaught permission to add drug to the catalog",
+            detail="Don't have enough permission to add drug to the catalog",
         )
-    if current_user.pharmacy_id is not None:
-        drug= crud.drug.create(db=db, obj_in=drug_in)
-        # product = crud.product.create_from_drug_with_pharmacy(db=db, db_drug=drug, pharmacy_id=current_user.pharmacy_id)
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Current user has no attributed pharmacy",
-        )
+    drug = crud.drug.create(db=db, obj_in=drug_in)
     return drug
 
 
-@router.post("/drug/{product_id}/pharmacy/{pharmacy_id}", response_model=schemas.StockItem)
-def add_drug_to_stock(
+@router.post("/product", response_model=schemas.Drug)
+def create_product(
     *,
-    product_id: UUID4,
-    pharmacy_id: UUID4,
+    db: Session = Depends(deps.get_db),
+    product_in: schemas.ProductCreate,
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    [ADMIN] Create new product in the catalog [only for test purposes].
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have enough permission to add product to the catalog",
+        )
+
+    product = crud.product.create(db=db, obj_in=product_in)
+
+    return product
+
+@router.post("/stock_item", response_model=schemas.StockItem)
+def create_stock_item(
+    *,
+    stock_item_in: schemas.StockItemCreate,
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Add a drug to the catalog of a pharmacy.
+    [ADMIN] Add a product to the catalog of a pharmacy.
     """
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enaught permission to add drug to the catalog",
-        )
-    product = crud.drug.get(db, product_id)
-    pharmacy = crud.pharmacy.get(db, pharmacy_id)
-    
-    if product is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Drug with the given id does not exist"
+            detail="Don't have enough permission",
         )
     
-    if pharmacy is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Pharmacy with the given id does not exist"
-        )
 
     # Create a stock item
-    stock_item = crud.stock_item.create_with_product_and_pharmacy(db, product_id=product_id, pharmacy_id=pharmacy_id)
-    pharmacy.stock_items.append(stock_item)
-    db.commit()
-    print(stock_item)
+    stock_item = crud.stock_item.create(db, obj_in=stock_item_in)
     return stock_item
+
+
+@router.get("/catalog/{pharmacy_id}", response_model=List[schemas.Product])
+def read_catalog(
+    pharmacy_id: UUID4,
+    filter: str = "",
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    [ADMIN] Get the catalog of product from a pharmacy by ID
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have enough permission to add drug to the catalog",
+            )
+
+    catalog_content = crud.product.get_multi_by_pharmacy(
+        db, skip=skip, limit=limit, filter=filter, pharmacy_id=pharmacy_id)
+    return catalog_content

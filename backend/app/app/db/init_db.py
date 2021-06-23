@@ -37,7 +37,7 @@ def init_db(db: Session) -> None:
     # base.Base.metadata.drop_all(bind=engine)
     # base.Base.metadata.create_all(bind=engine)
 
-    # pass
+    pass
     insert_roles(db)
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:

@@ -22,21 +22,19 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
             db.query(self.model)
             .join(StockItem)
             .filter(StockItem.pharmacy_id == pharmacy_id)
-            .filter(StockItem.name_unaccented.ilike('%' + str(filter) + '%'))
+            .filter(StockItem.name.ilike('%' + str(filter) + '%'))
             .offset(skip)
             .limit(limit)
-            .all()
         )
         drugs = (
            db.query(Product)
            .filter(Product.type == 'drugs')
-           .filter(Product.name_unaccented.ilike('%' + str(filter) + '%'))
+           .filter(Product.name.ilike('%' + str(filter) + '%'))
            .offset(skip)
            .limit(limit)
-           .all()
         )
         return (
-           products.union(drugs)
+           products.union(drugs).order_by(Product.name).all()
         )
 
 

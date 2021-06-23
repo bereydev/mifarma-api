@@ -41,7 +41,7 @@ def create_product(
     if not current_user.is_owner:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Don't have enaught permission to add product to the catalog",
+            detail="Don't have enough permission to add product to the catalog",
         )
     if current_user.pharmacy_id is not None:
         product = crud.product.create_with_pharmacy(db=db, obj_in=product_in, pharmacy_id=current_user.pharmacy_id)
