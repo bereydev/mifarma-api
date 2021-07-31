@@ -23,26 +23,6 @@ def read_active_pharmacys(
     return pharmacies
 
 
-@router.get("/inactive", response_model=List[schemas.Pharmacy])
-def read_inactive_pharmacys(
-    db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_user),
-) -> Any:
-    """
-    Retrieve active pharmacies.
-    """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
-    pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
-
-    return pharmacies
-
-
 @router.post("/", response_model=schemas.Pharmacy)
 def create_pharmacy(
     *,

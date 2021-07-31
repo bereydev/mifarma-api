@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from pydantic.types import UUID4
 from .user import User
+from ..models.pharmacy import DEFAULT_SCHEDULE
 
 
 # Shared properties
@@ -13,7 +14,7 @@ class PharmacyBase(BaseModel):
     address2: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None
-    schedule: Optional[dict] = None
+    schedule: Optional[dict] = DEFAULT_SCHEDULE
 
 
 # Properties to receive on pharmacy creation
@@ -23,7 +24,7 @@ class PharmacyCreate(PharmacyBase):
     address2: str
     country: str
     city: str
-    schedule: dict
+    schedule: dict = DEFAULT_SCHEDULE
 
 
 # Properties to receive on pharmacy update

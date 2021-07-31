@@ -10,8 +10,8 @@ from .product import Product
 
 # Shared properties
 class OrderContentBase(BaseModel):
-    product_id: UUID4
-    order_id: UUID4
+    product_id: Optional[UUID4] = None
+    order_id: Optional[UUID4] = None
     amount: int
     status: Optional[int] = OrderContentStatus.in_cart
     delivery_date: Optional[datetime]
@@ -30,6 +30,8 @@ class OrderContentUpdate(OrderContentBase):
 # Properties shared by models stored in DB
 class OrderContentInDBBase(OrderContentBase):
     id: UUID4
+    product_id: UUID4
+    order_id: UUID4
     product: Product
 
     class Config:

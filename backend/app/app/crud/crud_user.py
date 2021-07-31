@@ -1,6 +1,7 @@
 from app.schemas.pharmacy import Pharmacy
 from app.models.role import Role, RoleName
 from typing import Any, Dict, Optional, Union
+import re
 
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
@@ -8,17 +9,41 @@ from fastapi.encoders import jsonable_encoder
 from app.core.security import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 from app.models import User, Role
+from fastapi import HTTPException, status
 from app.schemas import UserCreate, UserUpdate, OwnerUpdate, OwnerCreate, EmployeeCreate, CustomerCreate
+import string
+import random
+
+def public_id_generator(size=6, chars=(string.ascii_uppercase + string.digits).replace('0','').replace('O','')):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
+    
+    def get_by_public_id(self, db: Session, *, public_id: str) -> Optional[User]:
+        return db.query(User).filter(User.public_id == public_id).first()
 
     def create_with_role(self, db: Session, obj_in: UserCreate, role: RoleName) -> User:
         user_in_data = jsonable_encoder(obj_in)
-        user_in_data['hashed_password'] = get_password_hash(user_in_data.pop('password'))
+        password_string = user_in_data.pop('password')
+        # Check the passwork for 1 Majuscule 1 minuscule 8 char and 1 number
+        if not re.match("^(?=.?[A-Z])(?=.?[a-z])(?=.*?[0-9]).{8,}$", password_string):
+            raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Password does not match the required format"
+            )
+        user_in_data['hashed_password'] = get_password_hash(password_string)
         user_in_data['role_id'] = db.query(Role).filter(Role.name == role).first().id
+        # Define a unique public id for the user
+        public_id = public_id_generator()
+        existing_user = self.get_by_public_id(db, public_id=public_id)
+        while existing_user is not None:
+            public_id = public_id_generator()
+            existing_user = self.get_by_public_id(db, public_id=public_id)
+        
+        user_in_data['public_id'] = public_id
 
         db_obj = User(**user_in_data)
         db.add(db_obj)

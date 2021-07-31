@@ -57,7 +57,14 @@ def update_ordercontent_status(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
     ) -> Any:
-    """ Update the ordercontent status to make change its status"""
+    """ Update the ordercontent status to make change its status
+    in_cart = 0
+    in_process = 1
+    available = 2
+    not_available = 3
+    cancelled = 4 
+    delivered = 5
+    """
     if not (current_user.is_owner or current_user.is_admin):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -97,3 +104,40 @@ def get_order(
             )
     order = crud.order.get(db, order_id)
     return order
+
+
+@router.get("/user/{public_id}", response_model=schemas.User)
+def read_user_by_public_id(
+    public_id: str,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Get a specific user by its public_id.
+    """
+    # Normalize public id to capital letters
+    public_id = str.upper(public_id)
+    user = crud.user.get_by_public_id(db, public_id=public_id)
+    
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No user found with this public_id"
+        )
+    # Allow only to read customers from their pharmacy
+    elif not user.is_customer and current_user.pharmacy_id == user.pharmacy_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Requested user is not a customer or is not a client of this pharmacy"
+        )
+
+    if current_user.is_admin:
+        return user
+
+    if not user.pharmacy_id == current_user.pharmacy_id or not (current_user.is_owner or current_user.is_employee):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges to read this user data"
+        )
+
+    return user

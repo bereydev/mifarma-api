@@ -26,7 +26,7 @@ class CRUDOrderContent(CRUDBase[OrderContent, OrderContentCreate, OrderContentUp
 
     def update_status(self, db: Session, obj_in: OrderContent, ordercontent_status: OrderContentStatus) -> OrderContent:
         # Check if the status is a valid OrderContentStatus
-        if not ordercontent_status in vars(RoleName).values():
+        if not ordercontent_status in vars(OrderContentStatus).values():
             raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="The requested status does not exist",

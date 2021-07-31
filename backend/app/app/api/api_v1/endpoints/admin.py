@@ -313,3 +313,23 @@ def read_catalog(
     catalog_content = crud.product.get_multi_by_pharmacy(
         db, skip=skip, limit=limit, filter=filter, pharmacy_id=pharmacy_id)
     return catalog_content
+
+
+@router.get("/pharmacies/inactive", response_model=List[schemas.Pharmacy])
+def read_inactive_pharmacys(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    Retrieve active pharmacies.
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges"
+        )
+    pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
+
+    return pharmacies

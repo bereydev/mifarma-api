@@ -1,17 +1,48 @@
-from app.models.role import RoleName
 from typing import Any, List
 
-from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
-from app.utils import generate_employee_invitation_token, send_employee_invitation_email, send_new_account_email, verify_employee_invitation_token
-from random import randint
+from app.utils import generate_employee_invitation_token, send_employee_invitation_email, verify_employee_invitation_token
 
 router = APIRouter()
+
+
+@router.get("/me", response_model=schemas.User)
+def read_user_me(
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    Get current user.
+    """
+    return current_user
+
+
+@router.get("/{user_id}", response_model=schemas.User)
+def read_user_by_id(
+    user_id: UUID4,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Get a specific user by id.
+    """
+    user = crud.user.get(db, id=user_id)
+    # Can read Himself or admin can read anyone
+    if user == current_user or current_user.is_admin:
+        return user
+    # Employee and owners can read their clients
+    # TODO can they read their previous clients ?
+    if not user.pharmacy_id == current_user.pharmacy_id or not (current_user.is_owner or current_user.is_employee):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges to read this user data"
+        )
+    return user
 
 
 @router.put("/me", response_model=schemas.User)
@@ -26,17 +57,6 @@ def update_user_me(
     """
     user = crud.user.update(db, db_obj=current_user, obj_in=user_in)
     return user
-
-
-@router.get("/me", response_model=schemas.User)
-def read_user_me(
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-) -> Any:
-    """
-    Get current user.
-    """
-    return current_user
 
 
 @router.post("/customer", response_model=schemas.Customer)
@@ -94,7 +114,7 @@ def create_employee(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"
-            )
+        )
 
     user = crud.user.get_by_email(db, email=user_in.email)
     if user:
@@ -106,29 +126,6 @@ def create_employee(
     pharmacy = crud.pharmacy.get(db, pharmacy_id)
     pharmacy.users.append(user)
     db.commit()
-    return user
-
-
-@router.get("/{user_id}", response_model=schemas.User)
-def read_user_by_id(
-    user_id: UUID4,
-    current_user: models.User = Depends(deps.get_current_user),
-    db: Session = Depends(deps.get_db),
-) -> Any:
-    """
-    Get a specific user by id.
-    """
-    user = crud.user.get(db, id=user_id)
-    # Can read Himself
-    if user == current_user:
-        return user
-    # Employee and owners can read their clients
-    # TODO can they read their previous clients ?
-    if not user.pharmacy_id == current_user.pharmacy_id or not (current_user.is_owner or current_user.is_employee):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges to read this user data"
-        )
     return user
 
 

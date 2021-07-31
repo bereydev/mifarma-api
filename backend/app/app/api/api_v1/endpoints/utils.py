@@ -7,6 +7,7 @@ from app import models, schemas
 from app.api import deps
 from app.core.celery_app import celery_app
 from app.utils import send_test_email
+from app.data import ALLERGY_LIST, SYMPTOM_LIST
 
 router = APIRouter()
 
@@ -45,3 +46,19 @@ def test_sms(
     """
     send_test_email(email_to=email_to)
     return {"msg": "Test email sent"}
+
+
+@router.get("/allergies")
+def get_allergy_list() -> Any:
+    """
+    Get the list of the allergies
+    """
+    return {'allergy_list': ALLERGY_LIST}
+
+
+@router.get("/symtoms")
+def get_symptom_list() -> Any:
+    """
+    Get the list of the symptoms
+    """
+    return {'symptom_list': SYMPTOM_LIST}
