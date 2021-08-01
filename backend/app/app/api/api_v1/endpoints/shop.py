@@ -68,7 +68,7 @@ def add_to_cart(
     if order is None:
         order = crud.order.create(db=db, obj_in=schemas.OrderCreate(pharmacy_id=current_user.pharmacy_id, user_id=current_user.id, in_cart=True))
     else:
-        # Check if an order content with the same product already exist in the user cart
+        # Check if an ordercontent content with the same product already exist in the user cart
         ordercontent = crud.ordercontent.get_duplicate_in_cart(db=db, user_id=current_user.id, product_id=product_id)
     
     if ordercontent is None:

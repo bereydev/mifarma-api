@@ -16,7 +16,7 @@ class CRUDOrderContent(CRUDBase[OrderContent, OrderContentCreate, OrderContentUp
         return db.query(self.model).filter(and_(OrderContent.user_id == user_id, OrderContent.status == status)).all()
     
     def get_duplicate_in_cart(self, db: Session, user_id: UUID4, product_id: UUID4) -> Optional[OrderContent]:
-        return db.query(OrderContent).join(Order).filter(and_(OrderContent.product_id == product_id, Order.status == OrderStatus.in_cart)).first()
+        return db.query(OrderContent).join(Order).filter(and_(OrderContent.product_id == product_id, Order.status == OrderStatus.in_cart, Order.user_id == user_id)).first()
 
     def add_items(self, db: Session, obj_in: OrderContent, amount: int) -> OrderContent:
         obj_in.amount += amount
