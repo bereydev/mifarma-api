@@ -1,3 +1,7 @@
+from os import stat
+from sqlalchemy.sql.operators import nullsfirst_op
+from sqlalchemy.util.langhelpers import duck_type_collection
+from app.models.user import User
 from app.schemas import order
 from typing import Any, List
 
@@ -40,14 +44,55 @@ def get_placed_orders_by_customer(
     descending: bool = False
     ) -> Any:
     """Get the placed orders or a given customer"""
-    if not (current_user.is_owner or current_user.is_admin):
+    if not (current_user.is_owner or current_user.is_admin or current_user.is_employee):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Don't have enough permissions",
         )
+    customer = crud.user.get(db, customer_id)
+    if customer is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="The requested customer_id is not found in the db"
+        )
+    if not customer.is_employee:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="The requested user is not a customer"
+        )
+    if not current_user.is_admin and current_user.pharmacy_id != customer.pharmacy_id:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Requested user is not a client of the current_user pharmacy"
+        )
     placed_orders = crud.order.get_multi_placed_by_customer(
         db=db, skip=skip, limit=limit, customer_id=customer_id, descending=descending)
     return placed_orders
+
+
+@router.get('/customers-with-most-recent-placed-orders/', response_model=List[schemas.User])
+def get_customers_with_most_recent_placed_orders(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_user),
+    ) -> Any:
+    """
+    Provide the list of customers that placed an order 
+    in the current_user's pharmacy order by the most recently placed order
+    """
+    if current_user.pharmacy_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="This user has has no pharmacy"
+        )
+
+    if not (current_user.is_admin or current_user.is_employee or current_user.is_owner) :
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user does not have the requested permissions",
+        )
+    return crud.user.get_customers_with_most_recent_placed_orders(db, skip, limit, current_user.pharmacy_id)
 
 
 @router.put('/update-ordercontent-status/{ordercontent_id}')

@@ -1,6 +1,8 @@
+from pydantic.types import UUID4
+from app.models.order import Order, OrderStatus
 from app.schemas.pharmacy import Pharmacy
 from app.models.role import Role, RoleName
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, List
 import re
 
 from sqlalchemy.orm import Session
@@ -131,5 +133,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         db.refresh(db_user)
         return db_user
+    
+    def get_customers_with_most_recent_placed_orders(self, db: Session, skip: int, limit: int, pharmacy_id: UUID4) -> List[User]:
+        customers = db.query(Order).filter(Order.status == OrderStatus.placed).join(User).filter(User.pharmacy_id == pharmacy_id).order_by(Order.order_date.desc())
+        return customers.offset(skip).limit(limit).all()
 
 user = CRUDUser(User)
