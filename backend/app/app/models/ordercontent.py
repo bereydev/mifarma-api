@@ -10,8 +10,7 @@ class OrderContentStatus():
     in_process = 1
     available = 2
     not_available = 3
-    cancelled = 4 
-    delivered = 5
+    delivered = 4
 
 class OrderContent(Base):
     __tablename__ = 'order_content'

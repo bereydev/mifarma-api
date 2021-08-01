@@ -23,12 +23,6 @@ class CRUDOrder(CRUDBase[Order, OrderCreate, OrderUpdate]):
         db.refresh(order_obj)
         return order_obj
 
-    def get_history_order_by_status(self, db: Session, *, skip: int, limit: int, customer: User) -> List[Order]:
-        return (customer.orders
-                .filter(Order.status != OrderStatus.in_cart)
-                .order_by(Order.status, Order.order_date.desc())
-                .offset(skip).limit(limit).all())
-
     def get_multi_placed(self, db: Session, *, skip: int, limit: int, descending: bool = False) -> List[Order]:
         placed_orders = db.query(self.model).filter(Order.status == OrderStatus.placed)
         placed_orders = placed_orders.order_by(Order.order_date.desc(

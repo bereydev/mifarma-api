@@ -181,8 +181,8 @@ def get_cart(
     return current_user.get_cart()
 
 
-@router.get('/orders/history', response_model=List[schemas.Order])
-def get_order_history(
+@router.get('/ordercontent/history', response_model=List[schemas.OrderContent])
+def get_order_content_history(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -201,5 +201,5 @@ def get_order_history(
             detail="This user has has no pharmacy"
         )
     
-    placed_orders = crud.order.get_history_order_by_status(db=db, skip=skip, limit=limit, customer=current_user)
+    placed_orders = crud.ordercontent.get_history_order_by_status(db=db, skip=skip, limit=limit, customer=current_user)
     return placed_orders

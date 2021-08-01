@@ -1,3 +1,5 @@
+from os import curdir
+from app.models.user import User
 from fastapi import HTTPException, status
 from app.models.order import Order, OrderStatus
 from typing import List, Optional
@@ -35,6 +37,10 @@ class CRUDOrderContent(CRUDBase[OrderContent, OrderContentCreate, OrderContentUp
         db.commit()
         db.refresh(obj_in)
         return obj_in
+
+    def get_history_order_by_status(self, db: Session, *, skip: int, limit: int, customer: User) -> List[Order]:
+        ordercontents = db.query(OrderContent).join(Order).filter(and_(Order.status != OrderStatus.in_cart, Order.user_id == customer.id)).order_by(Order.order_date.desc(), Order.status)
+        return ordercontents.offset(skip).limit(limit).all()
 
 
 ordercontent = CRUDOrderContent(OrderContent)
