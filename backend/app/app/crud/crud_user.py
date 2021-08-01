@@ -135,7 +135,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db_user
     
     def get_customers_with_most_recent_placed_orders(self, db: Session, skip: int, limit: int, pharmacy_id: UUID4) -> List[User]:
-        customers = db.query(Order).filter(Order.status == OrderStatus.placed).join(User).filter(User.pharmacy_id == pharmacy_id).order_by(Order.order_date.desc())
+        customers = db.query(User).join(Order).filter(Order.status == OrderStatus.placed).filter(User.pharmacy_id == pharmacy_id).order_by(Order.order_date.desc())
         return customers.offset(skip).limit(limit).all()
 
 user = CRUDUser(User)

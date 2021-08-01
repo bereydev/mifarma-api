@@ -1,4 +1,4 @@
 # Import all the models, so that Base has them before being
 # imported by Alembic
 from app.db.base_class import Base  # noqa
-from app.models import User, Pharmacy, Drug, Product, OrderContent, Order, Image, Role, StockItem  # noqa
+from app.models import User, Pharmacy, Drug, Product, Order, Image, Role, StockItem  # noqa

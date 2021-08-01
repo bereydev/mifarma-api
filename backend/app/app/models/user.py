@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import Boolean, Column, Integer, String, Date, JSON
 from sqlalchemy.dialects.postgresql import UUID
@@ -86,5 +86,5 @@ class User(Base):
     def is_employee(self):
         return self.can(Permission.SELL)
 
-    def get_cart(self) -> Order:
-        return self.orders.filter(Order.status == OrderStatus.in_cart).first()
+    def get_cart(self) -> List[Order]:
+        return self.orders.filter(Order.status == OrderStatus.in_cart).all()

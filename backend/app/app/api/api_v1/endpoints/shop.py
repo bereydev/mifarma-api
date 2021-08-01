@@ -1,5 +1,5 @@
 from app.models.order import OrderStatus
-from app.schemas.ordercontent import OrderContentUpdate
+from app.schemas.order import OrderUpdate
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -30,11 +30,11 @@ def read_catalog(
             detail="This user has has no pharmacy"
         )
         
-    catalog_content = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
-    return catalog_content
+    catalog_ = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
+    return catalog_
 
 
-@router.post("/add-to-cart/{product_id}", response_model=schemas.OrderContent)
+@router.post("/add-to-cart/{product_id}", response_model=schemas.Order)
 def add_to_cart(
     product_id: UUID4,
     amount: int,
@@ -63,25 +63,20 @@ def add_to_cart(
             detail="Requested product does not exist in db",
         )
 
-    order = current_user.get_cart()
-    ordercontent = None
+    # Check if an order  with the same product already exist in the user cart
+    order = crud.order.get_duplicate_in_cart(db=db, user_id=current_user.id, product_id=product_id)
+    
     if order is None:
-        order = crud.order.create(db=db, obj_in=schemas.OrderCreate(pharmacy_id=current_user.pharmacy_id, user_id=current_user.id, in_cart=True))
+        order = crud.order.create(db=db, obj_in=schemas.OrderCreate(product_id=product_id, amount=amount, pharmacy_id=current_user.pharmacy_id, user_id=current_user.id))
     else:
-        # Check if an ordercontent content with the same product already exist in the user cart
-        ordercontent = crud.ordercontent.get_duplicate_in_cart(db=db, user_id=current_user.id, product_id=product_id)
+        # Add amount to the existing order
+        order = crud.order.add_items(db=db, obj_in=order, amount=amount)
     
-    if ordercontent is None:
-        ordercontent = crud.ordercontent.create(db=db, obj_in=schemas.OrderContentCreate(order_id=order.id, product_id=product_id, amount=amount))
-    else:
-        # Add amount to the existing ordercontent
-        ordercontent = crud.ordercontent.add_items(db=db, obj_in=ordercontent, amount=amount)
-    
-    return ordercontent
+    return order
 
-@router.delete("/delete-from-cart/{ordercontent_id}", response_model=schemas.OrderContent)
+@router.delete("/delete-from-cart/{order_id}", response_model=schemas.Order)
 def delete_from_cart(
-    ordercontent_id: UUID4,
+    order_id: UUID4,
     amount: int,
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
@@ -101,32 +96,32 @@ def delete_from_cart(
             detail="This user has has no pharmacy"
         )
 
-    ordercontent = crud.ordercontent.get(db=db, id=ordercontent_id)
+    order = crud.order.get(db=db, id=order_id)
     
-    if ordercontent is None:
+    if order is None:
         raise HTTPException(
             status_code=404,
-            detail="Requested ordercontent does not exist in db",
+            detail="Requested order does not exist in db",
         )
     
-    new_amount = ordercontent.amount - amount
+    new_amount = order.amount - amount
     
     if new_amount == 0:
-        ordercontent = crud.ordercontent.remove(db, ordercontent_id)
-    elif ordercontent.amount >= amount and amount > 0:
-        ordercontent = crud.ordercontent.update(
+        order = crud.order.remove(db, order_id)
+    elif order.amount >= amount and amount > 0:
+        order = crud.order.update(
             db=db, 
-            db_obj=ordercontent, 
-            obj_in=OrderContentUpdate(amount=new_amount)
+            db_obj=order, 
+            obj_in=OrderUpdate(amount=new_amount)
             )
     else:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="The amount to delete from order is negative or too large"
         )
-    return ordercontent
+    return order
 
-@router.post("/place-order", response_model=schemas.Order)
+@router.post("/place-order", response_model=List[schemas.Order])
 def place_order(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
@@ -147,24 +142,24 @@ def place_order(
             detail="This user has has no pharmacy"
         )
 
-    order = current_user.get_cart()
-    if order is None:
+    cart = current_user.get_cart()
+    if cart is None:
         raise HTTPException(
             status_code=404,
             detail="The current_user has an empty cart",
         )
-    order = crud.order.place_order(db=db, order_obj=order)
+    cart = crud.order.place_order(db=db, user_obj=current_user)
 
-    return order
+    return cart
 
 
-@router.get("/get-cart", response_model=schemas.Order)
+@router.get("/get-cart", response_model=List[schemas.Order])
 def get_cart(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Get the content of order in the cart of the current user
+    Get the  of order in the cart of the current user
     """    
     if not current_user.is_customer:
         raise HTTPException(
@@ -181,8 +176,8 @@ def get_cart(
     return current_user.get_cart()
 
 
-@router.get('/ordercontent/history', response_model=List[schemas.OrderContent])
-def get_order_content_history(
+@router.get('/order/history', response_model=List[schemas.Order])
+def get_order_history(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -201,5 +196,5 @@ def get_order_content_history(
             detail="This user has has no pharmacy"
         )
     
-    placed_orders = crud.ordercontent.get_history_order_by_status(db=db, skip=skip, limit=limit, customer=current_user)
+    placed_orders = crud.order.get_history_order_by_status(db=db, skip=skip, limit=limit, customer=current_user)
     return placed_orders

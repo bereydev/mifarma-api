@@ -1,53 +1,53 @@
-from app.models.ordercontent import OrderContentStatus
-from app.api.api_v1.endpoints.shop import place_order
-from app.models.order import OrderStatus
+from os import curdir
+
+from sqlalchemy.sql.functions import user
+from app.models.user import User
+from fastapi import HTTPException, status
+from app.models.order import Order, OrderStatus
 from typing import List, Optional
-from typing_extensions import runtime
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
-from sqlalchemy import true, false, or_, and_
-from fastapi import HTTPException, status
+from sqlalchemy import and_
 from .base import CRUDBase
-from app.models import Order, OrderStatus, User
-from app.models.role import RoleName
+from app.models import Order
 from app.schemas import OrderCreate, OrderUpdate
-from . import user
-
 
 class CRUDOrder(CRUDBase[Order, OrderCreate, OrderUpdate]):
-    def place_order(self, db: Session, order_obj: Order) -> Order:
-        order_obj.status = OrderStatus.placed
-        for order_content in order_obj.content:
-            order_content.status = OrderContentStatus.in_process
+
+    def place_order(self, db: Session, user_obj: User) -> Order:
+        for order in user_obj.get_cart():
+            order.status = OrderStatus.placed
         db.commit()
-        db.refresh(order_obj)
-        return order_obj
+        db.refresh(user_obj)
+        return user_obj.get_cart()
 
-    def get_multi_placed(self, db: Session, *, skip: int, limit: int, descending: bool = False) -> List[Order]:
-        placed_orders = db.query(self.model).filter(Order.status == OrderStatus.placed)
-        placed_orders = placed_orders.order_by(Order.order_date.desc(
-        )) if descending else placed_orders.order_by(Order.order_date)
-        return placed_orders.offset(skip).limit(limit).all()
+    def get_by_status(self, db: Session, customer_id: UUID4, status: OrderStatus) -> List[Order]:
+        return db.query(self.model).filter(and_(Order.user_id == customer_id, Order.status == status)).all()
+    
+    def get_duplicate_in_cart(self, db: Session, user_id: UUID4, product_id: UUID4) -> Optional[Order]:
+        return db.query(Order).filter(and_(Order.product_id == product_id, Order.status == OrderStatus.in_cart, Order.user_id == user_id)).first()
 
-    def get_multi_placed_by_customer(self, db: Session, *, skip: int, limit: int, customer_id: UUID4, descending: bool = False) -> List[Order]:
-        customer = user.get(db, customer_id)
-        if customer is None:
+    def add_items(self, db: Session, obj_in: Order, amount: int) -> Order:
+        obj_in.amount += amount
+        db.commit()
+        db.refresh(obj_in)
+        return obj_in
+
+    def update_status(self, db: Session, obj_in: Order, order_status: OrderStatus) -> Order:
+        # Check if the status is a valid OrderStatus
+        if not order_status in vars(OrderStatus).values():
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="No such user"
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="The requested status does not exist",
             )
-        if not customer.is_customer:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="User is not a customer",
-            )
-        placed_orders = db.query(self.model).filter(
-            Order.user_id == customer_id).filter(Order.status == OrderStatus.placed)
+        obj_in.status = order_status
+        db.commit()
+        db.refresh(obj_in)
+        return obj_in
 
-        placed_orders = placed_orders.order_by(Order.order_date.desc(
-        )) if descending else placed_orders.order_by(Order.order_date)
-
-        return placed_orders.offset(skip).limit(limit).all()
+    def get_history_order_by_status(self, db: Session, *, skip: int, limit: int, customer: User) -> List[Order]:
+        orders = db.query(Order).filter(and_(Order.status != OrderStatus.in_cart, Order.user_id == customer.id)).order_by(Order.order_date.desc(), Order.status)
+        return orders.offset(skip).limit(limit).all()
 
 
 order = CRUDOrder(Order)

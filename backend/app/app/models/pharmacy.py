@@ -12,7 +12,6 @@ import uuid
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
-    from .order import Order  # noqa: F401
     from .stock_item import StockItem # noqa: F401
 
 DEFAULT_SCHEDULE = {

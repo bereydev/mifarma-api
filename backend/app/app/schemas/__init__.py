@@ -8,5 +8,4 @@ from .drug import Drug, DrugCreate, DrugInDB, DrugUpdate
 from .pharmacy import Pharmacy, PharmacyCreate, PharmacyInDB, PharmacyUpdate
 from .product import Product, ProductCreate, ProductInDB, ProductUpdate
 from .stock_item import StockItem, StockItemCreate, StockItemInDB, StockItemUpdate
-from .ordercontent import OrderContent, OrderContentCreate, OrderContentInDB, OrderContentUpdate
 from .order import Order, OrderCreate, OrderInDB, OrderUpdate

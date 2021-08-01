@@ -1,3 +1,4 @@
+from app.models.order import Order, OrderStatus
 from os import stat
 from sqlalchemy.sql.operators import nullsfirst_op
 from sqlalchemy.util.langhelpers import duck_type_collection
@@ -15,33 +16,11 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get('/placed-orders')
-def get_placed_orders(
-    db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_user),
-    descending: bool = False
-    ) -> Any:
-    """Get the placed orders"""
-    if not (current_user.is_owner or current_user.is_admin):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permissions",
-        )
-    placed_orders = crud.order.get_multi_placed(
-        db=db, skip=skip, limit=limit, descending=descending)
-    return placed_orders
-
-
 @router.get('/placed-orders-by-customer/{customer_id}')
 def get_placed_orders_by_customer(
     customer_id: UUID4,
     db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
     current_user: models.User = Depends(deps.get_current_user),
-    descending: bool = False
     ) -> Any:
     """Get the placed orders or a given customer"""
     if not (current_user.is_owner or current_user.is_admin or current_user.is_employee):
@@ -65,8 +44,8 @@ def get_placed_orders_by_customer(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Requested user is not a client of the current_user pharmacy"
         )
-    placed_orders = crud.order.get_multi_placed_by_customer(
-        db=db, skip=skip, limit=limit, customer_id=customer_id, descending=descending)
+    placed_orders = crud.order.get_by_status(
+        db=db, customer_id=customer_id, status=OrderStatus.placed)
     return placed_orders
 
 
@@ -95,20 +74,19 @@ def get_customers_with_most_recent_placed_orders(
     return crud.user.get_customers_with_most_recent_placed_orders(db, skip, limit, current_user.pharmacy_id)
 
 
-@router.put('/update-ordercontent-status/{ordercontent_id}')
-def update_ordercontent_status(
-    ordercontent_id: UUID4,
-    ordercontent_status: int,
+@router.put('/update-order-status/{order_id}')
+def update_order_status(
+    order_id: UUID4,
+    order_status: int,
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
     ) -> Any:
-    """ Update the ordercontent status to make change its status
+    """ Update the order status to make change its status
     in_cart = 0
-    in_process = 1
+    placed = 1
     available = 2
     not_available = 3
-    cancelled = 4 
-    delivered = 5
+    delivered = 4
     """
     if not (current_user.is_owner or current_user.is_admin):
         raise HTTPException(
@@ -116,38 +94,22 @@ def update_ordercontent_status(
             detail="Don't have enough permissions",
         )
 
-    ordercontent = crud.ordercontent.get(db, ordercontent_id)
-    if ordercontent is None:
+    order = crud.order.get(db, order_id)
+    if order is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No such ordercontent"
+            detail="No such order"
             )
 
     # Allow to edit only the pharmacy's customer's orders
-    if ordercontent.order.user.pharmacy_id != current_user.pharmacy_id:
+    if order.order.user.pharmacy_id != current_user.pharmacy_id:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Customer is not a client of the pharmacy"
             )
 
-    ordercontent = crud.ordercontent.update_status(db, ordercontent, ordercontent_status)
+    order = crud.order.update_status(db, order, order_status)
 
-    return ordercontent
-
-
-@router.get('/order/{order_id}', response_model=schemas.Order)
-def get_order(
-    order_id: UUID4,
-    current_user: models.User = Depends(deps.get_current_user),
-    db: Session = Depends(deps.get_db),
-    ) -> Any:
-    """Get the details of the order and the ordercontent elements"""
-    if not (current_user.is_owner or current_user.is_admin):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permissions",
-            )
-    order = crud.order.get(db, order_id)
     return order
 
 

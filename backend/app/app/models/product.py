@@ -19,7 +19,7 @@ class Product(Base):
     type_of_material = Column(Integer)
     magnitude = Column(Float)
     laboratory = Column(String)
-    order_contents = relationship('OrderContent', backref='product', lazy='dynamic', cascade="all,delete")
+    orders = relationship('Order', backref='product', lazy='dynamic', cascade="all,delete")
     stock_items = relationship('StockItem', backref='product', lazy='dynamic', cascade="all,delete")
     # pictures =
     type = Column(String)
