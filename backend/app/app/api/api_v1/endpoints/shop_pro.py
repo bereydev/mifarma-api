@@ -35,7 +35,7 @@ def get_placed_orders_by_customer(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="The requested customer_id is not found in the db"
         )
-    if not customer.is_customer or not current_user.is_admin:
+    if not (customer.is_customer or customer.is_admin):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="The requested user is not a customer"
