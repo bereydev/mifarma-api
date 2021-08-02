@@ -15,11 +15,12 @@ def read_active_pharmacys(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
+    filter: str = ""
 ) -> Any:
     """
     Retrieve active pharmacies.
     """
-    pharmacies = crud.pharmacy.get_multi_active(db, skip=skip, limit=limit)
+    pharmacies = crud.pharmacy.get_multi_active(db, skip=skip, limit=limit, filter=filter)
     return pharmacies
 
 

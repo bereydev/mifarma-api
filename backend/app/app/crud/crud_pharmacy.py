@@ -7,9 +7,10 @@ from app.models.role import RoleName
 from app.schemas import PharmacyCreate, PharmacyUpdate
 
 class CRUDPharmacy(CRUDBase[Pharmacy, PharmacyCreate, PharmacyUpdate]):
-    def get_multi_active(self, db: Session, *, skip: int, limit: int) -> List[Pharmacy]:
+    def get_multi_active(self, db: Session, *, skip: int, limit: int, filter: str) -> List[Pharmacy]:
         return (
             db.query(Pharmacy)
+            .filter(or_(Pharmacy.name.ilike('%' + str(filter) + '%'), Pharmacy.city.ilike('%' + str(filter) + '%'), Pharmacy.address.ilike('%' + str(filter) + '%'), Pharmacy.address2.ilike('%' + str(filter) + '%')))
             .join(User)
             .filter(and_(User.confirmed == true(), User.verified == true(), User.activated == true()))
             .join(Role)

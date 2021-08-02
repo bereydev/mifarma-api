@@ -11,7 +11,7 @@ from .product import Product
 # Shared properties
 class OrderBase(BaseModel):
     pharmacy_id: Optional[UUID4] = None
-    user_id: UUID4
+    user_id: Optional[ UUID4] = None
     product_id: Optional[UUID4] = None
     amount: int
     status: Optional[int] = OrderStatus.in_cart
@@ -32,6 +32,7 @@ class OrderUpdate(OrderBase):
 # Properties shared by models stored in DB
 class OrderInDBBase(OrderBase):
     id: UUID4
+    user_id: UUID4
     product_id: UUID4
     pharmacy_id: UUID4
     product: Product

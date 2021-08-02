@@ -30,8 +30,8 @@ def read_catalog(
             detail="This user has has no pharmacy"
         )
         
-    catalog_ = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
-    return catalog_
+    catalog = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
+    return catalog
 
 
 @router.post("/add-to-cart/{product_id}", response_model=schemas.Order)
@@ -107,7 +107,8 @@ def delete_from_cart(
     new_amount = order.amount - amount
     
     if new_amount == 0:
-        order = crud.order.remove(db, order_id)
+        crud.order.remove(db, id=order_id)
+        return None
     elif order.amount >= amount and amount > 0:
         order = crud.order.update(
             db=db, 

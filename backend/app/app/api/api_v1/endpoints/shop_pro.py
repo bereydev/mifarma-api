@@ -16,7 +16,7 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get('/placed-orders-by-customer/{customer_id}')
+@router.get('/placed-orders-by-customer/{customer_id}', response_model=List[schemas.Order])
 def get_placed_orders_by_customer(
     customer_id: UUID4,
     db: Session = Depends(deps.get_db),
@@ -76,7 +76,7 @@ def get_customers_with_most_recent_placed_orders(
     return crud.user.get_customers_with_most_recent_placed_orders(db, skip, limit, current_user.pharmacy_id)
 
 
-@router.put('/update-order-status/{order_id}')
+@router.put('/update-order-status/{order_id}', response_model=schemas.Order)
 def update_order_status(
     order_id: UUID4,
     order_status: int,
