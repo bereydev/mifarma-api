@@ -29,23 +29,25 @@ def get_placed_orders_by_customer(
             detail="Don't have enough permissions",
         )
     customer = crud.user.get(db, customer_id)
+
     if customer is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="The requested customer_id is not found in the db"
         )
-    if not customer.is_employee:
+    if not customer.is_customer or not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="The requested user is not a customer"
         )
-    if not current_user.is_admin and current_user.pharmacy_id != customer.pharmacy_id:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Requested user is not a client of the current_user pharmacy"
-        )
     placed_orders = crud.order.get_by_status(
         db=db, customer_id=customer_id, status=OrderStatus.placed)
+    
+    if current_user.pharmacy_id != customer.pharmacy_id and not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Current_user has no acces to clients from another pharmacy"
+        )
     return placed_orders
 
 
