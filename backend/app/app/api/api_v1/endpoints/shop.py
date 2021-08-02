@@ -74,7 +74,7 @@ def add_to_cart(
     
     return order
 
-@router.delete("/delete-from-cart/{order_id}", response_model=schemas.Order)
+@router.delete("/delete-from-cart/{order_id}", response_model=List[schemas.Order])
 def delete_from_cart(
     order_id: UUID4,
     amount: int,
@@ -108,7 +108,6 @@ def delete_from_cart(
     
     if new_amount == 0:
         crud.order.remove(db, id=order_id)
-        return None
     elif order.amount >= amount and amount > 0:
         order = crud.order.update(
             db=db, 
@@ -120,7 +119,7 @@ def delete_from_cart(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="The amount to delete from order is negative or too large"
         )
-    return order
+    return current_user.get_cart()
 
 @router.post("/place-order", response_model=List[schemas.Order])
 def place_order(
