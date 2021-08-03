@@ -103,11 +103,11 @@ def update_order_status(
             detail="No such order"
             )
 
-    # Allow to edit only the pharmacy's customer's orders
-    if order.order.user.pharmacy_id != current_user.pharmacy_id:
+    # Allow to edit only the orders of the current_user's pharmacy
+    if order.pharmacy_id != current_user.pharmacy_id:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Customer is not a client of the pharmacy"
+            detail="Requested order is not an order of the pharmacy"
             )
 
     order = crud.order.update_status(db, order, order_status)
