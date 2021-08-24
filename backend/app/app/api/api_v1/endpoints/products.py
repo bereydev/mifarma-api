@@ -119,7 +119,7 @@ def delete_product(
     return product
 
 
-@router.get("/{ean_code}", response_model=schemas.Product)
+@router.get("/ean/{ean_code}", response_model=schemas.Product)
 def get_by_ean(
     ean_code: str,
     db: Session = Depends(deps.get_db),
