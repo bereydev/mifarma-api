@@ -59,7 +59,7 @@ def add_to_cart(
     product = crud.product.get(db, product_id)
     if not product:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Requested product does not exist in db",
         )
 
@@ -100,7 +100,7 @@ def delete_from_cart(
     
     if order is None:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Requested order does not exist in db",
         )
     
@@ -145,7 +145,7 @@ def place_order(
     cart = current_user.get_cart()
     if cart is None:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="The current_user has an empty cart",
         )
     cart = crud.order.place_order(db=db, user_obj=current_user)

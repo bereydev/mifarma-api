@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
@@ -155,3 +155,13 @@ def send_employee_invitations(
         send_employee_invitation_email(email_to=email, token=token)
 
     return {"success": True, "msg": "The invitations to the employees are sent"}
+
+
+@router.post("/profile/image")
+def define_profile_image(
+    image: UploadFile = File(...),
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """Upload an image to use as the the current_user's profile picture"""
+    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': 'https://img.bfmtv.com/c/630/420/871/7b9f41477da5f240b24bd67216dd7.jpg'}

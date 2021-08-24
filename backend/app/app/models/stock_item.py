@@ -5,7 +5,7 @@ from sqlalchemy.sql.sqltypes import Integer, String, Float
 from app.db.base_class import Base
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
-# import unidecode
+import unidecode
 import uuid 
 
 
@@ -28,5 +28,5 @@ class StockItem(Base):
 
     @validates('name')
     def update_name_unaccented(self, key, name):
-        # self.name_unaccented = unidecode.unidecode(name)
+        self.name_unaccented = unidecode.unidecode(name)
         return name

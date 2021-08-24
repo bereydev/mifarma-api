@@ -65,8 +65,6 @@ class User(Base):
     activated = Column(Boolean(), default=True, nullable=False)
     # hashed_activation_token = Column(String)
     
-
-    
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)
 
@@ -88,3 +86,9 @@ class User(Base):
 
     def get_cart(self) -> List[Order]:
         return self.orders.filter(Order.status == OrderStatus.in_cart).all()
+    
+    @hybrid_property
+    def voucher(self) -> float:
+        # return self.orders.filter(Order.count_for_voucher == true()).sum(Order.count_for_voucher)
+        return sum(order.product.price for order in self.orders.filter(Order.count_for_voucher == true())) * self.pharmacy.percentage_for_voucher / 100
+

@@ -2,7 +2,7 @@ from app.models import stock_item
 from sqlalchemy.ext.mutable import MutableDict
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, String, JSON
+from sqlalchemy import Column, String, JSON, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -64,6 +64,7 @@ class Pharmacy(Base):
         JSON), default=DEFAULT_SCHEDULE, nullable=False)
     email = Column(String)
     phone = Column(String)
+    percentage_for_voucher = Column(Integer, nullable=False, default=0)
     # pictures =
 
     def get_owner(self):

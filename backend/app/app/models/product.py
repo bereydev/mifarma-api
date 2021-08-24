@@ -10,7 +10,7 @@ import uuid
 class Product(Base):
     __tablename__ = 'products'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    ean_code = Column(String, nullable=False, index=True)
+    ean_code = Column(String, nullable=False, index=True, unique=True)
     classification_number = Column(String)
     name = Column(String, nullable=False, index=True)
     description = Column(String)

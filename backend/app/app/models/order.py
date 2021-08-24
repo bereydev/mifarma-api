@@ -1,8 +1,8 @@
 import uuid
-from sqlalchemy.sql.sqltypes import DateTime
 
-from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import Column, ForeignKey, Integer, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.expression import null
 from app.db.base_class import Base
 from datetime import datetime
 
@@ -23,5 +23,6 @@ class Order(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     order_date = Column(DateTime, nullable=False, default=datetime.utcnow())
     delivery_date = Column(DateTime)
+    count_for_voucher = Column(Boolean, nullable=False, default=False)
     
 

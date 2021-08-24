@@ -3,7 +3,7 @@ from app.models import pharmacy, stock_item
 from random import randint
 from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.encoders import jsonable_encoder
 from pydantic.networks import EmailStr
 from sqlalchemy.orm.session import Session
@@ -14,6 +14,9 @@ from app.api import deps
 from app.core.celery_app import celery_app
 from app.utils import send_test_email, send_new_account_email
 from app.models.role import Role, RoleName
+import pandas as pd
+import os
+import shutil
 
 router = APIRouter()
 
@@ -42,7 +45,7 @@ def create_user(
         )
     if role not in vars(RoleName).values():
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Requested Role does not exist in db",
         )
     if role == RoleName.ADMIN:
@@ -74,7 +77,7 @@ def update_user(
     user = crud.user.get(db, id=user_id)
     if not user:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="The user with this username does not exist in the system",
         )
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
@@ -125,7 +128,7 @@ def verify_owner(
     user = crud.user.get(db, id)
     if user is None:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="No user linked to the requested id",
         )
     if not user.is_owner:
@@ -164,7 +167,7 @@ def full_activate_user(
     user = crud.user.get(db, id)
     if user is None:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="No user linked to the requested id",
         )
 
@@ -217,18 +220,32 @@ def create_pharmacy(
 
 @router.post("/catalog")
 def update_catalog(
+    excel_catalog: UploadFile = File(...),
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    [ADMIN] Update the drug catalog from a CSV/EXCEL file
+    [ADMIN] Update the drug catalog from a EXCEL file
     """
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions")
-    # TODO parse the document
-    return {'success': True, 'msg': 'The catalog is successfully updated'}
+    # Get the uploaded excel documents
+    # Parse it with pandas
+    usecols = ['EAN','LABORATORIO', 'PRODUCTO']
+    file_name = 'test.xlsx'
+    with open(file_name, 'wb') as buffer:
+        shutil.copyfileobj(excel_catalog.file, buffer)
+
+    catalog_df = pd.read_excel(file_name, nrows=3)
+    print(catalog_df['PRODUCTO'])
+    
+    # Create objects in the database from excel
+    os.remove(file_name)
+    
+    return {'success': True, 'msg': 'The catalog is successfully updated', 'filename': excel_catalog.filename, 
+    'file_type': excel_catalog.content_type}
 
 
 @router.post("/drug", response_model=schemas.Drug)

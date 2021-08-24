@@ -59,7 +59,7 @@ def recover_password(email: str, db: Session = Depends(deps.get_db)) -> Any:
 
     if not user:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="The user with this username does not exist in the system.",
         )
     password_reset_token = generate_password_reset_token(email=email)
@@ -86,7 +86,7 @@ def reset_password(
     user = crud.user.get_by_email(db, email=email)
     if not user:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="The user with this username does not exist in the system.",
         )
     hashed_password = get_password_hash(new_password)

@@ -66,7 +66,7 @@ def update_product(
     """
     product = crud.product.get(db=db, id=id)
     if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     if not current_user.is_owner:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -88,7 +88,7 @@ def read_product(
     """
     product = crud.product.get(db=db, id=id)
     if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     if not current_user.is_admin and (product.owner_id != current_user.id):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -100,8 +100,8 @@ def read_product(
 @router.delete("/{id}", response_model=schemas.Product)
 def delete_product(
     *,
-    db: Session = Depends(deps.get_db),
     id: UUID4,
+    db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
@@ -109,7 +109,7 @@ def delete_product(
     """
     product = crud.product.get(db=db, id=id)
     if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     if not crud.user.is_admin(current_user) and (product.owner_id != current_user.id):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -117,3 +117,14 @@ def delete_product(
             )
     product = crud.product.remove(db=db, id=id)
     return product
+
+
+@router.get("/{ean_code}", response_model=schemas.Product)
+def get_by_ean(
+    ean_code: str,
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    Retrieve a product by its ean
+    """

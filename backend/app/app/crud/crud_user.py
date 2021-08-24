@@ -1,3 +1,4 @@
+from app.schemas.customer import Customer
 from pydantic.types import UUID4
 from app.models.order import Order, OrderStatus
 from app.schemas.pharmacy import Pharmacy
@@ -137,5 +138,13 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_customers_with_most_recent_placed_orders(self, db: Session, skip: int, limit: int, pharmacy_id: UUID4) -> List[User]:
         customers = db.query(User).join(Order).filter(Order.status == OrderStatus.placed).filter(User.pharmacy_id == pharmacy_id).order_by(Order.order_date.desc())
         return customers.offset(skip).limit(limit).all()
+    
+    def reset_voucher(self, db: Session, db_customer: Customer) -> Customer:
+        for order in db_customer.orders:
+            order.count_for_voucher = False
+        db.commit()
+        db.refresh(db_customer)
+        return db_customer
+
 
 user = CRUDUser(User)
