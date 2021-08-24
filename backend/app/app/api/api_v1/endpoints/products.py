@@ -128,3 +128,10 @@ def get_by_ean(
     """
     Retrieve a product by its ean
     """
+    product = crud.product.get_by_ean(db, ean_code)
+    if product is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="The requested ean does not match any product in the catalog"
+        )
+    return product
