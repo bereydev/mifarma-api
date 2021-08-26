@@ -45,7 +45,7 @@ class CustomerInDBBase(CustomerBase):
     confirmed: bool
     verified: bool
     activated: bool
-    voucher: float
+    voucher: Optional[float] = 0
 
 
     class Config:

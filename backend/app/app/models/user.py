@@ -16,14 +16,16 @@ from sqlalchemy.ext.hybrid import hybrid_property
 if TYPE_CHECKING:
     from .order import Order
 
+
 class Gender():
     male = 0
     female = 1
     non_binary = 2
     not_specified = 3
 
+
 class User(Base):
-    __tablename__='users'
+    __tablename__ = 'users'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     public_id = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
@@ -49,7 +51,8 @@ class User(Base):
     city = Column(String)
     country = Column(String)
     # List of current use of drugs and prescriptions of the following format "{'prescriptions':[<names>,...]}"
-    prescriptions = Column(MutableDict.as_mutable(JSON), default={'prescriptions':[]}, nullable=False)
+    prescriptions = Column(MutableDict.as_mutable(JSON), default={
+                           'prescriptions': []}, nullable=False)
     # List of previous diseases with the following format "{<name of the diseases>:<true or false>,...}"
     previous_diseases = Column(MutableDict.as_mutable(JSON), default={}, nullable=False)
     # None if the user is not Owner, has to be checked manualy by a MiFarmacia staff before activating the account
@@ -60,11 +63,11 @@ class User(Base):
     # Adress mail confirmed
     confirmed = Column(Boolean(), default=False, nullable=False)
     # Owner account validated by a staff (with ID image and pharmacist_number verification)
-    verified= Column(Boolean(), default=True, nullable=False)
+    verified = Column(Boolean(), default=True, nullable=False)
     # Owner account and physical address validated by letter with a 15 days valid token
     activated = Column(Boolean(), default=True, nullable=False)
     # hashed_activation_token = Column(String)
-    
+
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)
 
@@ -75,7 +78,7 @@ class User(Base):
     @hybrid_property
     def is_admin(self):
         return self.can(Permission.ADMIN)
-    
+
     @hybrid_property
     def is_customer(self):
         return self.can(Permission.BUY)
@@ -86,9 +89,11 @@ class User(Base):
 
     def get_cart(self) -> List[Order]:
         return self.orders.filter(Order.status == OrderStatus.in_cart).all()
-    
+
     @hybrid_property
     def voucher(self) -> float:
         # return self.orders.filter(Order.count_for_voucher == true()).sum(Order.count_for_voucher)
-        return sum(order.product.price for order in self.orders.filter(Order.count_for_voucher == true())) * self.pharmacy.percentage_for_voucher / 100
-
+        return sum(order.product.price
+                   for order
+                   in self.orders.filter(Order.count_for_voucher == true())
+                   ) * self.pharmacy.percentage_for_voucher / 100
