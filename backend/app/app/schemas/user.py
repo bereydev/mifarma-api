@@ -49,6 +49,7 @@ class UserInDBBase(UserBase):
     confirmed: bool
     verified: bool
     activated: bool
+    voucher: float
 
 
     class Config:
