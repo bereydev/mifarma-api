@@ -8,7 +8,7 @@ default_context:
   secret_key: '1862e2b8307a7379a4666009484d4d633a90b47ef3f224f4bea24ddc43db85f0'
   first_superuser: 'bereyziat.developer@gmail.com'
   first_superuser_password: 'Coucoucmoi67'
-  backend_cors_origins: '["http://localhost", "http://localhost:4200", "http://localhost:3000", "http://localhost:8080", "https://localhost", "https://localhost:4200", "https://localhost:3000", "https://localhost:8080", "http://dev.mifarmacia.app", "https://stag.mifarmacia.app", "https://mifarmacia.app", "http://local.dockertoolbox.tiangolo.com", "http://localhost.tiangolo.com"]'
+  backend_cors_origins: '["http://172.19.36.52:8080", "http://localhost", "http://localhost:4200", "http://localhost:3000", "http://localhost:8080", "https://localhost", "https://localhost:4200", "https://localhost:3000", "https://localhost:8080", "http://dev.mifarmacia.app", "https://stag.mifarmacia.app", "https://mifarmacia.app", "http://local.dockertoolbox.tiangolo.com", "http://localhost.tiangolo.com"]'
   smtp_port: '465'
   smtp_host: 'smtp.ionos.es'
   smtp_user: 'noreply@mifarmacia.app'
