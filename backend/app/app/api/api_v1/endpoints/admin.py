@@ -11,7 +11,6 @@ from pydantic.types import UUID4
 
 from app import crud, models, schemas
 from app.api import deps
-from app.core.celery_app import celery_app
 from app.utils import send_test_email, send_new_account_email
 from app.models.role import Role, RoleName
 import pandas as pd

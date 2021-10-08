@@ -30,8 +30,6 @@ Alternative automatic documentation with ReDoc (from the OpenAPI backend): http:
 
 PGAdmin, PostgreSQL web administration: http://localhost:5050
 
-Flower, administration of Celery tasks: http://localhost:5555
-
 Traefik UI, to see how the routes are being handled by the proxy: http://localhost:8090
 
 **Note**: The first time you start your stack, it might take a minute for it to be ready. While the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
@@ -71,10 +69,6 @@ $ poetry shell
 Next, open your editor at `./backend/app/` (instead of the project root: `./`), so that you see an `./app/` directory with your code inside. That way, your editor will be able to find all the imports, etc. Make sure your editor uses the environment you just created with Poetry.
 
 Modify or add SQLAlchemy models in `./backend/app/app/models/`, Pydantic schemas in `./backend/app/app/schemas/`, API endpoints in `./backend/app/app/api/`, CRUD (Create, Read, Update, Delete) utils in `./backend/app/app/crud/`. The easiest might be to copy the ones for Items (models, endpoints, and CRUD utils) and update them to your needs.
-
-Add and modify tasks to the Celery worker in `./backend/app/app/worker.py`.
-
-If you need to install any additional package to the worker, add it to the file `./backend/app/celeryworker.dockerfile`.
 
 ### Docker Compose Override
 
@@ -713,8 +707,6 @@ Automatic Alternative Docs (ReDoc): https://mifarmacia.app/redoc
 
 PGAdmin: https://pgadmin.mifarmacia.app
 
-Flower: https://flower.mifarmacia.app
-
 ### Staging URLs
 
 Staging URLs, from the branch `master`.
@@ -729,8 +721,6 @@ Automatic Alternative Docs (ReDoc): https://stag.mifarmacia.app/redoc
 
 PGAdmin: https://pgadmin.stag.mifarmacia.app
 
-Flower: https://flower.stag.mifarmacia.app
-
 ### Development URLs
 
 Development URLs, for local development.
@@ -744,8 +734,6 @@ Automatic Interactive Docs (Swagger UI): https://localhost/docs
 Automatic Alternative Docs (ReDoc): https://localhost/redoc
 
 PGAdmin: http://localhost:5050
-
-Flower: http://localhost:5555
 
 Traefik UI: http://localhost:8090
 
@@ -763,8 +751,6 @@ Automatic Alternative Docs (ReDoc): https://local.dockertoolbox.tiangolo.com/red
 
 PGAdmin: http://local.dockertoolbox.tiangolo.com:5050
 
-Flower: http://local.dockertoolbox.tiangolo.com:5555
-
 Traefik UI: http://local.dockertoolbox.tiangolo.com:8090
 
 ### Development with a custom IP URLs
@@ -781,8 +767,6 @@ Automatic Alternative Docs (ReDoc): https://dev.mifarmacia.app/redoc
 
 PGAdmin: http://dev.mifarmacia.app:5050
 
-Flower: http://dev.mifarmacia.app:5555
-
 Traefik UI: http://dev.mifarmacia.app:8090
 
 ### Development in localhost with a custom domain URLs
@@ -798,8 +782,6 @@ Automatic Interactive Docs (Swagger UI): https://localhost.tiangolo.com/docs
 Automatic Alternative Docs (ReDoc): https://localhost.tiangolo.com/redoc
 
 PGAdmin: http://localhost.tiangolo.com:5050
-
-Flower: http://localhost.tiangolo.com:5555
 
 Traefik UI: http://localhost.tiangolo.com:8090
 
