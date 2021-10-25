@@ -1,43 +1,34 @@
 <template>
-  <div id="app">
-    <v-app>
-      <v-content v-if="loggedIn===null">
-        <v-container fill-height>
-          <v-layout align-center justify-center>
-            <v-flex>
-              <div class="text-xs-center">
-                <div class="headline my-5">Loading...</div>
-                <v-progress-circular size="100" indeterminate color="primary"></v-progress-circular>
-              </div>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-content>
-      <router-view v-else />
-      <NotificationsManager></NotificationsManager>
-    </v-app>
+  <div id="nav">
+    <router-link to="/">Dashboard</router-link> |
+    <router-link to="/profile">Profile</router-link> |
+    <router-link to="/login">Login</router-link> |
+    <router-link to="/password-recovery">Recover pswd</router-link> |
+    <router-link to="/reset-password">Reset pswd</router-link> |
+    <router-link to="/register">Register</router-link>
   </div>
+  <router-view />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import NotificationsManager from '@/components/NotificationsManager.vue';
-import { readIsLoggedIn } from '@/store/main/getters';
-import { dispatchCheckLoggedIn } from '@/store/main/actions';
-
-@Component({
-  components: {
-    NotificationsManager,
-  },
-})
-export default class App extends Vue {
-
-  get loggedIn() {
-    return readIsLoggedIn(this.$store);
-  }
-
-  public async created() {
-    await dispatchCheckLoggedIn(this.$store);
-  }
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
 }
-</script>
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>

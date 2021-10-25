@@ -20,11 +20,8 @@ default_context:
   traefik_constraint_tag: 'mifarmacia.app'
   traefik_constraint_tag_staging: 'stag.mifarmacia.app'
   traefik_public_constraint_tag: 'traefik-public'
-  flower_auth: 'admin:Coucoucmoi67'
-  sentry_dsn: ''
   docker_image_prefix: 'bereyziatdev/mifarma/'
   docker_image_backend: 'bereyziatdev/mifarma_backend'
-  docker_image_celeryworker: 'bereyziatdev/mifarma_celeryworker'
   docker_image_frontend: 'bereyziatdev/mifarma_frontend'
   _copy_without_render: [frontend/src/**/*.html, frontend/src/**/*.vue, frontend/node_modules/*, backend/app/app/email-templates/**]
   _template: ./
