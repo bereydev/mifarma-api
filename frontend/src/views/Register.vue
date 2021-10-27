@@ -9,43 +9,31 @@
     <div class="navBarElement">Contacto</div>
     <div id="access" class="navBarElement">Acceso</div>
   </div>
-  <div class="register">
-    <h1>Mi perfil</h1>
-    <div class="small-text">¿Ya tiene cuenta? Acceda aquí </div>
-    <div>
-      <i class="material-icons">person</i>
-    </div>
-    <div class="double-field">
-      <div class="text-field">Nombre</div>
-      <div class="text-field">Apellido</div>
-    </div>
-    <div class="text-field">Email</div>
-    <div class="text-field">Dirección</div>
-    <div class="double-field">
-      <div class="text-field">Código Postal</div>
-      <div class="text-field">Ciudad</div>
-    </div>
-    <div class="double-field">
-      <div class="text-field">Contraseña</div>
-      <div class="text-field">Repita la contraseña</div>
-    </div>
-    <div class="green-button">Confirmar</div>
-  </div>
+
+  <RegisterForm/>
+  
 </body>
 
 </template>
+
+<script>
+
+import RegisterForm from '../components/RegisterForm.vue'
+
+export default {
+  name: 'Register', 
+  components: {
+    RegisterForm
+  }, 
+}
+</script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 body{
   margin:0; 
-  font-family: Roboto;
-  font-size:1em; 
-  color: #2E2931; 
+  
 }
-
-
-
   #brandName{
     font-size: 1.5em;
     font-weight: bold; 
@@ -104,62 +92,6 @@ h1{
 }
 
 
-
-.small-text{
-  padding: 0.75em 0em 1.5em 0em; 
-  font-size:0.8em; 
-  color:#766B69; 
-  text-decoration: underline;
-}
-
-
-.register{
-  margin: 2.5% 33% 10% 33%; 
-  display: flex; 
-  flex-direction:column; 
-  align-items: center;
-  justify-content: center;
-  gap:0.25em; 
-}
-
-.double-field{
-  box-sizing: border-box;
-  padding:0; 
-  margin:0; 
-  display:flex; 
-  gap:5%; 
-  width: 100%; 
-  align-items: center;
-  justify-content: center;
-}
-
-.text-field{
-  box-sizing: border-box;
-  margin: 0.35em 0em 0.35em 0em; 
-  padding: 0.5em 1em 0.5em 1em; 
-  border-radius: 30px;
-  background-color:white; 
-  border: 2px solid #ADADAD;
-  justify-content:flex-start; 
-  text-align: start;
-  color: #B1B1B1; 
-  width: 100%; 
-}
-
-.green-button{
-   
-  display:flex; 
-  margin: 1em 0em 0.5em 0em; 
-  padding: 0.5em 1em 0.5em 1em; 
-  border-radius: 30px;
-  justify-content: center;
-  align-items: center;
-  width: 50%; 
-  font-size: 1.25em; 
-  background-color: #00DD7C; 
-  box-shadow: 0px 3px 6px -3.5px gray;
-  
-}
 
 
 </style>

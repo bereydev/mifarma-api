@@ -20,6 +20,13 @@
 
 <style>
 
+*{
+  font-family: Roboto;
+  font-size:1em; 
+  color: #2E2931; 
+}
+
+
 body {
   margin:0 !important;
 }
