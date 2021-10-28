@@ -1,19 +1,19 @@
 <template>
 	<body>
-		<NavBarComponent :access="true"/>
+		<NavBarOut :access="true" />
 		<RegisterForm />
 	</body>
 </template>
 
 <script>
 	import RegisterForm from "../components/RegisterForm.vue";
-	import NavBarComponent from "../components/NavBarComponent.vue";
+	import NavBarOut from "../components/NavBarOut.vue";
 
 	export default {
 		name: "Register",
 		components: {
 			RegisterForm,
-			NavBarComponent,
+			NavBarOut,
 		},
 	};
 </script>

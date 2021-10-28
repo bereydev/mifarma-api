@@ -1,5 +1,5 @@
 <template>
-	<NavBarComponent :access="false" />
+	<NavBarOut :access="false" />
 	<form class="login">
 		<h1>Mi cuenta</h1>
     <router-link class="small-text" to="/register">¿No tiene cuenta? Regístrese aquí</router-link>
@@ -23,12 +23,12 @@
 </template>
 
 <script>
-	import NavBarComponent from "../components/NavBarComponent.vue";
+	import NavBarOut from "../components/NavBarOut.vue";
 
 	export default {
 		name: "Login",
 		components: {
-			NavBarComponent,
+			NavBarOut,
 		},
 		data() {
 			return {
