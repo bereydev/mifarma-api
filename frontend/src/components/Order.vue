@@ -2,15 +2,15 @@
 	<div class="order" :style="{ 'background-color': backgroundColor }">
 		<div class="row-left">
 			<img
-				class="drug-pic"
+				class="order-pic"
 				src="https://images.pexels.com/photos/159211/headache-pain-pills-medication-159211.jpeg?cs=srgb&dl=pexels-pixabay-159211.jpg&fm=jpg"
 				alt="Foto de perfil"
 			/>
-			<span>Nombre del Medicamento</span>
+			<div class="order-name">{{this.order.product.name}}</div>
 		</div>
 		<div class="row-right">
 			<div class="order-time">
-				<span>Disponible</span>
+				<span>{{deliveryStatus}}</span>
 				<i class="material-icons time-icon">event_available</i>
 			</div>
 			<button class="material-icons dots">more_vert</button>
@@ -22,20 +22,35 @@
 	export default {
 		name: "Order",
 		props: {
-			status: Number,
+			order : {
+                name:'',
+                status:'',
+                delivery_date:'',
+                order_date:'', 
+            },
 		},
 		computed: {
 			backgroundColor() {
-				if (this.status === 0) return "#A6FFD8";
-				if (this.status === 1) return "#FFEE97";
-				if (this.status === 2) return "#FFA192";
+				if (this.order.status === 2) return "#A6FFD8";
+				if (this.order.status === 1) return "#FFEE97";
+				if (this.order.status === 3) return "#FFA192";
 				else return "#ADADAD";
+			},
+            deliveryStatus() {
+				if (this.order.status === 2) return "Disponible";
+				if (this.order.status === 1 && this.order.delivery_date ==null) return "Disponible próximamente";
+                if (this.order.status === 1 && this.order.delivery_date !=null) return "Disponible el " + this.order.delivery_date;
+				if (this.order.status === 3) return "Indisponible por el momento";
+				else return "Comprado el "+ this.order.order_date;
 			},
 		},
 	};
 </script>
 
 <style scoped>
+    .order-name{
+        font-size: 1.25em;
+    }
 	.order {
 		display: flex;
 		align-items: center;
@@ -43,7 +58,7 @@
 		padding: 0.5em 1em 0.5em 1em;
 		border-radius: 28px;
 	}
-	.drug-pic {
+	.order-pic {
 		border-radius: 50%;
 		width: 2.5em;
 		height: 2.5em;
@@ -71,10 +86,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		width: 80%;
         padding: .6em;
         border-radius: 12px;
         background-color: white;
+        gap: 2.5em; 
 	}
 	.row-left {
 		display: flex;
@@ -87,7 +102,8 @@
 		display: flex;
 		gap: 0.15em;
 		align-items: center;
-        width: 40%;
-        justify-content: space-between;
+        width: 60%;
+        gap: 1em; 
+        justify-content: flex-end;
 	}
 </style>
