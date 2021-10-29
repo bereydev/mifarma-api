@@ -7,16 +7,12 @@
 			<div id="brandName" class="navBarElement">MiFarmacia</div>
 		</div>
 		<div class=row-center>
-			<input v-show="searchBar"
+			<input v-show="searchBar" @input="$emit('search-input',searchText)" v-model="searchText"
 				class="searchBar"
 				placeholder="Buscar producto"
 				type="text"
 				id="name"
 				name="name"
-				required
-				minlength="4"
-				maxlength="8"
-				size="10"
 			/>
 		</div>
 		<div class="row-right">
@@ -36,6 +32,11 @@
 <script>
 	export default {
 		name: "NavBarPresentation",
+		data() {
+			return {
+				searchText: '', 
+			};
+		},
 		props: {
 			searchBar: {
 				type: Boolean,

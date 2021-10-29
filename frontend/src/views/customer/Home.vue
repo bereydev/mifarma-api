@@ -1,15 +1,21 @@
 <template>
 	<body>
-		<NavBarIn />
+		<NavBarIn @search-input="filterName" />
 
 		<div class="panels">
 			<div class="dashboard">
-				<HomeSelector @selector-click="filter" />
-				<div class="orders" v-for="order in filtered" :key="order.id">
-					<Order :order="order" />
+				<HomeSelector @selector-click="filterStatus" />
+				<div class="scroll">
+					<div
+						style="margin: 0.15em 0 0.15em 0"
+						v-for="order in filtered"
+						:key="order.id"
+					>
+						<Order :order="order" />
+					</div>
 				</div>
 			</div>
-			<PharmaInfoHome/>
+			<PharmaInfoHome />
 		</div>
 	</body>
 </template>
@@ -18,7 +24,7 @@
 	import NavBarIn from "../../components/NavBarIn.vue";
 	import HomeSelector from "../../components/HomeSelector.vue";
 	import Order from "../../components/Order.vue";
-  import PharmaInfoHome from "../../components/PharmaInfoHome.vue"; 
+	import PharmaInfoHome from "../../components/PharmaInfoHome.vue";
 
 	export default {
 		name: "Register",
@@ -29,16 +35,31 @@
 			};
 		},
 		methods: {
-			filter(id) {
+			filterStatus(id) {
 				if (id === -1) this.filtered = this.orders;
 				else this.filtered = this.orders.filter((e) => e.status === id);
+			},
+			filterName(text) {
+				text = text
+					.normalize("NFD")
+					.replace(/[\u0300-\u036f]/g, "")
+					.toLowerCase();
+				if (text === "") this.filtered = this.orders;
+				else
+					this.filtered = this.orders.filter((o) =>
+						o.product.name
+							.normalize("NFD")
+							.replace(/[\u0300-\u036f]/g, "")
+							.toLowerCase()
+							.includes(text)
+					);
 			},
 		},
 		components: {
 			NavBarIn,
 			HomeSelector,
 			Order,
-      PharmaInfoHome, 
+			PharmaInfoHome,
 		},
 		async created() {
 			let url =
@@ -71,7 +92,7 @@
 		display: flex;
 		width: 100%;
 		padding: 1.5% 1% 5% 1%;
-    gap: 2.5%; 
+		gap: 2.5%;
 	}
 
 	.dashboard {
