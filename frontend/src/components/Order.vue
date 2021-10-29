@@ -11,7 +11,7 @@
 		<div class="row-right">
 			<div class="order-time">
 				<span>{{deliveryStatus}}</span>
-				<i class="material-icons time-icon">event_available</i>
+				<i class="material-icons time-icon">{{deliveryIcon}}</i>
 			</div>
 			<button class="material-icons dots">more_vert</button>
 		</div>
@@ -43,6 +43,12 @@
 				if (this.order.status === 3) return "Indisponible por el momento";
 				else return "Comprado el "+ this.order.order_date;
 			},
+			deliveryIcon(){
+				if (this.order.status === 2) return 'event_available';
+				if (this.order.status === 1) return 'watch_later';
+				if (this.order.status === 3) return 'close';
+				else return 'hourglass_bottom';
+			}
 		},
 	};
 </script>

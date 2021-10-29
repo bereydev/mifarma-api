@@ -55,8 +55,10 @@
 			onClick(id) {
 				if (this.selected === id) {
 					this.selected = -1;
+					this.$emit("selector-click",id); 
 				} else {
 					this.selected=id; 
+					this.$emit("selector-click",id); 
 				}
 			},
 		},
