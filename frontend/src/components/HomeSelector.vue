@@ -71,7 +71,7 @@
 		border: none;
 	}
 	h1 {
-		font-size: 1.5em;
+		font-size: 1.75em;
 		padding: 0;
 		margin-block-start: 0px;
 		margin-block-end: 0px;
@@ -95,7 +95,7 @@
 		justify-content: space-between;
 		gap: 10%;
 		width: 35%;
-		padding: 0 0 5% 2.5%;
+		padding: 0 0 1.5% 2.5%;
 	}
 	.button-panel {
 		display: flex;
