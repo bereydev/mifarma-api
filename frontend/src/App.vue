@@ -8,7 +8,8 @@
 			<router-link to="/password-recovery">Recover pswd</router-link> |
 			<router-link to="/reset-password">Reset pswd</router-link> |
 			<router-link to="/register">Register</router-link> |
-			<router-link to="/customer/Home">Home customer</router-link>
+			<router-link to="/customer/Home">Home customer</router-link> |
+			
 		</div>
 	</div>
 </template>
@@ -55,6 +56,10 @@
 		font-size: 1em;
 		color: #2e2931;
     box-sizing: border-box;
+	}
+
+	span{
+		white-space: nowrap;
 	}
 
 

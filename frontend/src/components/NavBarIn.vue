@@ -2,12 +2,18 @@
 <template>
 	<div class="topNavBar">
 		<div class="row-left">
-			<img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo" />
-
-			<div id="brandName" class="navBarElement">MiFarmacia</div>
+			<router-link to="/customer/Home"
+				><img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo"
+			/></router-link>
+			<router-link to="/customer/Home"
+				><div id="brandName" class="navBarElement">MiFarmacia</div></router-link
+			>
 		</div>
-		<div class=row-center>
-			<input v-show="searchBar" @input="$emit('search-input',searchText)" v-model="searchText"
+		<div class="row-center">
+			<input
+				v-show="searchBar"
+				@input="$emit('search-input', searchText)"
+				v-model="searchText"
 				class="searchBar"
 				placeholder="Buscar producto"
 				type="text"
@@ -23,7 +29,7 @@
 			<img
 				class="profile-pic"
 				src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2960&q=80"
-                alt="Foto de perfil"
+				alt="Foto de perfil"
 			/>
 		</div>
 	</div>
@@ -34,7 +40,7 @@
 		name: "NavBarPresentation",
 		data() {
 			return {
-				searchText: '', 
+				searchText: "",
 			};
 		},
 		props: {
@@ -42,7 +48,6 @@
 				type: Boolean,
 				default: true,
 			},
-			
 		},
 	};
 </script>
@@ -65,7 +70,7 @@
 
 	.searchBar {
 		border: none;
-        align-self: center;
+		align-self: center;
 		width: 25em;
 		border-radius: 30px;
 		padding: 0.5em 1em 0.5em 1em;
@@ -74,25 +79,22 @@
 
 	.row-left {
 		display: flex;
-		gap: 0.15em; 
+		gap: 0.15em;
 		width: 10%;
 		align-items: center;
 		justify-content: flex-start;
 	}
-    .row-center {
+	.row-center {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
-    .row-right {
+	.row-right {
 		display: flex;
 		gap: 1.5em;
 		width: 10%;
 		align-items: center;
 		justify-content: flex-end;
-	}
-	img {
-		width: 3em;
 	}
 
 	.logo-img {
@@ -142,16 +144,16 @@
 	}
 
 	#navBarCart {
-        display: flex;
-        justify-items: center;
-    align-content: center;
+		display: flex;
+		justify-items: center;
+		align-content: center;
 		color: #2e2931;
 		border: 3px solid #2e2931;
 		font-size: 1.75em !important;
 		padding: 0.2em;
 		color: #2e2931;
 		border-radius: 100%;
-        background-color: white;
+		background-color: white;
 	}
 
 	.navBarElement {

@@ -10,6 +10,7 @@ const PasswordRecovery = () => import(/* webpackChunkName: "password-recovery" *
 const ResetPassword = () => import(/* webpackChunkName: "reset-password" */ "../views/ResetPassword.vue");
 const Register = () => import(/* webpackChunkName: "register" */ "../views/Register.vue");
 const HomeCustomer = () => import(/* webpackChunkName: "customerHome" */ "../views/customer/Home.vue");
+const Catalog = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Catalog.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -52,6 +53,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "HomeCustomer",
 
     component: HomeCustomer,
+  },
+  {
+    path: "/customer/Catalog",
+    name: "Catalog",
+    component: Catalog,
   },
 ];
 
