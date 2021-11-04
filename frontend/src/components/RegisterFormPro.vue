@@ -34,26 +34,10 @@
     <input
       class="text-field"
       type="text"
-      v-model="address"
-      name="address"
-      placeholder="Dirección"
+      v-model="pharmacist_number"
+      name="pharmacist_number"
+      placeholder="Your pharmacist identification number"
     />
-    <div class="double-field">
-      <input
-        class="text-field"
-        type="number"
-        v-model="postcode"
-        name="postcode"
-        placeholder="Código postal"
-      />
-      <input
-        class="text-field"
-        type="text"
-        v-model="city"
-        name="city"
-        placeholder="Ciudad"
-      />
-    </div>
     <div class="double-field">
       <input
         class="text-field"
@@ -84,22 +68,18 @@ export default {
       first_name: "",
       last_name: "",
       email: "",
-      address: "",
-      postcode: "",
-      city: "",
+      pharmacist_number: "",
       password: "",
       confirmPassword: "",
     };
   },
   methods: {
     async onSubmit() {
-      await axios.post("https://stag.mifarmacia.app/api/v1/users/customer", {
+      await axios.post("https://stag.mifarmacia.app/api/v1/users/Owner", {
         first_name: this.first_name,
         last_name: this.last_name,
+        pharmacist_number: this.pharmacist_number,
         email: this.email,
-        address: this.address,
-        postcode: this.postcode,
-        city: this.city,
         password: this.password,
       });
       this.$router.push("/login");

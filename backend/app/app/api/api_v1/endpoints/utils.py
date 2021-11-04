@@ -21,19 +21,7 @@ def test_email(
     """
     send_test_email(email_to=email_to)
     return {"msg": "Test email sent"}
-
-
-@router.post("/test-email/", response_model=schemas.Msg, status_code=201)
-def test_sms(
-    email_to: EmailStr,
-    current_user: models.User = Depends(deps.get_current_superuser),
-) -> Any:
-    """
-    Test SMS.
-    """
-    send_test_email(email_to=email_to)
-    return {"msg": "Test email sent"}
-
+    
 
 @router.get("/allergies")
 def get_allergy_list() -> Any:

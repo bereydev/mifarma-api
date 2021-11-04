@@ -8,7 +8,8 @@ const Login = () => import(/* webpackChunkName: "login" */ "../views/Login.vue")
 const Profile = () => import(/* webpackChunkName: "profile" */ "../views/Profile.vue");
 const PasswordRecovery = () => import(/* webpackChunkName: "password-recovery" */ "../views/PasswordRecovery.vue");
 const ResetPassword = () => import(/* webpackChunkName: "reset-password" */ "../views/ResetPassword.vue");
-const Register = () => import(/* webpackChunkName: "register" */ "../views/Register.vue");
+const Register = () => import(/* webpackChunkName: "register" */ "../views/customer/Register.vue");
+const RegisterPro = () => import(/* webpackChunkName: "register-pro" */ "../views/pro/Register.vue");
 const HomeCustomer = () => import(/* webpackChunkName: "customerHome" */ "../views/customer/Home.vue");
 const Catalog = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Catalog.vue");
 
@@ -58,6 +59,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/customer/Catalog",
     name: "Catalog",
     component: Catalog,
+  },
+  {
+    path: "/pro/register",
+    name: "RegisterPro",
+    component: RegisterPro,
   },
 ];
 
