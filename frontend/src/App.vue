@@ -61,7 +61,9 @@
 	span{
 		white-space: nowrap;
 	}
-
+	p{
+		text-align: start;
+	}
 
 	body {
 		margin: 0 !important;

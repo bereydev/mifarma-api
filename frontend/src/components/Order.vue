@@ -62,7 +62,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.5em 1em 0.5em 1em;
-		border-radius: 28px;
+		border-radius: 25px;
 	}
 	.order-pic {
 		border-radius: 50%;
