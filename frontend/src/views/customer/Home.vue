@@ -81,12 +81,6 @@
 
 
 <style scoped>
-	.small-text {
-		padding: 0.75em 0em 1.5em 0em;
-		font-size: 0.8em;
-		color: #766b69;
-		text-decoration: underline;
-	}
 
 	.panels {
 		display: flex;

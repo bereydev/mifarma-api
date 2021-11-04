@@ -32,13 +32,13 @@
 				>
 			</div>
 		</div>
-		<span
-			>Primera farmacia aprobada para venta online de medicamentos, Farmacia
+		<p>
+			Primera farmacia aprobada para venta online de medicamentos, Farmacia
 			Campoamor es referente nacional en gestión de oficina de farmacia. Abierta
 			desde 1978 por Lda. Margarita González, cuenta profesionales multilíngües
 			centrados en proporcionar el mejor servicio a los mejores precios
-			posibles.</span
-		>
+			posibles.
+		</p>
 		<div class="schedule">
 			<span><b>Lunes</b> : 08:30 - 14:00, 17:00 - 21:00</span>
 			<span><b>Martes</b> : 08:30 - 14:00, 17:00 - 21:00</span>
@@ -58,6 +58,9 @@
 </script>
 
 <style scoped>
+	.wrap-text {
+		white-space: pre;
+	}
 	h1 {
 		font-size: 1.75em;
 		padding: 0 0 0 5%;

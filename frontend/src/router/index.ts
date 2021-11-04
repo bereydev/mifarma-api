@@ -12,6 +12,7 @@ const Register = () => import(/* webpackChunkName: "register" */ "../views/custo
 const RegisterPro = () => import(/* webpackChunkName: "register-pro" */ "../views/pro/Register.vue");
 const HomeCustomer = () => import(/* webpackChunkName: "customerHome" */ "../views/customer/Home.vue");
 const Catalog = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Catalog.vue");
+const Cart = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Cart.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -64,6 +65,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/pro/register",
     name: "RegisterPro",
     component: RegisterPro,
+  },
+  {
+    path: "/customer/Cart",
+    name: "Cart",
+    component: Cart,
   },
 ];
 
