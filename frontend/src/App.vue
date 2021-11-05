@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBarOut />
+    <NavBarOut v-show="false"/>
     <router-view />
   </div>
 </template>

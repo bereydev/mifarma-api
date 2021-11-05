@@ -13,6 +13,7 @@ const RegisterPro = () => import(/* webpackChunkName: "register-pro" */ "../view
 const HomeCustomer = () => import(/* webpackChunkName: "customerHome" */ "../views/customer/Home.vue");
 const Catalog = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Catalog.vue");
 const Cart = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/Cart.vue");
+const PharmaPicker = () => import(/* webpackChunkName: "Catalog" */ "../views/customer/PharmaPicker.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -70,6 +71,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/customer/Cart",
     name: "Cart",
     component: Cart,
+  },
+  {
+    path: "/customer/PharmaPicker",
+    name: "PharmaPicker",
+
+    component: PharmaPicker,
   },
 ];
 

@@ -7,13 +7,14 @@
 					src="https://images.pexels.com/photos/5699982/pexels-photo-5699982.jpeg?cs=srgb&dl=pexels-markus-winkler-5699982.jpg&fm=jpg"
 					alt="Foto Farmacia"
 				/>
-				<button
+				<router-link
 					style="color: white; background-color: #2e2931"
 					id="button"
 					class="green-button"
+					to="/customer/PharmaPicker"
+					>Cambiar de Farmacia</router-link
 				>
-					Cambiar de Farmacia
-				</button>
+				
 			</div>
 			<div class="pharma-info">
 				<span>Nombre Farmacia</span>
