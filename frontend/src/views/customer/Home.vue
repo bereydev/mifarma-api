@@ -1,7 +1,5 @@
 <template>
 	<body>
-		<NavBarIn @search-input="filterName" />
-
 		<div class="panels">
 			<div class="dashboard">
 				<HomeSelector @selector-click="filterStatus" />
@@ -21,7 +19,6 @@
 </template>
 
 <script>
-	import NavBarIn from "../../components/NavBarIn.vue";
 	import HomeSelector from "../../components/HomeSelector.vue";
 	import Order from "../../components/Order.vue";
 	import PharmaInfoHome from "../../components/PharmaInfoHome.vue";
@@ -56,7 +53,6 @@
 			},
 		},
 		components: {
-			NavBarIn,
 			HomeSelector,
 			Order,
 			PharmaInfoHome,

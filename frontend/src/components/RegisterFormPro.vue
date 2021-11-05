@@ -54,6 +54,12 @@
         placeholder="Confirmar contraseña"
       />
     </div>
+    <input
+        class="text-field"
+        type="file"
+        name="confirmPassword"
+        placeholder="Confirmar contraseña"
+      />
 
     <input type="submit" value="Confirmar" class="green-button" />
   </form>

@@ -1,5 +1,4 @@
 <template>
-	<NavBarIn @search-input="filterName" />
 	<body>
 		<button class="green-button" id="confirmButton">Confimar</button>
 
@@ -23,7 +22,6 @@
 
 
 <script>
-	import NavBarIn from "../../components/NavBarIn.vue";
 	import PharmaWidget from "../../components/PharmaWidget.vue";
 
 	export default {
@@ -35,7 +33,6 @@
 			};
 		},
 		components: {
-			NavBarIn,
 			PharmaWidget,
 		},
 		methods: {

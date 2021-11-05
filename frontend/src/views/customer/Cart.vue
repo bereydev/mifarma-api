@@ -1,6 +1,5 @@
 <template>
 	<body>
-		<NavBarIn @search-input="filterName" />
 
 		<div class="panels">
 			<div class="dashboard">
@@ -32,7 +31,6 @@
 </template>
 
 <script>
-	import NavBarIn from "../../components/NavBarIn.vue";
 	import Drug from "../../components/Drug.vue";
 
 	export default {
@@ -61,7 +59,6 @@
 			},
 		},
 		components: {
-			NavBarIn,
 			Drug
 		},
 		async created() {

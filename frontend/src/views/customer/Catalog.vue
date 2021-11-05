@@ -1,5 +1,4 @@
 <template>
-	<NavBarIn @search-input="filterName" />
     <CatalogPharmaInfo/>
     <div class="offers">Ofertas</div>
     <div class="drugRow" >
@@ -21,7 +20,6 @@
 
 
 <script>
-	import NavBarIn from "../../components/NavBarIn.vue";
     import CatalogPharmaInfo from "../../components/CatalogPharmaInfo.vue";
     import DrugWidget from "../../components/DrugWidget.vue"; 
 
@@ -33,7 +31,6 @@
             },
 		},
 		components: {
-			NavBarIn,
             CatalogPharmaInfo, 
             DrugWidget, 
 		},

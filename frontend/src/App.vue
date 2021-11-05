@@ -1,18 +1,18 @@
 <template>
   <div>
-    <NavBarOut v-show="false"/>
+    <NavBar/>
     <router-view />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import NavBarOut from "./components/NavBarOut.vue";
+import NavBar from "./components/NavBar.vue";
 
 export default {
   name: "App",
   components: {
-    NavBarOut,
+    NavBar,
   },
   data() {
     return {
