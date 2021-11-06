@@ -11,7 +11,7 @@
 					style="color: white; background-color: #2e2931"
 					id="button"
 					class="green-button"
-					to="/customer/PharmaPicker"
+					to="/customer/pharma-picker"
 					>Cambiar de Farmacia</router-link
 				>
 				

@@ -1,10 +1,10 @@
 <template>
   <nav class="topNavBar">
     <div v-if="isAuth" class="row-left">
-      <router-link to="/customer/Home"
+      <router-link to="/customer/dashboard"
         ><img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo"
       /></router-link>
-      <router-link to="/customer/Home"
+      <router-link to="/customer/dashboard"
         ><div id="brandName" class="navBarElement">MiFarmacia</div></router-link
       >
     </div>

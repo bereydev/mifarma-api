@@ -4,21 +4,22 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 // this generates a separate chunk (about.[hash].js) for this route
 // which is lazy-loaded when the route is visited.
 const Welcome = () => import(/* webpackChunkName: "welcome" */ "../views/customer/Welcome.vue");
-const Login = () => import(/* webpackChunkName: "login" */ "../views/Login.vue");
-const Profile = () => import(/* webpackChunkName: "profile" */ "../views/Profile.vue");
-const PasswordRecovery = () => import(/* webpackChunkName: "password-recovery" */ "../views/PasswordRecovery.vue");
-const ResetPassword = () => import(/* webpackChunkName: "reset-password" */ "../views/ResetPassword.vue");
+const Login = () => import(/* webpackChunkName: "login" */ "../views/auth/Login.vue");
+const Profile = () => import(/* webpackChunkName: "profile" */ "../views/auth/Profile.vue");
+const PasswordRecovery = () => import(/* webpackChunkName: "password-recovery" */ "../views/auth/PasswordRecovery.vue");
+const ResetPassword = () => import(/* webpackChunkName: "reset-password" */ "../views/auth/ResetPassword.vue");
 const Register = () => import(/* webpackChunkName: "register" */ "../views/customer/Register.vue");
 const RegisterPro = () => import(/* webpackChunkName: "register-pro" */ "../views/pro/Register.vue");
-const HomeCustomer = () => import(/* webpackChunkName: "customerHome" */ "../views/customer/Home.vue");
+const DashboardCustomer = () => import(/* webpackChunkName: "dashboard-customer" */ "../views/customer/Dashboard.vue");
 const Catalog = () => import(/* webpackChunkName: "catalog" */ "../views/customer/Catalog.vue");
 const Cart = () => import(/* webpackChunkName: "cart" */ "../views/customer/Cart.vue");
-const PharmaPicker = () => import(/* webpackChunkName: "pharmq-picker" */ "../views/customer/PharmaPicker.vue");
+const PharmaPicker = () => import(/* webpackChunkName: "pharma-picker" */ "../views/customer/PharmaPicker.vue");
 const WelcomePro = () => import(/* webpackChunkName: "welcome-pro" */ "../views/pro/Welcome.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    alias: "/welcome",
     name: "Welcome",
     component: Welcome,
   },
@@ -53,10 +54,10 @@ const routes: Array<RouteRecordRaw> = [
     component: Register,
   },
   {
-    path: "/customer/home",
-    name: "HomeCustomer",
+    path: "/customer/dashboard",
+    name: "DashboardCustomer",
 
-    component: HomeCustomer,
+    component: DashboardCustomer,
   },
   {
     path: "/customer/catalog",
