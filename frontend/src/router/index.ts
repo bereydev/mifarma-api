@@ -15,6 +15,7 @@ const Catalog = () => import(/* webpackChunkName: "catalog" */ "../views/custome
 const Cart = () => import(/* webpackChunkName: "cart" */ "../views/customer/Cart.vue");
 const PharmaPicker = () => import(/* webpackChunkName: "pharma-picker" */ "../views/customer/PharmaPicker.vue");
 const WelcomePro = () => import(/* webpackChunkName: "welcome-pro" */ "../views/pro/Welcome.vue");
+const Drug = () => import(/* webpackChunkName: "drug" */ "../views/customer/Drug.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -75,10 +76,16 @@ const routes: Array<RouteRecordRaw> = [
     component: Cart,
   },
   {
-    path: "/customer/pharma-picker",
+    path: "/customer/pharmapicker",
     name: "PharmaPicker",
 
     component: PharmaPicker,
+  },
+  {
+    path: "/customer/Drug",
+    name: "Drug",
+
+    component: Drug
   },
   {
     path: "/pro/welcome",
