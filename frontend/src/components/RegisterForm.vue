@@ -102,7 +102,13 @@ export default {
         city: this.city,
         password: this.password,
       });
-      this.$router.push("/login");
+      
+      const params = new URLSearchParams();
+      params.append("username", this.email);
+      params.append("password", this.password);
+      const response = await axios.post("login/access-token", params);
+      localStorage.setItem("token", response.data.access_token);
+      this.$router.push("/customer/dashboard");
     },
   },
 };
