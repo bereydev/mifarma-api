@@ -76,7 +76,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Cart,
   },
   {
-    path: "/customer/pharmapicker",
+    path: "/customer/pharma-picker",
     name: "PharmaPicker",
 
     component: PharmaPicker,

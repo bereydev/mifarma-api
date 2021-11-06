@@ -22,6 +22,7 @@
 	import HomeSelector from "../../components/HomeSelector.vue";
 	import Order from "../../components/Order.vue";
 	import PharmaInfoHome from "../../components/PharmaInfoHome.vue";
+	import axios from "axios";
 
 	export default {
 		name: "Register",
@@ -58,18 +59,9 @@
 			PharmaInfoHome,
 		},
 		async created() {
-			let url =
-				"https://stag.mifarmacia.app/api/v1/shop-pro/placed-orders-by-customer/8de69c90-df9a-4c70-8525-bd4192077e06";
-			const response = await fetch(url, {
-				method: "GET", // *GET, POST, PUT, DELETE, etc.
-				headers: {
-					"Content-Type": "application/json",
-					Authorization:
-						"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzYxODU4MjIsInN1YiI6ImRkZTIwNTNlLWNmNDItNDliOS1iNzMxLTA5YjhiYWE1ZDg0NiJ9.uIIGvC9sqlnwW5SpKMgDcDgALAvekN0kreEG9CwI-lI",
-				},
-				//body: JSON.stringify(data) // body data type must match "Content-Type" header
-			});
-			this.orders = await response.json();
+			const response = await axios.get("shop/order/history");
+			console.log(response.data);
+			this.orders = response.data; 
 			this.filtered = this.orders;
 		},
 	};
@@ -77,7 +69,6 @@
 
 
 <style scoped>
-
 	.panels {
 		display: flex;
 		width: 100%;
