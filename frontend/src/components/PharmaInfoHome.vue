@@ -14,14 +14,13 @@
 					to="/customer/pharma-picker"
 					>Cambiar de Farmacia</router-link
 				>
-				
 			</div>
 			<div class="pharma-info">
-				<span>Nombre Farmacia</span>
-				<span>Dirección</span>
-				<span>69420</span>
-				<span>Granada</span>
-				<span>España</span>
+				<span>{{pharma.name}}</span>
+				<span>{{pharma.address}}</span>
+				<span>{{pharma.address2}}</span>
+				<span>{{pharma.city}}</span>
+				<span>{{pharma.country}}</span>
 				<span>correofarmacia@gmail.com</span>
 				<span>958556677</span>
 				<router-link
@@ -55,6 +54,34 @@
 <script>
 	export default {
 		name: "PharmaInfoHome",
+		props: {
+			pharma: {
+				type: Object,
+				// Object or array defaults must be returned from
+				// a factory function
+				default() {
+					return {
+						name: "Example Pharma",
+						description:
+							"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+						address: "Somewhere in hell",
+						address2: "string",
+						country: "Switzerland",
+						city: "Lausanne",
+						schedule: {
+							Lunes: ["09:00-14:30", "17:30-21:00"],
+							Martes: ["09:00-14:30", "17:30-21:00"],
+							Miercoles: ["09:00-14:30", "17:30-21:00"],
+							Jueves: ["09:00-14:30", "17:30-21:00"],
+							Viernes: ["09:00-14:30", "17:30-21:00"],
+							Sabado: ["09:00-14:30", "17:30-21:00"],
+							Domingo: ["09:00-14:30", "17:30-21:00"],
+						},
+						id: "90550ff5-15d7-4bce-838f-03a437ba2bd8",
+					};
+				},
+			},
+		},
 	};
 </script>
 

@@ -42,6 +42,10 @@ export default {
       params.append("password", this.password);
       const response = await axios.post("login/access-token", params);
       localStorage.setItem("token", response.data.access_token);
+      //Check if is Customer or pharmacist 
+      //if(customer) => Check if has adopted a pharmacy 
+      // Send to pharmacy picker page 
+      // Send to dashboard 
       this.$router.push("/customer/dashboard");
     },
   },

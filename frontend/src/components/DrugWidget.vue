@@ -5,8 +5,8 @@
 				src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80"
 				alt="Foto Medicamento"
 			/>
-			<span>Nombre del medicamento</span>
-			<span>5</span>
+			<span>No</span>
+			<span>No</span>
 		</div>
 	</router-link>
 </template>
@@ -14,6 +14,12 @@
 <script>
 	export default {
 		name: "DrugWidget",
+		props:{
+			drug: {
+				name: 'Nombre del medicamento',
+				price: '5.00'
+			}, 
+		}
 	};
 </script>
 
