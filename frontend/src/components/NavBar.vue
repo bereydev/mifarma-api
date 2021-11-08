@@ -38,21 +38,20 @@
     </div>
 
     <div v-if="!isAuth" class="group">
-      <router-link class="navBarElement" to="/pro/welcome"
-        >Soy una farmacia</router-link
-      >
-      <div class="navBarElement">Contacto</div>
-      <router-link class="navBarElement" v-bind:to="buttonLink">
-        <button v-bind:class="buttonClass">
-          {{ buttonText }}
-        </button>
-      </router-link>
+      <NavTab link="/pro/register">Soy una farmacia</NavTab>
+      <NavTab>Contacto </NavTab>
+        <NavTab :link="buttonLink">
+          <Button :color="buttonColor">{{ buttonText }}</Button>
+        </NavTab>
     </div>
   </nav>
 </template>
 
 
 <script>
+import Button from "./Button.vue";
+import NavTab from "./NavTab.vue";
+
 export default {
   name: "NavBar",
   data() {
@@ -67,20 +66,24 @@ export default {
         this.$route.name === "Register" ||
         this.$route.name === "RegisterPro" ||
         this.$route.name === "Welcome" ||
-        this.$route.name === "WelcomePro" 
+        this.$route.name === "WelcomePro"
       );
     },
     buttonText() {
       return this.$route.name === "Login" ? "Registrarse" : "Acceder";
     },
-    buttonClass() {
-      return this.$route.name === "Login" ? "btn-register" : "btn-login";
+    buttonColor() {
+      return this.$route.name === "Login" ? "green" : "dark";
     },
     buttonLink() {
       return this.$route.name === "Login" ? "/register" : "/login";
     },
   },
   props: {},
+  components: {
+    Button,
+    NavTab,
+  },
 };
 </script>
 
@@ -102,14 +105,6 @@ export default {
   align-self: center;
 }
 
-.navBarElement {
-  color: #2e2931;
-  align-self: center;
-  justify-self: center;
-  font-size: 1em;
-  flex: 1 0 auto;
-  margin: 0 0.5em 0 0.5em;
-}
 .searchBar {
   border: none;
   width: 25em;
@@ -219,25 +214,6 @@ input:hover {
   border-radius: 100%;
   padding: 0.05em;
   font-size: 6em !important;
-}
-
-.btn-login {
-  padding: 0.5em 1em 0.5em 1em;
-  background-color: #2e2931;
-  border-radius: 38px;
-  border: none;
-  color: white !important;
-  justify-content: center;
-  box-shadow: 0px 3px 6px -3.5px grey;
-}
-.btn-register {
-  padding: 0.5em 1em 0.5em 1em;
-  background-color: #00dd7c;
-  border-radius: 38px;
-  border: none;
-  color: #2e2931;
-  justify-content: center;
-  box-shadow: 0px 3px 6px -3.5px grey;
 }
 
 spacer {
