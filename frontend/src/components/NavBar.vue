@@ -38,7 +38,7 @@
     </div>
 
     <div v-if="!isAuth" class="group">
-      <NavTab link="/pro/register">Soy una farmacia</NavTab>
+      <NavTab link="/pro/welcome">Soy una farmacia</NavTab>
       <NavTab>Contacto </NavTab>
         <NavTab :link="buttonLink">
           <Button :color="buttonColor">{{ buttonText }}</Button>
@@ -147,19 +147,6 @@ input:hover {
   width: 10%;
   align-items: center;
   justify-content: flex-end;
-}
-
-.logo-img {
-  height: 2em;
-  width: auto;
-  align-self: center;
-}
-#brandName {
-  font-size: 1.25em;
-  font-weight: bold;
-  margin: 0 0 0 0.25em;
-  padding: 0.25em 0 0 0;
-  align-self: center;
 }
 
 .profile-pic {

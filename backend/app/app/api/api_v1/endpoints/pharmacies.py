@@ -91,27 +91,6 @@ def read_pharmacy_me(
     return pharmacy
 
 
-@router.get("/owner", response_model=schemas.User)
-def read_pharmacy_owner(
-    *,
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-) -> Any:
-    """
-    Get owner of the current_user's pharmacy [only available for the owner of the pharmacy].
-    """
-    pharmacy = crud.user.get(db=db, id=current_user.id).pharmacy
-    if not pharmacy:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User has no pharmacy")
-    if not current_user.is_owner:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not enough permissions"
-        )
-
-    return pharmacy.get_owner()
-
-
 @router.get("/employees", response_model=List[schemas.User])
 def read_pharmacy_employees(
     *,

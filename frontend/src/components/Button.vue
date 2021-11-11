@@ -27,6 +27,7 @@ export default {
   border: none;
   justify-content: center;
   box-shadow: 0px 3px 6px -3.5px grey;
+  font-size: 18px;
 }
 
 .btn-green {

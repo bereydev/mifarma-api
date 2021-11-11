@@ -19,7 +19,6 @@ class OwnerBase(BaseModel):
 # Properties to receive via API on creation
 class OwnerCreate(OwnerBase):
     email: EmailStr
-    phone: str
     pharmacist_number: str
     password: str
 

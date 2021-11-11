@@ -71,12 +71,14 @@
       />
     </div>
 
-    <input type="submit" value="Confirmar" class="green-button" />
+    <Button type="submit">Confirmar</Button>
   </form>
 </template>
 
 <script>
 import axios from "axios";
+import Button from "./Button.vue";
+
 export default {
   name: "RegisterForm",
   data() {
@@ -91,9 +93,12 @@ export default {
       confirmPassword: "",
     };
   },
+  components: {
+    Button,
+  },
   methods: {
     async onSubmit() {
-      await axios.post("https://stag.mifarmacia.app/api/v1/users/customer", {
+      await axios.post("/users/customer", {
         first_name: this.first_name,
         last_name: this.last_name,
         email: this.email,
@@ -102,7 +107,7 @@ export default {
         city: this.city,
         password: this.password,
       });
-      
+
       const params = new URLSearchParams();
       params.append("username", this.email);
       params.append("password", this.password);
@@ -124,7 +129,7 @@ export default {
   font-size: 6em !important;
 }
 
-.register {
+form {
   margin: 2.5% 33% 10% 33%;
   display: flex;
   flex-direction: column;

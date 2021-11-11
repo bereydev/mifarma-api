@@ -10,7 +10,7 @@
 	export default {
 		name: "Register",
 		components: {
-			RegisterForm
+			RegisterForm,
 		},
 	};
 </script>

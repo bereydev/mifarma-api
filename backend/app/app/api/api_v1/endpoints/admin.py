@@ -26,16 +26,10 @@ def create_user(
     db: Session = Depends(deps.get_db),
     user_in: schemas.UserCreate,
     role: str,
-    current_user: models.User = Depends(deps.get_current_superuser),
-) -> Any:
+    current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
     """
     [ADMIN] Create new user.
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The current user has not enough permissions.",
-        )
     user = crud.user.get_by_email(db, email=user_in.email)
     if user:
         raise HTTPException(
@@ -68,8 +62,7 @@ def update_user(
     db: Session = Depends(deps.get_db),
     user_id: UUID4,
     user_in: schemas.UserUpdate,
-    current_user: models.User = Depends(deps.get_current_superuser),
-) -> Any:
+    current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
     """
     [ADMIN] Update a user by id.
     """
@@ -86,18 +79,11 @@ def update_user(
 @router.get("/user/{user_id}", response_model=schemas.User)
 def read_user_by_id(
     user_id: UUID4,
-    current_user: models.User = Depends(deps.get_current_user),
-    db: Session = Depends(deps.get_db),
-) -> Any:
+    current_user: models.User = Depends(deps.get_current_superuser),
+    db: Session = Depends(deps.get_db),) -> Any:
     """
     [ADMIN] Get a specific user by id.
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough permissions"
-        )
-
     user = crud.user.get(db, id=user_id)
 
     if not user:
@@ -107,28 +93,37 @@ def read_user_by_id(
         )
     return user
 
+@router.get("/pharmacy/{pharmacy_id}/owner", response_model=schemas.User)
+def read_pharmacy_owner(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_superuser),
+    pharmacy_id: UUID4,
+) -> Any:
+    """
+    [ADMIN] Get owner of the current_user's pharmacy
+    """
+    pharmacy = crud.pharmacy.get(db=db, id=pharmacy_id)
+    if pharmacy is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No pharmacy linked to the requested pharmacy_id")
 
-@router.put("/verify-owner/{id}", response_model=schemas.OwnerActivation)
+    return pharmacy.get_owner()
+
+@router.put("/verify-owner/{owner_id}", response_model=schemas.OwnerActivation)
 def verify_owner(
     *,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-    id: UUID4,
-) -> Any:
+    current_user: models.User = Depends(deps.get_current_superuser),
+    owner_id: UUID4,) -> Any:
     """
     [ADMIN] Verify the user after a manual check for its identity and its pharmacy_number
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user has not enough privileges",
-        )
     # TODO send a letter to check the address (with a token to be sure that the user is the pharmacist)
-    user = crud.user.get(db, id)
+    user = crud.user.get(db, owner_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No user linked to the requested id",
+            detail="No user linked to the requested owner_id",
         )
     if not user.is_owner:
         raise HTTPException(
@@ -151,18 +146,12 @@ def verify_owner(
 def full_activate_user(
     *,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
     id: UUID4,
 ) -> Any:
     """
     [ADMIN] Set three verification status of a user to true (verified, confirmed, activated)
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user has not enough privileges",
-        )
-
     user = crud.user.get(db, id)
     if user is None:
         raise HTTPException(
@@ -183,17 +172,11 @@ def create_pharmacy(
     user_id: UUID4,
     db: Session = Depends(deps.get_db),
     pharmacy_in: schemas.PharmacyCreate,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Create new pharmacy with owner.
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User has not enough premissions"
-        )
-
     user = crud.user.get(db, user_id)
     if not user:
         raise HTTPException(
@@ -221,30 +204,26 @@ def create_pharmacy(
 def update_catalog(
     excel_catalog: UploadFile = File(...),
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Update the drug catalog from a EXCEL file
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not enough permissions")
     # Get the uploaded excel documents
     # Parse it with pandas
-    usecols = ['EAN','LABORATORIO', 'PRODUCTO']
+    usecols = ['EAN', 'LABORATORIO', 'PRODUCTO']
     file_name = 'test.xlsx'
     with open(file_name, 'wb') as buffer:
         shutil.copyfileobj(excel_catalog.file, buffer)
 
     catalog_df = pd.read_excel(file_name, nrows=3)
     print(catalog_df['PRODUCTO'])
-    
+
     # Create objects in the database from excel
     os.remove(file_name)
-    
-    return {'success': True, 'msg': 'The catalog is successfully updated', 'filename': excel_catalog.filename, 
-    'file_type': excel_catalog.content_type}
+
+    return {'success': True, 'msg': 'The catalog is successfully updated', 'filename': excel_catalog.filename,
+            'file_type': excel_catalog.content_type}
 
 
 @router.post("/drug", response_model=schemas.Drug)
@@ -252,16 +231,11 @@ def create_drug(
     *,
     db: Session = Depends(deps.get_db),
     drug_in: schemas.DrugCreate,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Create new drug in the catalog [only for test purposes].
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permission to add drug to the catalog",
-        )
     drug = crud.drug.create(db=db, obj_in=drug_in)
     return drug
 
@@ -271,39 +245,26 @@ def create_product(
     *,
     db: Session = Depends(deps.get_db),
     product_in: schemas.ProductCreate,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Create new product in the catalog [only for test purposes].
-    """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permission to add product to the catalog",
-        )
-
+    """    
     product = crud.product.create(db=db, obj_in=product_in)
 
     return product
+
 
 @router.post("/stock_item", response_model=schemas.StockItem)
 def create_stock_item(
     *,
     stock_item_in: schemas.StockItemCreate,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Add a product to the catalog of a pharmacy.
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permission",
-        )
-    
-
-    # Create a stock item
     stock_item = crud.stock_item.create(db, obj_in=stock_item_in)
     return stock_item
 
@@ -315,17 +276,11 @@ def read_catalog(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
     [ADMIN] Get the catalog of product from a pharmacy by ID
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have enough permission to add drug to the catalog",
-            )
-
     catalog_content = crud.product.get_multi_by_pharmacy(
         db, skip=skip, limit=limit, filter=filter, pharmacy_id=pharmacy_id)
     return catalog_content
@@ -336,16 +291,11 @@ def read_inactive_pharmacys(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
-    Retrieve active pharmacies.
+    Retrieve inactive pharmacies.
     """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
     pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
 
     return pharmacies

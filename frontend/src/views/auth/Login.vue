@@ -18,13 +18,14 @@
       name="password"
       placeholder="Contraseña"
     />
-    <input type="submit" value="Entrar" class="green-button" />
+    <Button type="submit" style="width:60%">Entrar</Button>
     <div class="small-text">¿Se olvidó la contraseña? Pinche aquí</div>
   </form>
 </template>
 
 <script>
 import axios from "axios";
+import Button from "../../components/Button.vue";
 
 export default {
   name: "Login",
@@ -34,7 +35,9 @@ export default {
       username: "",
     };
   },
-  components: {},
+  components: {
+    Button,
+  },
   methods: {
     async onSubmit() {
       const params = new URLSearchParams();

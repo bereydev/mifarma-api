@@ -11,11 +11,14 @@ const ResetPassword = () => import(/* webpackChunkName: "reset-password" */ "../
 const Register = () => import(/* webpackChunkName: "register" */ "../views/customer/Register.vue");
 const RegisterPro = () => import(/* webpackChunkName: "register-pro" */ "../views/pro/Register.vue");
 const DashboardCustomer = () => import(/* webpackChunkName: "dashboard-customer" */ "../views/customer/Dashboard.vue");
+const DashboardPro = () => import(/* webpackChunkName: "dashboard-pro" */ "../views/pro/Dashboard.vue");
+const DashboardAdmin = () => import(/* webpackChunkName: "dashboard-admin" */ "../views/admin/Dashboard.vue");
 const Catalog = () => import(/* webpackChunkName: "catalog" */ "../views/customer/Catalog.vue");
 const Cart = () => import(/* webpackChunkName: "cart" */ "../views/customer/Cart.vue");
 const PharmaPicker = () => import(/* webpackChunkName: "pharma-picker" */ "../views/customer/PharmaPicker.vue");
 const WelcomePro = () => import(/* webpackChunkName: "welcome-pro" */ "../views/pro/Welcome.vue");
 const Drug = () => import(/* webpackChunkName: "drug" */ "../views/customer/Drug.vue");
+const CreatePharma = () => import(/* webpackChunkName: "create-pharma" */ "../views/pro/CreatePharma.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -61,6 +64,18 @@ const routes: Array<RouteRecordRaw> = [
     component: DashboardCustomer,
   },
   {
+    path: "/pro/dashboard",
+    name: "DashboardPro",
+
+    component: DashboardPro,
+  },
+  {
+    path: "/admin/dashboard",
+    name: "DashboardAdmin",
+
+    component: DashboardAdmin,
+  },
+  {
     path: "/customer/catalog",
     name: "Catalog",
     component: Catalog,
@@ -92,6 +107,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "WelcomePro",
 
     component: WelcomePro,
+  },
+  {
+    path: "/create-pharma",
+    name: "CreatePharma",
+
+    component: CreatePharma,
   },
 ];
 

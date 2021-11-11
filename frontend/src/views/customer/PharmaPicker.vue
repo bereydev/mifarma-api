@@ -22,7 +22,7 @@
 
 
 <script>
-	import PharmaWidget from "../../components/PharmaWidget.vue";
+	import PharmaWidget from "../../components/PharmaCard.vue";
 
 	export default {
 		name: "Cart",
