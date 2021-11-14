@@ -5,7 +5,7 @@
       >¿Ya tiene cuenta? Acceda aquí</router-link
     >
     <div>
-      <i class="material-icons">person</i>
+      <font-awesome-icon class="material-icons" icon="user" />
     </div>
     <div class="double-field">
       <input
