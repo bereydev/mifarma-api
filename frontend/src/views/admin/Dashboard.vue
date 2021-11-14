@@ -1,29 +1,22 @@
 <template>
   <div>
     <h1>List of all the new pharmacies</h1>
-    <pharma-list :pharmacies="pharmacies"></pharma-list>
+    <owner-list :owners="$store.state.unverifiedOwners"></owner-list>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import PharmaList from "../../components/PharmaList.vue";
+import OwnerList from "../../components/OwnerList.vue"
 
 export default {
   name: "DashboardAdmin",
-  data() {
-    return {
-      pharmacies: [],
-    };
-  },
   components: {
-    PharmaList,
+    OwnerList,
   },
   methods: {},
   async created() {
-    // const response = await axios.get("admin/pharmacies/inactive");
-    // console.log(response.data);
-    // this.pharmacies = response.data;
+    this.$store.dispatch('updateUnverifiedOwners');
+    console.log(this.$store.state.unverifiedOwners)
   },
 };
 </script>

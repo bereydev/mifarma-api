@@ -286,16 +286,16 @@ def read_catalog(
     return catalog_content
 
 
-@router.get("/pharmacies/inactive", response_model=List[schemas.Pharmacy])
-def read_inactive_pharmacys(
+@router.get("/unverified/owners", response_model=List[schemas.Owner])
+def read_unverified_owners(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
     current_user: models.User = Depends(deps.get_current_superuser),
 ) -> Any:
     """
-    Retrieve inactive pharmacies.
+    Retrieve unverified owners.
     """
-    pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
+    pharmacies = crud.user.get_multi_unverified(db, skip=skip, limit=limit)
 
     return pharmacies

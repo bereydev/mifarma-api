@@ -6,22 +6,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import NavBar from "./components/NavBar.vue";
 
 export default {
   name: "App",
   components: {
     NavBar,
-  },
-  data() {
-    return {
-      user: null,
-    };
-  },
-  async created() {
-    const response = await axios.get("users/me");
-    this.user = response.data;
   },
 };
 </script>

@@ -8,6 +8,8 @@ export default createStore({
     pharmacy: null,
     employees: [],
     customers: [],
+    activePharmacies: [],
+    unverifiedOwners: [],
   },
   mutations: {
     updateCurrentUser(state, user) {
@@ -22,6 +24,9 @@ export default createStore({
     updateCustomers(state, customers) {
       state.customers = customers;
     },
+    updateUnverifiedOwners(state, unverifiedOwners) {
+      state.unverifiedOwners = unverifiedOwners
+    }
   },
   actions: {
     async updateCurrentUser({ commit }) {
@@ -63,6 +68,15 @@ export default createStore({
         password: payload.password,
       });
     },
+    async updateUnverifiedOwners({ commit }) {
+      const response = await axios.get('/admin/unverified/owners');
+      commit("updateUnverifiedOwners", response.data);
+    },
+    async verifyOwner({ dispatch, state }, pharmacyId) {
+      dispatch('updatePharmacyOwner', pharmacyId);
+      const pharmacy = state.pharmacies.find(obj => obj.id == pharmacyId);
+      await axios.put(`/admin/verify-owner/${pharmacy.owner.id}`);
+    }
   },
   modules: {},
   plugins: [createPersistedState()],

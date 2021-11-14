@@ -4,6 +4,7 @@ from app.models.order import Order, OrderStatus
 from app.schemas.pharmacy import Pharmacy
 from app.models.role import Role, RoleName
 from typing import Any, Dict, Optional, Union, List
+from sqlalchemy import true, false, or_, and_
 import re
 
 from sqlalchemy.orm import Session
@@ -145,6 +146,17 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         db.refresh(db_customer)
         return db_customer
+
+    def get_multi_unverified(self, db: Session, *, skip: int, limit: int) -> List[User]:
+        return (
+            db.query(User)
+            .filter(or_(User.confirmed == false(), User.verified == false(), User.activated == false()))
+            .join(Role)
+            .filter(Role.name == RoleName.OWNER)
+            .offset(skip)
+            .limit(limit)
+            .all()
+            )
 
 
 user = CRUDUser(User)
