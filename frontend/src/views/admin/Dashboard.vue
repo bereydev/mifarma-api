@@ -21,9 +21,9 @@ export default {
   },
   methods: {},
   async created() {
-    const response = await axios.get("admin/pharmacies/inactive");
-    console.log(response.data);
-    this.pharmacies = response.data;
+    // const response = await axios.get("admin/pharmacies/inactive");
+    // console.log(response.data);
+    // this.pharmacies = response.data;
   },
 };
 </script>
