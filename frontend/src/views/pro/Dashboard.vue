@@ -3,7 +3,7 @@
     <h1>Enter your verification number</h1>
     <input type="text" />
     <Button type="submit">Login</Button>
-    <p>{{$store.state.user.first_name}}</p>
+    <p>{{ $store.state.user.first_name }}</p>
     <font-awesome-icon icon="user" />
   </form>
 </template>
@@ -17,10 +17,10 @@ export default {
     Button,
   },
   created() {
-    this.$store.dispatch('updateUser');
-    this.$store.dispatch('updatePharmacy');
-    this.$store.dispatch('updateEmployees');
-    this.$store.dispatch('updateCustomers');
-  }
+    this.$store.dispatch("updateCurrentUser");
+    this.$store.dispatch("updatePharmacy");
+    this.$store.dispatch("updateEmployees");
+    this.$store.dispatch("updateCustomers");
+  },
 };
 </script>

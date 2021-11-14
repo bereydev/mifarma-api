@@ -7,22 +7,20 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Button from "../../components/Button.vue";
-import { Options, Vue } from "vue-class-component";
 
-@Options({
+export default {
   components: {
     Button,
   },
-})
-export default class Dashboard extends Vue {}
+};
 </script>
 
 <style lang="scss" scoped>
 #register-pharma {
-    position: fixed;
-    bottom: 1em;
-    right: 45%; 
+  position: fixed;
+  bottom: 1em;
+  right: 45%;
 }
 </style>

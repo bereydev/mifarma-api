@@ -22,7 +22,6 @@
 import HomeSelector from "../../components/HomeSelector.vue";
 import Order from "../../components/Order.vue";
 import PharmaInfoHome from "../../components/PharmaInfoHome.vue";
-import axios from "axios";
 
 export default {
   name: "Register",
@@ -58,15 +57,16 @@ export default {
     Order,
     PharmaInfoHome,
   },
-  async created() {
-    const response = await axios.get("shop/order/history");
-    console.log(response.data);
-    this.orders = response.data;
-    this.filtered = this.orders;
+  created() {
+    this.$store.dispatch("updatePharmacy");
+    this.$store.dispatch("updateCurrentUser");
+    // const response = await axios.get("shop/order/history");
+    // console.log(response.data);
+    // this.orders = response.data;
+    // this.filtered = this.orders;
   },
 };
 </script>
-
 
 <style scoped>
 .panels {

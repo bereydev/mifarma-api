@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .nav-tab {
   color: #2e2931;
   align-self: center;

@@ -40,13 +40,12 @@
     <div v-if="!isAuth" class="group">
       <NavTab link="/pro/welcome">Soy una farmacia</NavTab>
       <NavTab>Contacto </NavTab>
-        <NavTab :link="buttonLink">
-          <Button :color="buttonColor">{{ buttonText }}</Button>
-        </NavTab>
+      <NavTab :link="buttonLink">
+        <Button :color="buttonColor">{{ buttonText }}</Button>
+      </NavTab>
     </div>
   </nav>
 </template>
-
 
 <script>
 import Button from "./Button.vue";
@@ -86,7 +85,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .group {

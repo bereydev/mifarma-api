@@ -1,4 +1,3 @@
-
 <template>
   <form @submit.prevent="onSubmit" class="register">
     <h1>Crear cuenta</h1>
@@ -118,7 +117,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .material-icons {

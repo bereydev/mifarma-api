@@ -1,4 +1,3 @@
-
 <template>
   <form @submit.prevent="onSubmit" class="register">
     <h1>Crear cuenta</h1>
@@ -55,11 +54,11 @@
       />
     </div>
     <input
-        class="text-field"
-        type="file"
-        name="confirmPassword"
-        placeholder="Confirmar contraseña"
-      />
+      class="text-field"
+      type="file"
+      name="confirmPassword"
+      placeholder="Confirmar contraseña"
+    />
 
     <input type="submit" value="Confirmar" class="green-button" />
   </form>
@@ -88,7 +87,7 @@ export default {
         email: this.email,
         password: this.password,
       });
-      
+
       const params = new URLSearchParams();
       params.append("username", this.email);
       params.append("password", this.password);
@@ -99,7 +98,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .material-icons {

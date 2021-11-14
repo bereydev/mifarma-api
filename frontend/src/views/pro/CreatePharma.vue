@@ -1,8 +1,8 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit">
-        <h1>Crear pharma</h1>
-        <input
+      <h1>Crear pharma</h1>
+      <input
         class="text-field"
         type="text"
         v-model="name"

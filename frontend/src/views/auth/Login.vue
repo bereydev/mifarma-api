@@ -18,13 +18,12 @@
       name="password"
       placeholder="Contraseña"
     />
-    <Button type="submit" style="width:60%">Entrar</Button>
+    <Button type="submit" style="width: 60%">Entrar</Button>
     <div class="small-text">¿Se olvidó la contraseña? Pinche aquí</div>
   </form>
 </template>
 
 <script>
-import axios from "axios";
 import Button from "../../components/Button.vue";
 
 export default {
@@ -40,20 +39,20 @@ export default {
   },
   methods: {
     async onSubmit() {
-      const params = new URLSearchParams();
-      params.append("username", this.username);
-      params.append("password", this.password);
-      const response = await axios.post("login/access-token", params);
-      localStorage.setItem("token", response.data.access_token);
-      //Check if is Customer or pharmacist 
-      //if(customer) => Check if has adopted a pharmacy 
-      // Send to pharmacy picker page 
-      // Send to dashboard 
+      this.$store.dispatch("login", {
+        username: this.username,
+        password: this.password,
+      });
+      //Check if is Customer or pharmacist
+      //if(customer) => Check if has adopted a pharmacy
+      // Send to pharmacy picker page
+      // Send to dashboard
       this.$router.push("/customer/dashboard");
     },
   },
 };
-</script>‚
+</script>
+‚
 
 <style scoped>
 .text-field,

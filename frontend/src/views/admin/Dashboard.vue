@@ -7,22 +7,19 @@
 
 <script>
 import axios from "axios";
-import Button from "../../components/Button.vue";
 import PharmaList from "../../components/PharmaList.vue";
 
 export default {
   name: "DashboardAdmin",
   data() {
     return {
-      pharmacies: []
-    }
+      pharmacies: [],
+    };
   },
   components: {
     PharmaList,
   },
-  methods: {
-
-  },
+  methods: {},
   async created() {
     const response = await axios.get("admin/pharmacies/inactive");
     console.log(response.data);
@@ -31,5 +28,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
