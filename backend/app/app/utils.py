@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
 import uuid
+import string
+import random
 
 import emails
 from emails.template import JinjaTemplate
@@ -10,6 +12,9 @@ from jose import jwt
 
 from app.core.config import settings
 
+
+def public_id_generator(size=6, chars=(string.ascii_uppercase + string.digits).replace('0','').replace('O','')):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def send_email(
     email_to: str,
@@ -141,3 +146,10 @@ def verify_employee_invitation_token(token: str) -> Optional[str]:
         return uuid.UUID(decoded_token["sub"])
     except jwt.JWTError:
         return None
+
+def generate_activation_token(pharmacy_id: str) -> tuple[str, str]:
+    now = datetime.utcnow()
+    encoded_jwt= jwt.encode(
+        {"nbf": now, "sub": str(pharmacy_id)}, settings.SECRET_KEY, algorithm="HS256",
+    )
+    return 

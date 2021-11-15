@@ -9,6 +9,7 @@ export default createStore({
     employees: [],
     customers: [],
     activePharmacies: [],
+    inactivePharmacies: [],
     unverifiedOwners: [],
   },
   mutations: {
@@ -26,7 +27,13 @@ export default createStore({
     },
     updateUnverifiedOwners(state, unverifiedOwners) {
       state.unverifiedOwners = unverifiedOwners
-    }
+    },
+    updateActivePharmacies(state, activePharmacies) {
+      state.activePharmacies = activePharmacies
+    },
+    updateInactivePharmacies(state, inactivePharmacies) {
+      state.inactivePharmacies = inactivePharmacies
+    },
   },
   actions: {
     async updateCurrentUser({ commit }) {
@@ -42,8 +49,33 @@ export default createStore({
       commit("updateEmployees", response.data);
     },
     async updateCustomers({ commit }) {
-      const response = await axios.get("/pharmacies/customers");
-      commit("updateCustomers", response.data);
+      try {
+        const response = await axios.get("/pharmacies/customers");
+        commit("updateCustomers", response.data);
+      } catch (err) {
+        console.log(err)
+        throw new Error('Unable to get a token.')
+      }
+    },
+    async updateActivePharmacies({ commit }) {
+      try {
+        const response = await axios.get("/pharmacies/active");
+        commit('updateActivePharmacies', response.data);
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async updateInactivePharmacies({ commit }) {
+      try {
+        const response = await axios.get("/admin/pharmacies/inactive");
+        commit('updateInactivePharmacies', response.data);
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async updatePharmacies({ dispatch }) {
+      dispatch('updateActivePharmacies');
+      dispatch('updateInactivePharmacies');
     },
     async login({ commit }, payload) {
       const params = new URLSearchParams();
@@ -69,14 +101,25 @@ export default createStore({
       });
     },
     async updateUnverifiedOwners({ commit }) {
-      const response = await axios.get('/admin/unverified/owners');
+      const response = await axios.get('/admin/owners/unverified');
       commit("updateUnverifiedOwners", response.data);
     },
-    async verifyOwner({ dispatch, state }, pharmacyId) {
-      dispatch('updatePharmacyOwner', pharmacyId);
-      const pharmacy = state.pharmacies.find(obj => obj.id == pharmacyId);
-      await axios.put(`/admin/verify-owner/${pharmacy.owner.id}`);
-    }
+    async verifyOwner({ dispatch }, ownerId) {
+      await axios.put(`/admin/verify-owner/${ownerId}`);
+      dispatch('updateUnverifiedOwners');
+    },
+  },
+  getters: {
+    getInactivePharmacyById: (state) => (id) => {
+      console.log(state.inactivePharmacies.find(pharma => pharma.id === id))
+      return state.inactivePharmacies.find(pharma => pharma.id === id)
+    },
+    activePharmaciesCount: state => {
+      return state.activePharmacies.length
+    },
+    inactivePharmaciesCount: state => {
+      return state.inactivePharmacies.length
+    },
   },
   modules: {},
   plugins: [createPersistedState()],

@@ -29,7 +29,8 @@ class OwnerUpdate(OwnerBase):
 
 
 class OwnerInDBBase(OwnerBase):
-    id: Optional[UUID4] = None
+    id: UUID4
+    pharmacy_id: Optional[UUID4] = None
     role: Role
     confirmed: bool
     verified: bool

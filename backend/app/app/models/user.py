@@ -66,7 +66,8 @@ class User(Base):
     verified = Column(Boolean(), default=True, nullable=False)
     # Owner account and physical address validated by letter with a 15 days valid token
     activated = Column(Boolean(), default=True, nullable=False)
-    # hashed_activation_token = Column(String)
+    # Activation token sent over letter hashed with the user credentials and a expiration time
+    hashed_activation_token = Column(String)
 
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)

@@ -43,7 +43,8 @@ class UserUpdate(UserBase):
 
 
 class UserInDBBase(UserBase):
-    id: Optional[UUID4] = None
+    id: UUID4
+    pharmacy_id: Optional[UUID4] = None
     public_id: str
     role: Role
     confirmed: bool

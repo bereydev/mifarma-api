@@ -93,6 +93,22 @@ def read_user_by_id(
         )
     return user
 
+
+@router.get("/customers", response_model=List[schemas.Customer])
+def read_customers(
+    current_user: models.User = Depends(deps.get_current_superuser),
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(deps.get_db),) -> Any:
+    """
+    [ADMIN] Get customers of mi farmacia
+    """
+    customers = crud.user.get_multi_by_role(db, skip=skip, limit=limit, role=RoleName.CUSTOMER)
+    return customers
+
+
+
+
 @router.get("/pharmacy/{pharmacy_id}/owner", response_model=schemas.User)
 def read_pharmacy_owner(
     *,
@@ -286,7 +302,21 @@ def read_catalog(
     return catalog_content
 
 
-@router.get("/unverified/owners", response_model=List[schemas.Owner])
+@router.get("/pharmacies/inactive", response_model=List[schemas.Pharmacy])
+def read_inactive_pharmacys(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_superuser),
+) -> Any:
+    """
+    Retrieve inactive pharmacies.
+    """
+    pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
+
+    return pharmacies
+
+@router.get("/owners/unverified", response_model=List[schemas.Owner])
 def read_unverified_owners(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -296,6 +326,6 @@ def read_unverified_owners(
     """
     Retrieve unverified owners.
     """
-    pharmacies = crud.user.get_multi_unverified(db, skip=skip, limit=limit)
+    owners = crud.user.get_multi_unverified(db, skip=skip, limit=limit)
 
-    return pharmacies
+    return owners

@@ -9,6 +9,7 @@
 <script>
 import OwnerItem from "./OwnerItem.vue";
 export default {
+  name: "OwnerList",
   props: ["owners"],
   components: {
     OwnerItem,

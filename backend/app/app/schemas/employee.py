@@ -28,7 +28,8 @@ class EmployeeUpdate(EmployeeBase):
 
 
 class EmployeeInDBBase(EmployeeBase):
-    id: Optional[UUID4] = None
+    id: UUID4
+    pharmacy_id: Optional[UUID4] = None
     role: Role
     confirmed: bool
     verified: bool

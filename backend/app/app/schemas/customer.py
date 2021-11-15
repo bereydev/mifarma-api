@@ -1,4 +1,5 @@
 from typing import Optional
+from app.schemas import pharmacy
 
 from pydantic import BaseModel, EmailStr
 from pydantic.types import UUID4
@@ -40,7 +41,8 @@ class CustomerUpdate(CustomerBase):
 
 
 class CustomerInDBBase(CustomerBase):
-    id: Optional[UUID4] = None
+    id: UUID4
+    pharmacy_id: Optional[UUID4] = None
     role: Role
     confirmed: bool
     verified: bool

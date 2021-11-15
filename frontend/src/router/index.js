@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store";
+import { Role } from '@/_helpers.js/Role';
 
 // route level code-splitting
 // this generates a separate chunk (about.[hash].js) for this route
@@ -95,33 +96,40 @@ const routes = [
   {
     path: "/pro/dashboard",
     name: "DashboardPro",
+    meta: { authorize: [Role.Owner, Role.Employee] },
 
     component: DashboardPro,
   },
   {
     path: "/admin/dashboard",
     name: "DashboardAdmin",
+    meta: { authorize: [Role.Admin] },
 
     component: DashboardAdmin,
   },
   {
     path: "/customer/catalog",
     name: "Catalog",
+
     component: Catalog,
   },
   {
     path: "/pro/register",
     name: "RegisterPro",
+
     component: RegisterPro,
   },
   {
     path: "/customer/cart",
     name: "Cart",
+    meta: { authorize: [Role.Customer] },
+
     component: Cart,
   },
   {
     path: "/customer/pharma-picker",
     name: "PharmaPicker",
+    meta: { authorize: [Role.Customer] },
 
     component: PharmaPicker,
   },
@@ -140,6 +148,7 @@ const routes = [
   {
     path: "/create-pharma",
     name: "CreatePharma",
+    meta: { authorize: [Role.Owner, Role.Admin] },
 
     component: CreatePharma,
   },
@@ -158,6 +167,7 @@ router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = store.state.currentUser;
+  const currentUserRole = currentUser.role.name;
 
   if (authorize) {
     if (!currentUser) {
@@ -166,7 +176,7 @@ router.beforeEach((to, from, next) => {
     }
 
     // check if route is restricted by role
-    if (authorize.length && !authorize.includes(currentUser.role)) {
+    if (authorize.length && !authorize.includes(currentUserRole)) {
       // role not authorised so redirect to home page
       return next({ path: "/" });
     }

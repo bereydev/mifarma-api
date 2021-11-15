@@ -6,6 +6,7 @@ from app.models.role import Role, RoleName
 from typing import Any, Dict, Optional, Union, List
 from sqlalchemy import true, false, or_, and_
 import re
+from app.utils import public_id_generator
 
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
@@ -15,11 +16,6 @@ from app.crud.base import CRUDBase
 from app.models import User, Role
 from fastapi import HTTPException, status
 from app.schemas import UserCreate, UserUpdate, OwnerUpdate, OwnerCreate, EmployeeCreate, CustomerCreate
-import string
-import random
-
-def public_id_generator(size=6, chars=(string.ascii_uppercase + string.digits).replace('0','').replace('O','')):
-    return ''.join(random.choice(chars) for _ in range(size))
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
@@ -150,9 +146,19 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_multi_unverified(self, db: Session, *, skip: int, limit: int) -> List[User]:
         return (
             db.query(User)
-            .filter(or_(User.confirmed == false(), User.verified == false(), User.activated == false()))
+            .filter(User.verified == false())
             .join(Role)
             .filter(Role.name == RoleName.OWNER)
+            .offset(skip)
+            .limit(limit)
+            .all()
+            )
+
+    def get_multi_by_role(self, db: Session, *, skip: int, limit: int, role:RoleName) -> List[User]:
+        return (
+            db.query(User)
+            .join(Role)
+            .filter(Role.name == role)
             .offset(skip)
             .limit(limit)
             .all()
