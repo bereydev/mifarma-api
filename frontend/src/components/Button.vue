@@ -22,7 +22,7 @@ export default {
 @import "../assets/styles/colors.scss";
 
 .btn {
-  padding: 0.5em 1em 0.5em 1em;
+  padding: 0.5em 2em 0.5em 2em;
   border-radius: 38px;
   border: none;
   justify-content: center;
@@ -32,6 +32,11 @@ export default {
 
 .btn-green {
   background-color: $accent-green;
+  color: $black;
+}
+
+.btn-red {
+  background-color: $accent-red;
   color: $black;
 }
 

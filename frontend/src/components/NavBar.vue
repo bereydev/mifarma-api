@@ -148,7 +148,7 @@ input:hover {
 }
 
 .profile-pic {
-  border-radius: 100%;
+  border-radius: 50%;
   width: 3em;
   height: 3em;
   border: 3px solid #00dd7c;

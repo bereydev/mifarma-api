@@ -103,7 +103,7 @@ const routes = [
   {
     path: "/admin/dashboard",
     name: "DashboardAdmin",
-    meta: { authorize: [Role.Admin] },
+    //meta: { authorize: [Role.Admin] },
 
     component: DashboardAdmin,
   },
@@ -169,6 +169,7 @@ router.beforeEach((to, from, next) => {
   const currentUser = store.state.currentUser;
   const currentUserRole = currentUser.role.name;
 
+  
   if (authorize) {
     if (!currentUser) {
       // not logged in so redirect to login page with the return url
@@ -181,6 +182,7 @@ router.beforeEach((to, from, next) => {
       return next({ path: "/" });
     }
   }
+  
 
   next();
 });
