@@ -73,15 +73,19 @@ export default {
   },
   methods: {
     async onSubmit() {
-      await axios.post("/pharmacies", {
-        name: this.name,
-        address: this.address,
-        address2: this.address2,
-        country: this.country,
-        city: this.city,
-        schedule: DEFAULT_SCHEDULE,
-      });
-      this.$router.push("/pro/dashboard");
+      try {
+        await this.$store.dispatch('createPharmacy', {
+          name: this.name,
+          address: this.address,
+          address2: this.address2,
+          country: this.country,
+          city: this.city,
+          schedule: this.schedule,
+        })
+        this.$router.push("/pro/dashboard");
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 };

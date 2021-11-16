@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 import uuid
 import string
 import random
@@ -147,7 +147,7 @@ def verify_employee_invitation_token(token: str) -> Optional[str]:
     except jwt.JWTError:
         return None
 
-def generate_activation_token(pharmacy_id: str) -> tuple[str, str]:
+def generate_activation_token(pharmacy_id: str) -> Tuple[str, str]:
     now = datetime.utcnow()
     encoded_jwt= jwt.encode(
         {"nbf": now, "sub": str(pharmacy_id)}, settings.SECRET_KEY, algorithm="HS256",

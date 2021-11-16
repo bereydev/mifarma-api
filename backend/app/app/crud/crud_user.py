@@ -146,7 +146,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_multi_unverified(self, db: Session, *, skip: int, limit: int) -> List[User]:
         return (
             db.query(User)
-            .filter(User.verified == false())
+            .filter(and_(User.verified == false(), User.pharmacy_id != None))
             .join(Role)
             .filter(Role.name == RoleName.OWNER)
             .offset(skip)

@@ -16,11 +16,11 @@ export default {
   components: {
     Button,
   },
-  created() {
-    this.$store.dispatch("updateCurrentUser");
-    this.$store.dispatch("updatePharmacy");
-    this.$store.dispatch("updateEmployees");
-    this.$store.dispatch("updateCustomers");
+  async created() {
+    await this.$store.dispatch("updateCurrentUser");
+    await this.$store.dispatch("updatePharmacy");
+    await this.$store.dispatch("updateEmployees");
+    await this.$store.dispatch("updateCustomers");
   },
 };
 </script>

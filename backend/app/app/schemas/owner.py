@@ -14,6 +14,7 @@ class OwnerBase(BaseModel):
     phone: Optional[str] = None
     gender: Optional[int] = None
     birthdate: Optional[date] = None
+    pharmacist_number: Optional[str] = None
 
 
 # Properties to receive via API on creation

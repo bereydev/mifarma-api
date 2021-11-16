@@ -5,6 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
   state: {
     currentUser: null,
+    token: null,
     pharmacy: null,
     employees: [],
     customers: [],
@@ -15,6 +16,9 @@ export default createStore({
   mutations: {
     updateCurrentUser(state, user) {
       state.currentUser = user;
+    },
+    updateToken(state, token) {
+      state.token = token
     },
     updatePharmacy(state, pharmacy) {
       state.pharmacy = pharmacy;
@@ -43,6 +47,25 @@ export default createStore({
     async updatePharmacy({ commit }) {
       const response = await axios.get("/pharmacies/me");
       commit("updatePharmacy", response.data);
+    },
+    async createPharmacy({ commit, dispatch }, payload) {
+      try {
+        const response = await axios.post("/pharmacies", {
+          name: payload.name,
+          address: payload.address,
+          address2: payload.address2,
+          country: payload.country,
+          city: payload.city,
+          schedule: payload.schedule,
+        });
+        commit('updatePharmacy', response.data);
+        dispatch('updateCurrentUser')
+      } catch (error) {
+        console.log(error)
+        throw new Error('Unable to create a pharmacy')
+      }
+
+
     },
     async updateEmployees({ commit }) {
       const response = await axios.get("/pharmacies/employees");
@@ -82,8 +105,9 @@ export default createStore({
       params.append("username", payload.username);
       params.append("password", payload.password);
       const response = await axios.post("/login/access-token/", params);
-      localStorage.setItem("token", response.data.access_token);
-      commit("updateCurrentUser", response.data.currentUser);
+      commit("updateToken", response.data.access_token)
+      commit("updateCurrentUser", response.data.user);
+
     },
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
@@ -95,7 +119,20 @@ export default createStore({
         city: payload.city,
         password: payload.password,
       });
-      dispatch("login", {
+      await dispatch("login", {
+        username: payload.email,
+        password: payload.password,
+      });
+    },
+    async registerOwner({ dispatch }, payload) {
+      await axios.post("/users/owner", {
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        pharmacist_number: payload.pharmacist_number,
+        email: payload.email,
+        password: payload.password,
+      });
+      await dispatch("login", {
         username: payload.email,
         password: payload.password,
       });
@@ -111,7 +148,6 @@ export default createStore({
   },
   getters: {
     getInactivePharmacyById: (state) => (id) => {
-      console.log(state.inactivePharmacies.find(pharma => pharma.id === id))
       return state.inactivePharmacies.find(pharma => pharma.id === id)
     },
     activePharmaciesCount: state => {

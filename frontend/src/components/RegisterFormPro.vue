@@ -80,19 +80,14 @@ export default {
   },
   methods: {
     async onSubmit() {
-      await axios.post("/users/owner", {
+
+      await this.$store.dispatch("registerOwner", {
         first_name: this.first_name,
         last_name: this.last_name,
         pharmacist_number: this.pharmacist_number,
         email: this.email,
         password: this.password,
       });
-
-      const params = new URLSearchParams();
-      params.append("username", this.email);
-      params.append("password", this.password);
-      const response = await axios.post("login/access-token", params);
-      localStorage.setItem("token", response.data.access_token);
       this.$router.push("/create-pharma");
     },
   },

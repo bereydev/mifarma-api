@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import Button from "../../components/Button.vue";
+import Button from "@/components/Button.vue";
+import { Role } from "@/_helpers/Role";
 
 export default {
   name: "Login",
@@ -39,15 +40,32 @@ export default {
   },
   methods: {
     async onSubmit() {
-      this.$store.dispatch("login", {
-        username: this.username,
-        password: this.password,
-      });
-      //Check if is Customer or pharmacist
-      //if(customer) => Check if has adopted a pharmacy
-      // Send to pharmacy picker page
-      // Send to dashboard
-      this.$router.push("/customer/dashboard");
+      try {
+        await this.$store.dispatch("login", {
+          username: this.username,
+          password: this.password,
+        });
+        const currentUser = this.$store.state.currentUser;
+        const role = currentUser.role.name;
+
+        if (role === Role.Admin) {
+          this.$router.push("/admin/dashboard");
+        } else if (role === Role.Owner || role === Role.Employee) {
+          if (!currentUser.pharmacy_id) {
+            this.$router.push("/create-pharma");
+          }
+          this.$router.push("/pro/dashboard");
+        } else if (role === Role.Customer) {
+          if (!currentUser.pharmacy_id) {
+            this.$router.push("/customer/pharma-picker");
+          }
+          this.$router.push("/customer/dashboard");
+        } else {
+          throw new Error("The current user has no compatible role");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
