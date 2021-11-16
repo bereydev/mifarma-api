@@ -145,6 +145,15 @@ export default createStore({
       await axios.put(`/admin/verify-owner/${ownerId}`);
       dispatch('updateUnverifiedOwners');
     },
+    async pickPharmacy({ commit }, pharmacy_id) {
+      try {
+        const response = await axios.post('/pharmacies/selection', { pharmacy_id: pharmacy_id });
+        commit("updatePharmacy", response.data);
+        await this.dispatch('updateCurrentUser')
+      } catch (error) {
+        console.error(error);
+      }
+    }
   },
   getters: {
     getInactivePharmacyById: (state) => (id) => {

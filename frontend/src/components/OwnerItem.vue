@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "PharmaItem",
+  name: "OwnerItem",
   props: ["owner"],
 };
 </script>

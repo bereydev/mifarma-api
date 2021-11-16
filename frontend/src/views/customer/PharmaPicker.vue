@@ -1,59 +1,57 @@
 <template>
   <body>
-    <button class="green-button" id="confirmButton">Confimar</button>
-
+    <div v-if="selectedPharmacy">
+      <pharma-info-vue :pharmacy="selectedPharmacy"></pharma-info-vue>
+      <button-vue v-on:click="pickPharmacy()">Confimar</button-vue>
+    </div>
     <div class="indication">
       <span class="material-icons-outlined infoIcon"> info </span>
-
       Seleccione su farmacia de confianza, podrá modificar su selección más
       tarde en ajustes de cuenta
     </div>
     <div class="pharmaRow">
-      <PharmaWidget v-for="i in [1, 2, 3, 4, 5, 6]" :key="i" />
-    </div>
-    <div class="pharmaRow">
-      <PharmaWidget v-for="i in [1, 2, 3, 4, 5, 6]" :key="i" />
-    </div>
-    <div class="pharmaRow">
-      <PharmaWidget v-for="i in [1, 2, 3, 4, 5, 6]" :key="i" />
+      <pharma-widget-vue
+        v-for="pharmacy in pharmacies"
+        :key="pharmacy.public_id"
+        :pharmacy="pharmacy"
+        v-on:click="select(pharmacy)"
+      ></pharma-widget-vue>
     </div>
   </body>
 </template>
 
 <script>
-import PharmaWidget from "../../components/PharmaCard.vue";
-
+import PharmaWidgetVue from "@/components/PharmaCard.vue";
+import PharmaInfoVue from "@/components/PharmaInfo.vue";
+import ButtonVue from "@/components/Button.vue";
 export default {
   name: "Cart",
   data() {
     return {
-      pharmacies: [],
-      filtered: [],
+      selectedPharmacy: null,
     };
   },
   components: {
-    PharmaWidget,
+    PharmaWidgetVue,
+    PharmaInfoVue,
+    ButtonVue,
   },
-  methods: {
-    filterName(text) {
-      text = text
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      if (text === "") this.filtered = this.pharmacies;
-      else
-        this.filtered = this.pharmacies.filter((o) =>
-          o.product.name
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .includes(text)
-        );
+  computed: {
+    pharmacies() {
+      return this.$store.state.activePharmacies;
     },
   },
-
+  methods: {
+    select(pharmacy) {
+      this.selectedPharmacy = pharmacy;
+    },
+    async pickPharmacy() {
+      await this.$store.dispatch("pickPharmacy", this.selectedPharmacy.id);
+      this.$router.push("/customer/dashboard");
+    },
+  },
   async created() {
-    return null;
+    await this.$store.dispatch("updateActivePharmacies");
   },
 };
 </script>

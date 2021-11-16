@@ -1,16 +1,18 @@
 <template>
   <div class="col">
-    <img
-      src="https://images.unsplash.com/photo-1531076226985-ee33c0d85b21?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1776&q=80"
-      alt="Foto Farmacia"
-    />
-    <span>Nombre de la Farmacia</span>
+    <pharma-image :pharmacy="pharmacy"></pharma-image>
+    <span>{{pharmacy.name}}</span>
   </div>
 </template>
 
 <script>
+import PharmaImage from './PharmaImage.vue';
 export default {
-  name: "PharmaWidget",
+  name: "PharmaCard",
+  props: ["pharmacy"],
+  components: {
+    PharmaImage,
+  }
 };
 </script>
 

@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Body
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
 
@@ -132,7 +132,7 @@ def read_pharmacy_customers(
 
 @router.post("/selection", response_model=schemas.Pharmacy)
 def select_pharmacy_customer(
-    pharmacy_id: UUID4,
+    pharmacy_id: UUID4 = Body(..., embed=True),
     current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ) -> Any:

@@ -6,21 +6,21 @@
       <owner-item v-on:click="select(owner)" :owner="owner"></owner-item>
     </div>
   </div>
-  <unverified-pharma @close="closeInfo" v-if="selectedPharmacy" :pharmacy="selectedPharmacy" :owner="selectedOwner"></unverified-pharma>
+  <pharma-info-container @close="closeInfo" v-if="selectedPharmacy" :pharmacy="selectedPharmacy" :owner="selectedOwner"></pharma-info-container>
 </div>
 
 </template>
 
 <script>
 import OwnerItem from "./OwnerItem";
-import UnverifiedPharma from "./PharmaInfoContainer.vue";
+import PharmaInfoContainer from "./PharmaInfoContainer.vue";
 
 export default {
   name: "OwnerList",
   props: ["owners"],
   components: {
     OwnerItem,
-    UnverifiedPharma,
+    PharmaInfoContainer,
   },
   data() {
     return {
