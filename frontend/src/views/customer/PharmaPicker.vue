@@ -2,7 +2,7 @@
   <body>
     <div v-if="selectedPharmacy">
       <pharma-info-vue :pharmacy="selectedPharmacy"></pharma-info-vue>
-      <button-vue v-on:click="pickPharmacy()">Confimar</button-vue>
+      <button-vue v-if="pharmacyChanged" v-on:click="pickPharmacy()">Confimar</button-vue>
     </div>
     <div class="indication">
       <span class="material-icons-outlined infoIcon"> info </span>
@@ -28,7 +28,8 @@ export default {
   name: "Cart",
   data() {
     return {
-      selectedPharmacy: null,
+      selectedPharmacy: this.$store.state.pharmacy,
+      currentPharmacy: this.$store.state.pharmacy,
     };
   },
   components: {
@@ -40,6 +41,9 @@ export default {
     pharmacies() {
       return this.$store.state.activePharmacies;
     },
+    pharmacyChanged() {
+      return this.currentPharmacy.id !== this.selectedPharmacy.id;
+    }
   },
   methods: {
     select(pharmacy) {

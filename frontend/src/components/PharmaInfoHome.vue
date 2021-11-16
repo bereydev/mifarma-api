@@ -7,13 +7,9 @@
           src="https://images.pexels.com/photos/5699982/pexels-photo-5699982.jpeg?cs=srgb&dl=pexels-markus-winkler-5699982.jpg&fm=jpg"
           alt="Foto Farmacia"
         />
-        <router-link
-          style="color: white; background-color: #2e2931"
-          id="button"
-          class="green-button"
-          to="/customer/pharma-picker"
-          >Cambiar de Farmacia</router-link
-        >
+        <router-link to="/customer/pharma-picker">
+          <button-vue color="dark">Cambiar de Farmacia</button-vue>
+        </router-link>
       </div>
       <div class="pharma-info">
         <span>{{ $store.state.pharmacy.name }}</span>
@@ -23,13 +19,9 @@
         <span>{{ $store.state.pharmacy.country }}</span>
         <span>{{ $store.state.pharmacy.email }}</span>
         <span>{{ $store.state.pharmacy.phone }}</span>
-        <router-link
-          style="font-size: 1.25em"
-          id="button"
-          class="green-button"
-          to="/customer/Catalog"
-          >Catálogo</router-link
-        >
+        <router-link to="/customer/Catalog">
+          <button-vue>Catálogo</button-vue>
+        </router-link>
       </div>
     </div>
     <p>
@@ -49,8 +41,13 @@
 </template>
 
 <script>
+import ButtonVue from "./Button.vue";
+
 export default {
   name: "PharmaInfoHome",
+  components: {
+    ButtonVue,
+  },
 };
 </script>
 
