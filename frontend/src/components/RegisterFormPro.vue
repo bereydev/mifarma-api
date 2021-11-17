@@ -80,15 +80,18 @@ export default {
   },
   methods: {
     async onSubmit() {
-
-      await this.$store.dispatch("registerOwner", {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        pharmacist_number: this.pharmacist_number,
-        email: this.email,
-        password: this.password,
-      });
-      this.$router.push("/create-pharma");
+      try {
+        await this.$store.dispatch("registerOwner", {
+          first_name: this.first_name,
+          last_name: this.last_name,
+          pharmacist_number: this.pharmacist_number,
+          email: this.email,
+          password: this.password,
+        });
+        this.$router.push("/create-pharma");
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };

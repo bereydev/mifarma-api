@@ -2,8 +2,8 @@ import { createStore } from "vuex";
 import axios from "axios";
 import createPersistedState from "vuex-persistedstate";
 
-export default createStore({
-  state: {
+const initialState = () => {
+  return {
     currentUser: null,
     token: null,
     pharmacy: null,
@@ -12,8 +12,15 @@ export default createStore({
     activePharmacies: [],
     inactivePharmacies: [],
     unverifiedOwners: [],
-  },
+  }
+}
+
+export default createStore({
+  state: initialState,
   mutations: {
+    resetAll(state) {
+      Object.assign(state, initialState())
+    },
     updateCurrentUser(state, user) {
       state.currentUser = user;
     },
@@ -41,16 +48,16 @@ export default createStore({
   },
   actions: {
     async updateCurrentUser({ commit }) {
-      const response = await axios.get("/users/me");
+      const response = await axios.get("/users/me/");
       commit("updateCurrentUser", response.data);
     },
     async updatePharmacy({ commit }) {
-      const response = await axios.get("/pharmacies/me");
+      const response = await axios.get("/pharmacies/me/");
       commit("updatePharmacy", response.data);
     },
     async createPharmacy({ commit, dispatch }, payload) {
       try {
-        const response = await axios.post("/pharmacies", {
+        const response = await axios.post("/pharmacies/", {
           name: payload.name,
           address: payload.address,
           address2: payload.address2,
@@ -68,12 +75,12 @@ export default createStore({
 
     },
     async updateEmployees({ commit }) {
-      const response = await axios.get("/pharmacies/employees");
+      const response = await axios.get("/pharmacies/employees/");
       commit("updateEmployees", response.data);
     },
     async updateCustomers({ commit }) {
       try {
-        const response = await axios.get("/pharmacies/customers");
+        const response = await axios.get("/pharmacies/customers/");
         commit("updateCustomers", response.data);
       } catch (err) {
         console.log(err)
@@ -82,7 +89,7 @@ export default createStore({
     },
     async updateActivePharmacies({ commit }) {
       try {
-        const response = await axios.get("/pharmacies/active");
+        const response = await axios.get("/pharmacies/active/");
         commit('updateActivePharmacies', response.data);
       } catch (err) {
         console.log(err)
@@ -90,7 +97,7 @@ export default createStore({
     },
     async updateInactivePharmacies({ commit }) {
       try {
-        const response = await axios.get("/admin/pharmacies/inactive");
+        const response = await axios.get("/admin/pharmacies/inactive/");
         commit('updateInactivePharmacies', response.data);
       } catch (err) {
         console.log(err)
@@ -100,14 +107,15 @@ export default createStore({
       dispatch('updateActivePharmacies');
       dispatch('updateInactivePharmacies');
     },
-    async login({ commit }, payload) {
+    async login({ commit, dispatch }, payload) {
+      commit("resetAll");
       const params = new URLSearchParams();
       params.append("username", payload.username);
       params.append("password", payload.password);
       const response = await axios.post("/login/access-token/", params);
       commit("updateToken", response.data.access_token)
       commit("updateCurrentUser", response.data.user);
-
+      dispatch("updatePharmacy")
     },
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
@@ -138,7 +146,7 @@ export default createStore({
       });
     },
     async updateUnverifiedOwners({ commit }) {
-      const response = await axios.get('/admin/owners/unverified');
+      const response = await axios.get('/admin/owners/unverified/');
       commit("updateUnverifiedOwners", response.data);
     },
     async verifyOwner({ dispatch }, ownerId) {
@@ -147,7 +155,7 @@ export default createStore({
     },
     async pickPharmacy({ commit }, pharmacy_id) {
       try {
-        const response = await axios.post('/pharmacies/selection', { pharmacy_id: pharmacy_id });
+        const response = await axios.post('/pharmacies/selection/', { pharmacy_id: pharmacy_id });
         commit("updatePharmacy", response.data);
         await this.dispatch('updateCurrentUser')
       } catch (error) {
