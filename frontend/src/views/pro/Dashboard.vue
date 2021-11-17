@@ -1,20 +1,28 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <h1>Enter your verification number</h1>
-    <input type="text" />
-    <Button type="submit">Login</Button>
-    <p>{{ $store.state.currentUser.first_name }}</p>
-    <font-awesome-icon icon="user" />
-  </form>
+  <div class="principal-pannel"> 
+    <customer-history-list :customers="oldCustomers"/>
+    <customer-schedule-list :customers="oldCustomers"/>
+    <pharma-pro/>
+
+  </div>
 </template>
 
 <script>
-import Button from "../../components/Button.vue";
+import CustomerHistoryList from "../../components/CustomerHistoryList.vue"
+import CustomerScheduleList from "../../components/CustomerScheduleList.vue"
+import PharmaPro from "../../components/PharmaPro.vue"
 
 export default {
   name: "DashboardPro",
   components: {
-    Button,
+    CustomerHistoryList,
+    CustomerScheduleList, 
+    PharmaPro
+  },
+  computed: {
+    oldCustomers() {
+      return this.$store.state.customers;
+    },
   },
   async created() {
     await this.$store.dispatch("updateCurrentUser");
@@ -24,3 +32,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.principal-pannel{
+  display: flex;
+  gap: 1.5%; 
+  padding: 1.5%;
+}
+</style>

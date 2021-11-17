@@ -121,7 +121,7 @@ const routes = [
     name: "DashboardPro",
     meta: {
       authorize: [Role.Owner, Role.Employee, Role.Admin],
-      pharmaRequired: true,
+      pharmaRequired: false,
     },
 
     component: DashboardPro,
