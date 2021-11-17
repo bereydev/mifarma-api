@@ -35,8 +35,8 @@ export default {
 .pannels {
   display: flex;
   flex-direction: row;
-  padding: 1.5% 2.5% 1.5% 2.5%;
-  gap: 2%;
+  padding: 1.5%;
+  gap : 5%; 
 }
 .data {
   width: 20%;

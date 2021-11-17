@@ -42,7 +42,7 @@ export default {
   padding: 1% 1.5% 1% 1.5%;
   border-radius: 15px;
   gap: 0.5em;
-  width: 60%;
+  width: 100%;
 }
 .buttons {
   display: flex;

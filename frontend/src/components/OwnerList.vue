@@ -1,5 +1,5 @@
 <template>
-<div class="pannels">
+<div class="pannel">
   <div class="owner-list">
     <h1>Unverified owners</h1>
     <div v-for="owner in owners" :key="owner.public_id">
@@ -41,21 +41,26 @@ export default {
 };
 </script>
 
-<style>
-.pannels {
+<style scoped>
+.pannel {
   display: flex;
   flex-direction: row;
-  padding: 1.5% 2.5% 1.5% 2.5%;
-  gap: 2%;
+  padding: none;
+  gap : 1.5%; 
 }
 .owner-list {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   align-items: flex-start;
-  width: 17%;
+  width: 60%;
 }
 h1 {
   font-size: 1.5em;
+  white-space: nowrap;
+  padding: none;
+  margin: none; 
+  width: 100%; 
+  text-align: start;
 }
 </style>
