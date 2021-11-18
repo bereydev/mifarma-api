@@ -9,6 +9,7 @@ const initialState = () => {
     pharmacy: null,
     employees: [],
     customers: [],
+    catalog: [],
     activePharmacies: [],
     inactivePharmacies: [],
     unverifiedOwners: [],
@@ -23,6 +24,9 @@ export default createStore({
     },
     updateCurrentUser(state, user) {
       state.currentUser = user;
+    },
+    updateCatalog(state, catalog) {
+      state.catalog = catalog;
     },
     updateToken(state, token) {
       state.token = token
@@ -50,6 +54,10 @@ export default createStore({
     async updateCurrentUser({ commit }) {
       const response = await axios.get("/users/me/");
       commit("updateCurrentUser", response.data);
+    },
+    async updateCatalog({ commit }) {
+      const response = await axios.get("/shop/catalog");
+      commit("updateCatalog", response.data);
     },
     async updatePharmacy({ commit }) {
       const response = await axios.get("/pharmacies/me/");

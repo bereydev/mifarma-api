@@ -20,7 +20,7 @@ const ResetPassword = () =>
     /* webpackChunkName: "reset-password" */ "../views/auth/ResetPassword.vue"
   );
 const Register = () =>
-  import(/* webpackChunkName: "register" */ "../views/customer/Register.vue");
+  import(/* webpackChunkName: "register" */ "../views/auth/Register.vue");
 const RegisterPro = () =>
   import(/* webpackChunkName: "register-pro" */ "../views/pro/Register.vue");
 const DashboardCustomer = () =>

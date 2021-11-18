@@ -5,7 +5,7 @@
       >¿Ya tiene cuenta? Acceda aquí</router-link
     >
     <div>
-      <font-awesome-icon class="material-icons" icon="user" />
+      <i class="material-icons">person</i>
     </div>
     <div class="double-field">
       <input
@@ -70,7 +70,7 @@
       />
     </div>
 
-    <Button type="submit">Confirmar</Button>
+    <Button size="large" type="submit">Confirmar</Button>
   </form>
 </template>
 

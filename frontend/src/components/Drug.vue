@@ -24,14 +24,7 @@
 <script>
 export default {
   name: "Drug",
-  props: {
-    drug: {
-      name: "",
-      status: "",
-      delivery_date: "",
-      order_date: "",
-    },
-  },
+  
 };
 </script>
 

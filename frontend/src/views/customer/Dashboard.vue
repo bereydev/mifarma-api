@@ -60,10 +60,6 @@ export default {
   async created() {
     await this.$store.dispatch("updatePharmacy");
     await this.$store.dispatch("updateCurrentUser");
-    // const response = await axios.get("shop/order/history");
-    // console.log(response.data);
-    // this.orders = response.data;
-    // this.filtered = this.orders;
   },
 };
 </script>

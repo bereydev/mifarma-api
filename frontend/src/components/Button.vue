@@ -9,10 +9,12 @@ export default {
   name: "Button",
   props: {
     color: { type: [String], default: "green" },
+    size: { type: [String], default: "" },
+
   },
   computed: {
     styles() {
-      return `btn btn-${this.color}`;
+      return `btn ${this.size} btn-${this.color}`;
     },
   },
 };
@@ -22,12 +24,18 @@ export default {
 @import "../assets/styles/colors.scss";
 
 .btn {
-  padding: 0.5em 2em 0.5em 2em;
+  padding: 0.5em 1em 0.5em 1em;
   border-radius: 38px;
   border: none;
   justify-content: center;
   box-shadow: 0px 3px 6px -3.5px grey;
   font-size: 18px;
+}
+.large{
+  padding: 0.5em 5em 0.5em 5em;
+}
+.medium{
+  padding: 0.5em 3em 0.5em 3em;
 }
 
 .btn-green {
