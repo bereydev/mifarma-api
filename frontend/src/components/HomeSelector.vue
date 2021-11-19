@@ -3,9 +3,9 @@
     <h1>Mis pedidos</h1>
     <div class="button-panel">
       <button
-        @click="onClick(0)"
+        @click="onClick(2)"
         :class="[
-          selected == '0' ? 'selected' : '',
+          selected == '2' ? 'selected' : '',
           'material-icons selectorIcon',
         ]"
       >
@@ -21,15 +21,6 @@
         watch_later
       </button>
       <button
-        @click="onClick(2)"
-        :class="[
-          selected == '2' ? 'selected' : '',
-          'material-icons selectorIcon',
-        ]"
-      >
-        close
-      </button>
-      <button
         @click="onClick(3)"
         :class="[
           selected == '3' ? 'selected' : '',
@@ -38,6 +29,16 @@
       >
         hourglass_bottom
       </button>
+      <button
+        @click="onClick(4)"
+        :class="[
+          selected == '4' ? 'selected' : '',
+          'material-icons selectorIcon',
+        ]"
+      >
+        close
+      </button>
+      
     </div>
   </div>
 </template>

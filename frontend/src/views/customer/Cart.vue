@@ -7,20 +7,20 @@
           <div class="offers">Sin receta</div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in filtered"
+            v-for="order in nonPrescripted"
             :key="order.id"
           >
-            <Drug :drug="order" :color="red" :isCool="true" />
+            <Drug :order="order"/>
           </div>
           <div class="offers" style="background-color: #a6ffd8">
             Medicamento con receta
           </div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in filtered"
+            v-for="order in prescripted"
             :key="order.id"
           >
-            <Drug :drug="order" :color="red" :isCool="false" />
+            <Drug :order="order"/>
           </div>
         </div>
       </div>
@@ -36,32 +36,17 @@ export default {
   name: "Cart",
   data() {
     return {
-      products: [],
-      filtered: [],
+      prescripted : [], 
+      nonPrescripted :[], 
     };
-  },
-  methods: {
-    filterName(text) {
-      text = text
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      if (text === "") this.filtered = this.products;
-      else
-        this.filtered = this.products.filter((o) =>
-          o.product.name
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .includes(text)
-        );
-    },
   },
   components: {
     Drug,
   },
   async created() {
-    //TODO
+    await this.$store.dispatch("updateCart");
+    this.prescripted = this.$store.state.cart; 
+    this.nonPrescripted = this.$store.state.cart; 
   },
 };
 </script>

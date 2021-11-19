@@ -6,7 +6,7 @@
         <div class="scroll">
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in filtered"
+            v-for="order in cart"
             :key="order.id"
           >
             <Order :order="order" />
@@ -27,14 +27,13 @@ export default {
   name: "Register",
   data() {
     return {
-      orders: [],
-      filtered: [],
+      cart: [],
     };
   },
   methods: {
     filterStatus(id) {
-      if (id === -1) this.filtered = this.orders;
-      else this.filtered = this.orders.filter((e) => e.status === id);
+      if (id === -1) this.cart = this.$store.state.orders;
+      else this.cart = this.$store.state.orders.filter((e) => e.status === id);
     },
     filterName(text) {
       text = text
@@ -60,6 +59,8 @@ export default {
   async created() {
     await this.$store.dispatch("updatePharmacy");
     await this.$store.dispatch("updateCurrentUser");
+    await this.$store.dispatch("updateOrders");
+    this.cart = this.$store.state.orders; 
   },
 };
 </script>

@@ -6,16 +6,16 @@
         src="https://images.pexels.com/photos/159211/headache-pain-pills-medication-159211.jpeg?cs=srgb&dl=pexels-pixabay-159211.jpg&fm=jpg"
         alt="Foto de perfil"
       />
-      <div class="order-name">Name</div>
+      <div class="order-name">{{order.product.name}}</div>
     </div>
     <div class="itemCount">
       <button class="material-icons customButton">remove</button>
-      <b>14</b>
+      <b>{{order.amount}}</b>
       <button class="material-icons customButton">add</button>
     </div>
 
     <div class="row-right">
-      <div class="price">1.99$</div>
+      <div class="price">{{order.product.price}} $</div>
       <button class="material-icons customButton">clear</button>
     </div>
   </div>
@@ -23,8 +23,7 @@
 
 <script>
 export default {
-  name: "Drug",
-  
+  props: ["order"],
 };
 </script>
 

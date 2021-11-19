@@ -8,7 +8,7 @@
 					alt="Foto Farmacia"
 				/>
 				<router-link to="/customer/pharma-picker">
-					<button-vue color="dark">Cambiar de Farmacia</button-vue>
+					<button-vue  color="dark">Cambiar de Farmacia</button-vue>
 				</router-link>
 			</div>
 			<div class="pharma-info">

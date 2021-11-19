@@ -101,6 +101,7 @@ export default {
   margin: 0 0 0 0.25em;
   padding: 0.25em 0 0 0;
   align-self: center;
+  color: #2e2931;
 }
 
 .searchBar {

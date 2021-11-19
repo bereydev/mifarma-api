@@ -21,6 +21,7 @@
 <script>
 export default {
   name: "Order",
+  
   props: {
     order: {
       name: "",
@@ -38,18 +39,16 @@ export default {
     },
     deliveryStatus() {
       if (this.order.status === 2) return "Disponible";
-      if (this.order.status === 1 && this.order.delivery_date == null)
-        return "Disponible próximamente";
-      if (this.order.status === 1 && this.order.delivery_date != null)
-        return "Disponible el " + this.order.delivery_date;
+      if (this.order.status === 1)
+        return "Disponible el " + this.order.delivery_date.substr(0,10).split("-").reverse().join("/") + "a las " + this.order.delivery_date.substr(11,5);
       if (this.order.status === 3) return "Indisponible por el momento";
-      else return "Comprado el " + this.order.order_date;
+      else return "Pedido cancelado";
     },
     deliveryIcon() {
       if (this.order.status === 2) return "event_available";
       if (this.order.status === 1) return "watch_later";
-      if (this.order.status === 3) return "close";
-      else return "hourglass_bottom";
+      if (this.order.status === 3) return "hourglass_bottom";
+      else return "close";
     },
   },
 };

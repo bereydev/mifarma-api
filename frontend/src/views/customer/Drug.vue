@@ -6,48 +6,65 @@
 				alt="Foto Medicamento"
 			/>
 			<div class="text-div">
-				<h1>{{drug.name}}</h1>
+				<h1>{{ drug.name }}</h1>
 				<h2>Descripción</h2>
 				<p>
-					{{drug.description}}
+					{{ drug.description }}
 				</p>
-        <p>
-					{{drug.pharma_indications}}
+				<p>
+					{{ drug.pharma_indications }}
 				</p>
 			</div>
 			<div class="buy-div">
 				<div style="display: flex; gap: 1em">
-					<h2 class="price">{{drug.price}} $</h2>
+					<h2 class="price">{{ drug.price }} $</h2>
 				</div>
-
-				<button class="green-button addButton">
-					Añadir al carrito
-					<div class="material-icons" id="navBarCart">shopping_cart</div>
-				</button>
+				<button-vue size="medium" @click.prevent="addToCart"
+					>Añadir al carrito
+					<div class="material-icons" id="cart">shopping_cart</div></button-vue
+				>
+				<h2 class="price">ADD A COUNTER</h2>
 			</div>
 		</div>
 	</body>
 </template>
 
 <script>
-import axios from "axios";
+	import axios from "axios";
+	import ButtonVue from "../../components/Button.vue";
 
 	export default {
-    
-
 		name: "Drug",
-    data() {
+		components: {
+			ButtonVue,
+		},
+		data() {
 			return {
 				drug: null,
+        ammount: 1, 
 			};
 		},
 		async created() {
-      try {
-        const response = await axios.get('/products/ean/' + this.$route.query.ean);
-        this.drug = response.data; 
-      } catch (error) {
-        console.error(error);
-      }
+			try {
+				const response = await axios.get(
+					"/products/ean/" + this.$route.query.ean
+				);
+				this.drug = response.data;
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		methods: {
+			async addToCart() {
+				try {
+					const response = await axios.post(
+						"/shop/add-to-cart/"+this.drug.id+"?amount="+ this.ammount
+					);
+          console.log(response.data); 
+				} catch (error) {
+					console.error(error);
+				}
+			},
 		},
 	};
 </script>
