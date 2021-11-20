@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="onSubmit" class="register">
-    <h1>Crear cuenta</h1>
-    <router-link id="login" to="/login" class="small-text"
-      >¿Ya tiene cuenta? Acceda aquí</router-link
-    >
+    <h2>Crear cuenta</h2>
+    <router-link id="login" to="/login"
+      >¿Ya tiene cuenta? Acceda aquí
+    </router-link>
     <div>
       <i class="material-icons">person</i>
     </div>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   name: "RegisterForm",
   data() {
@@ -107,7 +106,6 @@ export default {
 }
 
 .register {
-  margin: 2.5% 33% 10% 33%;
   display: flex;
   flex-direction: column;
   align-items: center;

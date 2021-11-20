@@ -21,5 +21,6 @@ export default {
   font-size: 1em;
   flex: 1 0 auto;
   margin: 0 0.5em 0 0.5em;
+  text-decoration: none;
 }
 </style>

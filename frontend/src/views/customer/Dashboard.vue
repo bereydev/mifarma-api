@@ -1,21 +1,19 @@
 <template>
-  <body>
-    <div class="panels">
-      <div class="dashboard">
-        <HomeSelector @selector-click="filterStatus" />
-        <div class="scroll">
-          <div
-            style="margin: 0.15em 0 0.15em 0"
-            v-for="order in cart"
-            :key="order.id"
-          >
-            <Order :order="order" />
-          </div>
+  <div class="panels">
+    <div class="dashboard">
+      <HomeSelector @selector-click="filterStatus" />
+      <div class="scroll">
+        <div
+          style="margin: 0.15em 0 0.15em 0"
+          v-for="order in cart"
+          :key="order.id"
+        >
+          <Order :order="order" />
         </div>
       </div>
-      <PharmaInfoHome />
     </div>
-  </body>
+    <PharmaInfoHome class="pharma-info" />
+  </div>
 </template>
 
 <script>
@@ -60,23 +58,25 @@ export default {
     await this.$store.dispatch("updatePharmacy");
     await this.$store.dispatch("updateCurrentUser");
     await this.$store.dispatch("updateOrders");
-    this.cart = this.$store.state.orders; 
+    this.cart = this.$store.state.orders;
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .panels {
   display: flex;
-  width: 100%;
-  padding: 1.5% 1% 5% 1%;
-  gap: 2.5%;
+  padding: 1em;
+  gap: 1em;
 }
 
 .dashboard {
   display: flex;
   flex-direction: column;
-  width: 65%;
-  gap: 0.75em;
+  width: 60%;
+  gap: 0.5em;
+}
+.pharma-info {
+  width: 40%;
 }
 </style>

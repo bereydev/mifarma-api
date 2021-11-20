@@ -27,8 +27,13 @@ export default {
   props: ["pharmacy", "owner"],
   methods: {
     async verifyOwner() {
-      this.$store.dispatch("verifyOwner", this.owner.id);
+      try {
+        await this.$store.dispatch("verifyOwner", this.owner.id);
       this.$emit("close");
+      } catch (error) {
+        console.error(error);
+      }
+      
     },
   },
 };

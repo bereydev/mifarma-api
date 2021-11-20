@@ -35,6 +35,7 @@
 		-webkit-transition: all 0.3s ease-in-out;
 		-moz-transition: all 0.3s ease-in-out;
 		transition: all 0.3s ease-in-out;
+		cursor: pointer;
 	}
 	.large {
 		padding: 0.5em 5em 0.5em 5em;
@@ -43,8 +44,7 @@
 		padding: 0.5em 3em 0.5em 3em;
 	}
 	.btn-green:hover {
-		background-color: $black;
-		color: $accent-green !important;
+		background-color: $accent-green-hover;
 	}
 
 	.btn-green {
@@ -57,9 +57,12 @@
 		color: $black;
 	}
 
+	.btn-red:hover {
+		background-color: $accent-red-hover;
+	}
+
 	.btn-dark:hover {
-		background-color: white;
-		color: $black;
+		background-color: $black-hover
 	}
 	.btn-dark {
 		background-color: $black;

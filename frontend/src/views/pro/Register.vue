@@ -1,7 +1,7 @@
 <template>
-  <body>
+  <div class="register-pro">
     <RegisterFormPro />
-  </body>
+  </div>
 </template>
 
 <script>
@@ -17,7 +17,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body {
-  margin: 0;
+.register-pro {
+  margin: auto;
+  width: 40%;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <nav class="topNavBar">
+  <nav>
     <div v-if="isAuth" class="row-left">
       <router-link to="/customer/dashboard"
         ><img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo"
@@ -86,7 +86,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+
+nav {
+    box-sizing: border-box;
+  padding: 0.25em 1.5em 0.25em 1.5em;
+  font-size: 1.15em;
+  height: 3.5em;
+  width: 100%;
+  background: #f5f5f5;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+}
 .group {
   display: flex;
 }
@@ -169,18 +182,6 @@ input:hover {
   background-color: #ffd500;
 }
 
-.topNavBar {
-  box-sizing: border-box;
-  padding: 0.25em 1.5em 0.25em 1.5em;
-  font-size: 1.15em;
-  height: 3.5em;
-  width: 100%;
-  background-color: #f5f5f5;
-  display: flex;
-  align-content: center;
-  justify-content: space-between;
-}
-
 #navBarCart {
   display: flex;
   justify-items: center;
@@ -204,18 +205,6 @@ input:hover {
 
 spacer {
   flex: 100 100 auto;
-}
-
-.topNavBar {
-  box-sizing: border-box;
-  padding: 0.25em 1.5em 0.25em 1.5em;
-  font-size: 1.15em;
-  height: 3.5em;
-  width: 100%;
-  background: #f5f5f5;
-  display: flex;
-  align-content: center;
-  justify-content: space-between;
 }
 
 .searchBar:focus {

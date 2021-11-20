@@ -90,7 +90,7 @@ export default createStore({
           schedule: payload.schedule,
         });
         commit('updatePharmacy', response.data);
-        dispatch('updateCurrentUser')
+        await dispatch('updateCurrentUser')
       } catch (error) {
         console.log(error)
         throw new Error('Unable to create a pharmacy')
@@ -128,8 +128,8 @@ export default createStore({
       }
     },
     async updatePharmacies({ dispatch }) {
-      dispatch('updateActivePharmacies');
-      dispatch('updateInactivePharmacies');
+      await dispatch('updateActivePharmacies');
+      await dispatch('updateInactivePharmacies');
     },
     async login({ commit, dispatch }, payload) {
       commit("resetAll");
@@ -139,7 +139,7 @@ export default createStore({
       const response = await axios.post("/login/access-token/", params);
       commit("updateToken", response.data.access_token)
       commit("updateCurrentUser", response.data.user);
-      dispatch("updatePharmacy")
+      await dispatch("updatePharmacy")
     },
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
@@ -175,7 +175,7 @@ export default createStore({
     },
     async verifyOwner({ dispatch }, ownerId) {
       await axios.put(`/admin/verify-owner/${ownerId}`);
-      dispatch('updateUnverifiedOwners');
+      await dispatch('updateUnverifiedOwners');
     },
     async pickPharmacy({ commit }, pharmacy_id) {
       try {

@@ -69,7 +69,9 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+
 	body {
 		display: flex;
 		flex-direction: column;
@@ -86,13 +88,6 @@
 	span {
 		width: 100px;
 		white-space: pre-wrap;
-	}
-	p,
-	h1,
-	h2 {
-		margin: 0 0 0.5em 0;
-		padding: 0;
-		text-align: justify;
 	}
 	.price {
 		font-size: 1.5em;

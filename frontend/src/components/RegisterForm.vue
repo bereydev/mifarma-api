@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="register">
-    <h1>Crear cuenta</h1>
-    <router-link id="login" to="/login" class="small-text"
+    <h2>Crear cuenta</h2>
+    <router-link id="login" to="/login"
       >¿Ya tiene cuenta? Acceda aquí</router-link
     >
     <div>
@@ -107,7 +107,7 @@ export default {
           city: this.city,
           password: this.password,
         });
-        // this.$router.push("/customer/pharma-picker");
+        this.$router.push("/customer/pharma-picker");
       } catch (error) {
         console.error(error);
       }
@@ -126,11 +126,10 @@ export default {
 }
 
 form {
-  margin: 2.5% 33% 10% 33%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.15em;
+  gap: 0.25em;
 }
 </style>

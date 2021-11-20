@@ -1,8 +1,8 @@
 <template>
   <div class="principal-pannel"> 
-    <customer-history-list :customers="oldCustomers"/>
-    <customer-schedule-list :customers="oldCustomers"/>
-    <pharma-pro/>
+    <customer-history-list class="customer-history" :customers="oldCustomers"/>
+    <customer-schedule-list class="customer-schedule" :customers="oldCustomers"/>
+    <pharma-pro class="pharma-info"/>
 
   </div>
 </template>
@@ -36,7 +36,17 @@ export default {
 <style scoped>
 .principal-pannel{
   display: flex;
-  gap: 1.5%; 
-  padding: 1.5%;
+  gap: 1.5em; 
+  padding: 1.5em;
+}
+
+.customer-history {
+  width: 30%;
+}
+.customer-schedule {
+  width: 30%;
+}
+.pharma-info {
+  width: 40%;
 }
 </style>
