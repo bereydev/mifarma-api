@@ -1,8 +1,14 @@
 <template>
   <body>
     <div v-if="selectedPharmacy">
-      <pharma-info-vue :pharmacy="selectedPharmacy"></pharma-info-vue>
-      <button-vue v-if="pharmacyChanged" v-on:click="pickPharmacy()">Confimar</button-vue>
+      <div class="row">
+        <pharma-image-vue :pharmacy="selectedPharmacy"></pharma-image-vue>
+        <pharma-contacts-vue :pharmacy="selectedPharmacy"></pharma-contacts-vue>
+      </div>
+
+      <button-vue v-if="pharmacyChanged" v-on:click="pickPharmacy()"
+        >Confimar
+      </button-vue>
     </div>
     <div class="indication">
       <span class="material-icons-outlined infoIcon"> info </span>
@@ -22,8 +28,9 @@
 
 <script>
 import PharmaWidgetVue from "@/components/PharmaCard.vue";
-import PharmaInfoVue from "@/components/PharmaInfo.vue";
+import PharmaContactsVue from "@/components/PharmaContacts.vue";
 import ButtonVue from "@/components/Button.vue";
+import PharmaImageVue from "@/components/PharmaImage.vue";
 export default {
   name: "Cart",
   data() {
@@ -34,7 +41,8 @@ export default {
   },
   components: {
     PharmaWidgetVue,
-    PharmaInfoVue,
+    PharmaContactsVue,
+    PharmaImageVue,
     ButtonVue,
   },
   computed: {
@@ -43,7 +51,7 @@ export default {
     },
     pharmacyChanged() {
       return this.currentPharmacy.id !== this.selectedPharmacy.id;
-    }
+    },
   },
   methods: {
     select(pharmacy) {
@@ -65,6 +73,11 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1% 2.5% 2.5% 2.5%;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
 }
 
 #confirmButton {

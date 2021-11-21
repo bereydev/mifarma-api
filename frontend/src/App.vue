@@ -19,6 +19,7 @@ export default {
 <style lang="scss">
 @import "@/assets/styles/colors.scss";
 @import "@/assets/styles/fonts.scss";
+@import "@/assets/styles/lists.scss";
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -36,7 +37,10 @@ select:-webkit-autofill:focus {
   background-color: white !important;
   color: #b1b1b1 !important;
 }
-
+html, body {
+    padding:0;
+    margin:0;
+}
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #b1b1b1;

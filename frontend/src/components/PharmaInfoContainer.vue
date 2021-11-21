@@ -1,7 +1,7 @@
 <template>
   <div class="unverified-pharma">
     <owner-info :owner="owner"> </owner-info>
-    <pharma-info :pharmacy="pharmacy"></pharma-info>
+    <pharma-contacts-vue :pharmacy="pharmacy"></pharma-contacts-vue>
     <p>
       {{ pharmacy.description }}
     </p>
@@ -15,14 +15,14 @@
 <script>
 import OwnerInfo from "./OwnerInfo.vue";
 import Button from "./Button.vue";
-import PharmaInfo from "./PharmaInfo.vue";
+import PharmaContactsVue from './PharmaContacts.vue';
 
 export default {
   name: "PharmaInfoContainer",
   components: {
-    PharmaInfo,
     OwnerInfo,
     Button,
+    PharmaContactsVue
   },
   props: ["pharmacy", "owner"],
   methods: {

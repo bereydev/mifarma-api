@@ -1,6 +1,6 @@
 <template>
   <div class="panels">
-    <div class="dashboard">
+    <div class="order-pannel">
       <HomeSelector @selector-click="filterStatus" />
       <div class="scroll">
         <div
@@ -12,14 +12,35 @@
         </div>
       </div>
     </div>
-    <PharmaInfoHome class="pharma-info" />
+    <div class="pharmacy-pannel">
+      <h2>Mi Farmacia</h2>
+      <div class="pharma">
+        <pharma-image-vue :pharmacy="pharmacy"></pharma-image-vue>
+        <pharma-contacts-vue :pharmacy="pharmacy"></pharma-contacts-vue>
+      </div>
+      <div class="btn-group">
+        <router-link to="/customer/pharma-picker">
+          <button-vue color="dark">Cambiar de Farmacia</button-vue>
+        </router-link>
+        <router-link to="/customer/catalog">
+          <button-vue size="medium">Catálogo</button-vue>
+        </router-link>
+      </div>
+      <p v-if="pharmacy.description">
+        {{ pharmacy.description }}
+      </p>
+      <pharma-schedule-vue :pharmacy="pharmacy"></pharma-schedule-vue>
+    </div>
   </div>
 </template>
 
 <script>
-import HomeSelector from "../../components/HomeSelector.vue";
-import Order from "../../components/Order.vue";
-import PharmaInfoHome from "../../components/PharmaInfoHome.vue";
+import HomeSelector from "@/components/HomeSelector.vue";
+import Order from "@/components/Order.vue";
+import ButtonVue from "@/components/Button.vue";
+import PharmaContactsVue from "@/components/PharmaContacts.vue";
+import PharmaImageVue from "@/components/PharmaImage.vue";
+import PharmaScheduleVue from "@/components/PharmaSchedule.vue";
 
 export default {
   name: "Register",
@@ -27,6 +48,11 @@ export default {
     return {
       cart: [],
     };
+  },
+  computed: {
+    pharmacy() {
+      return this.$store.state.pharmacy
+    }
   },
   methods: {
     filterStatus(id) {
@@ -52,7 +78,10 @@ export default {
   components: {
     HomeSelector,
     Order,
-    PharmaInfoHome,
+    ButtonVue,
+    PharmaContactsVue,
+    PharmaImageVue,
+    PharmaScheduleVue,
   },
   async created() {
     await this.$store.dispatch("updatePharmacy");
@@ -70,13 +99,27 @@ export default {
   gap: 1em;
 }
 
-.dashboard {
+.order-pannel {
   display: flex;
   flex-direction: column;
   width: 60%;
   gap: 0.5em;
 }
-.pharma-info {
+.pharmacy-pannel {
   width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
+.btn-group {
+  display: flex;
+  gap: 1em;
+}
+
+.pharma {
+  display: flex;
+  gap: 1em;
+}
+
+
 </style>

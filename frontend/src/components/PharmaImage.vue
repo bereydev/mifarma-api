@@ -7,8 +7,8 @@
 
 <script>
 export default {
-    name: "PharmaImage",
-    props: ["pharmacy"]
+  name: "PharmaImage",
+  props: ["pharmacy"],
 };
 </script>
 
