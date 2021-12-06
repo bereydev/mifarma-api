@@ -9,3 +9,4 @@ from .pharmacy import Pharmacy, PharmacyCreate, PharmacyInDB, PharmacyUpdate
 from .product import Product, ProductCreate, ProductInDB, ProductUpdate
 from .stock_item import StockItem, StockItemCreate, StockItemInDB, StockItemUpdate
 from .order import Order, OrderCreate, OrderInDB, OrderUpdate
+from .image import Image, ImageCreate, ImageInDB, ImageUpdate

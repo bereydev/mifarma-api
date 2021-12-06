@@ -4,6 +4,7 @@ from .crud_pharmacy import pharmacy
 from .crud_product import product
 from .crud_stock_item import stock_item
 from .crud_order import order
+from .crud_image import image
 
 # For a new basic set of CRUD operations you could just do
 

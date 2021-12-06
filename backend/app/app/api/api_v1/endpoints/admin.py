@@ -1,18 +1,16 @@
-from starlette.types import Scope
-from app.models import pharmacy, stock_item
 from random import randint
 from typing import Any, List
+from app.db.session import engine
 
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
 from sqlalchemy.orm.session import Session
 from pydantic.types import UUID4
 
 from app import crud, models, schemas
 from app.api import deps
-from app.utils import send_test_email, send_new_account_email
-from app.models.role import Role, RoleName
+from app.utils import send_new_account_email
+from app.models.role import RoleName
 import pandas as pd
 import os
 import shutil
@@ -26,7 +24,7 @@ def create_user(
     db: Session = Depends(deps.get_db),
     user_in: schemas.UserCreate,
     role: str,
-    current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
+        current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
     """
     [ADMIN] Create new user.
     """
@@ -62,7 +60,7 @@ def update_user(
     db: Session = Depends(deps.get_db),
     user_id: UUID4,
     user_in: schemas.UserUpdate,
-    current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
+        current_user: models.User = Depends(deps.get_current_superuser),) -> Any:
     """
     [ADMIN] Update a user by id.
     """
@@ -78,9 +76,9 @@ def update_user(
 
 @router.get("/user/{user_id}", response_model=schemas.User)
 def read_user_by_id(
-    user_id: UUID4,
-    current_user: models.User = Depends(deps.get_current_superuser),
-    db: Session = Depends(deps.get_db),) -> Any:
+        user_id: UUID4,
+        current_user: models.User = Depends(deps.get_current_superuser),
+        db: Session = Depends(deps.get_db),) -> Any:
     """
     [ADMIN] Get a specific user by id.
     """
@@ -96,17 +94,16 @@ def read_user_by_id(
 
 @router.get("/customers", response_model=List[schemas.Customer])
 def read_customers(
-    current_user: models.User = Depends(deps.get_current_superuser),
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(deps.get_db),) -> Any:
+        current_user: models.User = Depends(deps.get_current_superuser),
+        skip: int = 0,
+        limit: int = 100,
+        db: Session = Depends(deps.get_db),) -> Any:
     """
     [ADMIN] Get customers of mi farmacia
     """
-    customers = crud.user.get_multi_by_role(db, skip=skip, limit=limit, role=RoleName.CUSTOMER)
+    customers = crud.user.get_multi_by_role(
+        db, skip=skip, limit=limit, role=RoleName.CUSTOMER)
     return customers
-
-
 
 
 @router.get("/pharmacy/{pharmacy_id}/owner", response_model=schemas.User)
@@ -121,16 +118,18 @@ def read_pharmacy_owner(
     """
     pharmacy = crud.pharmacy.get(db=db, id=pharmacy_id)
     if pharmacy is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No pharmacy linked to the requested pharmacy_id")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No pharmacy linked to the requested pharmacy_id")
 
     return pharmacy.get_owner()
+
 
 @router.put("/verify-owner/{owner_id}", response_model=schemas.OwnerActivation)
 def verify_owner(
     *,
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_superuser),
-    owner_id: UUID4,) -> Any:
+        owner_id: UUID4,) -> Any:
     """
     [ADMIN] Verify the user after a manual check for its identity and its pharmacy_number
     """
@@ -232,8 +231,17 @@ def update_catalog(
     with open(file_name, 'wb') as buffer:
         shutil.copyfileobj(excel_catalog.file, buffer)
 
-    catalog_df = pd.read_excel(file_name, nrows=3)
-    print(catalog_df['PRODUCTO'])
+    catalog_df = pd.read_excel(file_name, usecols=usecols)
+
+    for row in catalog_df.iterrows():
+        ean_code, laboratory, name = row[1]
+        product = crud.product.get_by_ean(db, str(ean_code))
+        if product is None:
+            product_in = schemas.ProductCreate(ean_code=str(ean_code), laboratory=laboratory, name=name)
+            crud.product.create(db, obj_in=product_in)
+        else:
+            product_in = schemas.ProductUpdate(laboratory=laboratory, name=name)
+            crud.product.update(db, db_obj=product, obj_in=product_in)
 
     # Create objects in the database from excel
     os.remove(file_name)
@@ -265,7 +273,7 @@ def create_product(
 ) -> Any:
     """
     [ADMIN] Create new product in the catalog [only for test purposes].
-    """    
+    """
     product = crud.product.create(db=db, obj_in=product_in)
 
     return product
@@ -315,6 +323,7 @@ def read_inactive_pharmacys(
     pharmacies = crud.pharmacy.get_multi_inactive(db, skip=skip, limit=limit)
 
     return pharmacies
+
 
 @router.get("/owners/unverified", response_model=List[schemas.Owner])
 def read_unverified_owners(

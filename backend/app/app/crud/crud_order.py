@@ -1,6 +1,3 @@
-from os import curdir
-
-from sqlalchemy.sql.functions import user
 from app.models.user import User
 from fastapi import HTTPException, status
 from app.models.order import Order, OrderStatus

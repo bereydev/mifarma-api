@@ -51,6 +51,7 @@ class UserInDBBase(UserBase):
     verified: bool
     activated: bool
     voucher: Optional[float] = 0
+    image_filename: Optional[str] = None
 
 
     class Config:

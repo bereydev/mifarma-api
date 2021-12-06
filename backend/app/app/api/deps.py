@@ -52,3 +52,6 @@ def get_current_superuser(
             detail="The user doesn't have enough privileges"
         )
     return current_user
+
+
+

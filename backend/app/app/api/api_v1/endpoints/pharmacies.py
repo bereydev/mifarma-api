@@ -1,4 +1,8 @@
+import shutil
+import os
 from typing import Any, List
+from PIL import Image, ExifTags
+
 
 from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Body
 from pydantic.types import UUID4
@@ -6,8 +10,11 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
+from app.models import pharmacy
 
 router = APIRouter()
+
+IMAGE_MAX_SIZE = 720, 720
 
 
 @router.get("/active", response_model=List[schemas.Pharmacy])
@@ -87,7 +94,8 @@ def read_pharmacy_me(
     """
     pharmacy = current_user.pharmacy
     if not pharmacy:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User has no pharmacy")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="User has no pharmacy")
     return pharmacy
 
 
@@ -102,7 +110,8 @@ def read_pharmacy_employees(
     """
     pharmacy = crud.user.get(db=db, id=current_user.id).pharmacy
     if not pharmacy:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User has no pharmacy")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="User has no pharmacy")
     return pharmacy.get_employees().all()
 
 
@@ -146,18 +155,19 @@ def select_pharmacy_customer(
         )
     pharmacy = crud.pharmacy.get(db=db, id=pharmacy_id)
     if pharmacy is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No such pharmacy")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No such pharmacy")
     crud.user.select_pharmacy(db=db, db_user=current_user, db_pharmacy=pharmacy)
     return pharmacy
 
 
-@router.post("/selection/image")
-def define_selection_image(
-    image: UploadFile = File(...),
+@router.post("/image")
+def upload_pharmacy_image(
+    upload_image: UploadFile = File(...),
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
-    """Upload an image to use as the selection image for the current_user's pharmacy"""
+    """Upload an image for the current_user's pharmacy"""
     if not (current_user.is_admin or current_user.is_owner):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -168,24 +178,19 @@ def define_selection_image(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User has no linked pharmacy"
         )
-    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': 'https://img.bfmtv.com/c/630/420/871/7b9f41477da5f240b24bd67216dd7.jpg'}
 
+    # Check the mime type
+    if not upload_image.content_type in ["image/jpeg", "image/png"]:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="File type is not PNG or JPEG"
+        )
 
-@router.post("/presentation/image")
-def define_presentation_image(
-    image: UploadFile = File(...),
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
-) -> Any:
-    """Upload an image to use on the presentation page for the current_user's pharmacy"""
-    if not (current_user.is_admin or current_user.is_owner):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Current user has not enough priviledges"
-        )
-    if not current_user.pharmacy_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User has no linked pharmacy"
-        )
-    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': 'https://img.bfmtv.com/c/630/420/871/7b9f41477da5f240b24bd67216dd7.jpg'}
+    image = crud.image.create(db=db,
+                              obj_in=schemas.ImageCreate(
+                                  pharmacy_id=current_user.pharmacy_id, name="pharmacy_image"),
+                              upload_image=upload_image,
+                              old_image=current_user.pharmacy.image
+                              )
+
+    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': image.filename}

@@ -6,7 +6,7 @@ from pydantic.types import UUID4
 
 # Shared properties
 class ProductBase(BaseModel):
-    ean_code: str
+    ean_code: Optional[str] = None
     classification_number: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
@@ -30,6 +30,7 @@ class ProductUpdate(ProductBase):
 class ProductInDBBase(ProductBase):
     id: UUID4
     type: str
+    image_filename: Optional[str] = None
 
     class Config:
         orm_mode = True

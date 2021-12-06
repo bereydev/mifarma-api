@@ -2,6 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 from pydantic.networks import EmailStr
+from fastapi.responses import FileResponse
 
 from app import models, schemas
 from app.api import deps
@@ -37,3 +38,10 @@ def get_symptom_list() -> Any:
     Get the list of the symptoms
     """
     return {'symptom_list': SYMPTOM_LIST}
+
+
+@router.get("/image")
+def get_image(
+    filename: str
+) -> Any:
+    return FileResponse("/app/files/" + filename )

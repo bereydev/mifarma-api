@@ -15,6 +15,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 if TYPE_CHECKING:
     from .order import Order
+    from .image import Image
 
 
 class Gender():
@@ -69,6 +70,11 @@ class User(Base):
     refused = Column(Boolean(), default=False, nullable=False)
     # Activation token sent over letter hashed with the user credentials and a expiration time
     hashed_activation_token = Column(String)
+    image = relationship('Image', backref='user', uselist=False)
+
+    @hybrid_property
+    def image_filename(self):
+        return self.image.filename
 
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)

@@ -41,6 +41,7 @@ class PharmacyInDBBase(PharmacyBase):
     country: str
     city: str
     schedule: dict
+    image_filename: Optional[str] = None
 
     class Config:
         orm_mode = True

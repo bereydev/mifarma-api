@@ -1,4 +1,4 @@
-from app.models import stock_item
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableDict
 from typing import TYPE_CHECKING
 
@@ -13,6 +13,7 @@ import uuid
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
     from .stock_item import StockItem # noqa: F401
+    from .image import Image # noqa: F401
 
 DEFAULT_SCHEDULE = {
     "Lunes": [
@@ -65,7 +66,11 @@ class Pharmacy(Base):
     email = Column(String)
     phone = Column(String)
     percentage_for_voucher = Column(Integer, nullable=False, default=0)
-    # pictures =
+    image = relationship('Image', backref='pharmacy', uselist=False)
+
+    @hybrid_property
+    def image_filename(self):
+        return self.image.filename
 
     def get_owner(self):
         return self.users.join(Role).filter(Role.name == RoleName.OWNER).first()

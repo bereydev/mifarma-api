@@ -1,11 +1,8 @@
-from app.models.order import OrderStatus
-from app.schemas.order import OrderUpdate
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic.types import UUID4
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import mode
 
 from app import crud, models, schemas
 from app.api import deps
@@ -112,7 +109,7 @@ def delete_from_cart(
         order = crud.order.update(
             db=db, 
             db_obj=order, 
-            obj_in=OrderUpdate(amount=new_amount)
+            obj_in=schemas.OrderUpdate(amount=new_amount)
             )
     else:
         raise HTTPException(

@@ -157,11 +157,25 @@ def send_employee_invitations(
     return {"success": True, "msg": "The invitations to the employees are sent"}
 
 
-@router.post("/profile/image")
-def define_profile_image(
-    image: UploadFile = File(...),
+@router.post("/image")
+def upload_user_image(
+    upload_image: UploadFile = File(...),
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
-    """Upload an image to use as the the current_user's profile picture"""
-    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': 'https://img.bfmtv.com/c/630/420/871/7b9f41477da5f240b24bd67216dd7.jpg'}
+    """Upload an image for the current_user's profile picture"""
+    # Check the mime type
+    if not upload_image.content_type in ["image/jpeg", "image/png"]:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="File type is not PNG or JPEG"
+        )
+
+    image = crud.image.create(db=db,
+                              obj_in=schemas.ImageCreate(
+                                  user_id=current_user.id, name="user_profile_image"),
+                              upload_image=upload_image,
+                              old_image=current_user.image
+                              )
+
+    return {'success': True, 'msg': 'The image was uploaded succefully', 'image': image.filename}

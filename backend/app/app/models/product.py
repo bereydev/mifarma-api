@@ -1,8 +1,8 @@
+from sqlalchemy.ext.hybrid import hybrid_property
 from app.db.base_class import Base
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import validates
 
 import uuid
 
@@ -21,8 +21,12 @@ class Product(Base):
     laboratory = Column(String)
     orders = relationship('Order', backref='product', lazy='dynamic', cascade="all,delete")
     stock_items = relationship('StockItem', backref='product', lazy='dynamic', cascade="all,delete")
-    # pictures =
+    image = relationship('Image', backref='product', uselist=False)
     type = Column(String)
+
+    @hybrid_property
+    def image_filename(self):
+        return self.image.filename
 
     __mapper_args__ = {
         'polymorphic_identity': 'products',

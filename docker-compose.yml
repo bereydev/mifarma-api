@@ -83,7 +83,7 @@ services:
           - node.labels.${STACK_NAME?Variable not set}.app-db-data == true
 
   pgadmin:
-    image: dpage/pgadmin4:5.6
+    image: dpage/pgadmin4:6.2
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - default
@@ -108,6 +108,8 @@ services:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     env_file:
       - .env
+    volumes:
+      - app-file-storage:/app/files
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
       - SERVER_HOST=https://${DOMAIN?Variable not set}
@@ -140,6 +142,7 @@ services:
 
 volumes:
   app-db-data:
+  app-file-storage:
 
 networks:
   traefik-public:
