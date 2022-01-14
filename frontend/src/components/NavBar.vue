@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div v-if="isAuth" class="row-left">
+    <div  class="row-left">
       <router-link to="/customer/dashboard"
         ><img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo"
       /></router-link>
@@ -8,18 +8,18 @@
         ><div id="brandName" class="navBarElement">MiFarmacia</div></router-link
       >
     </div>
-    <div v-if="isAuth" class="row-center">
+    <div v-if="isAuth"  class="row-center">
       <input
         @input="$emit('search-input', searchText)"
         v-model="searchText"
         class="searchBar"
-        placeholder="Buscar producto"
+        placeholder="Buscar"
         type="text"
         id="name"
         name="name"
       />
     </div>
-    <div v-if="isAuth" class="row-right">
+    <div v-if="isAuth"  class="row-right">
       <router-link style="position: relative" to="/customer/cart">
         <i class="material-icons" id="navBarCart">shopping_cart</i>
         <div class="notif">3</div></router-link
@@ -32,10 +32,7 @@
       />
     </div>
 
-    <div v-if="!isAuth" class="group">
-      <img class="logo-img" src="../assets/logo.png" alt="MiFarmacia logo" />
-      <div id="brandName">MiFarmacia</div>
-    </div>
+    
 
     <div v-if="!isAuth" class="group">
       <NavTab link="/pro/welcome">Soy una farmacia</NavTab>

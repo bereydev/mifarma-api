@@ -70,7 +70,7 @@ button {
   border: none;
 }
 h1 {
-  font-size: 1.75em;
+  font-size: 1.5em;
   padding: 0;
   margin-block-start: 0px;
   margin-block-end: 0px;

@@ -23,7 +23,7 @@
           <button-vue color="dark">Cambiar de Farmacia</button-vue>
         </router-link>
         <router-link to="/customer/catalog">
-          <button-vue size="medium">Catálogo</button-vue>
+          <button-vue >Acceder al catálogo</button-vue>
         </router-link>
       </div>
       <p v-if="pharmacy.description">
@@ -99,6 +99,13 @@ export default {
   gap: 1em;
 }
 
+h2{
+  font-size: 1.5em;
+  padding: 0;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
 .order-pannel {
   display: flex;
   flex-direction: column;
@@ -113,7 +120,7 @@ export default {
 }
 .btn-group {
   display: flex;
-  gap: 1em;
+  gap: 3em;
 }
 
 .pharma {

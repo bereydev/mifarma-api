@@ -141,6 +141,16 @@ export default createStore({
       commit("updateCurrentUser", response.data.user);
       await dispatch("updatePharmacy")
     },
+    async loginNewUser({ commit, dispatch }, payload) {
+      commit("resetAll");
+      const params = new URLSearchParams();
+      params.append("username", payload.username);
+      params.append("password", payload.password);
+      const response = await axios.post("/login/access-token/", params);
+      commit("updateToken", response.data.access_token)
+      commit("updateCurrentUser", response.data.user);
+      //await dispatch("updatePharmacy")
+    },
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
         first_name: payload.first_name,
@@ -151,7 +161,7 @@ export default createStore({
         city: payload.city,
         password: payload.password,
       });
-      await dispatch("login", {
+      await dispatch("loginNewUser", {
         username: payload.email,
         password: payload.password,
       });

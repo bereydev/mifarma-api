@@ -36,11 +36,13 @@ select:-webkit-autofill:focus {
   background-image: none !important;
   background-color: white !important;
   color: #b1b1b1 !important;
+  text-decoration: none;
 }
 html, body {
     padding:0;
     margin:0;
 }
+
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #b1b1b1;
@@ -57,6 +59,11 @@ html, body {
   color: #b1b1b1;
 }
 
+a, a:link, a:visited, a:focus, a:hover, a:active{
+  text-decoration:none; 
+  font-size: unset;
+}
+
 /* ALL OF THE ABOVE ARE COMPLICATED CSS RULES DEFINED TO OVERRIDE THE BROWSER PRESETS */
 
 * {
@@ -66,6 +73,7 @@ html, body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 
 .double-field {
   padding: 0;

@@ -1,20 +1,21 @@
 <template>
   <body>
-    <div v-if="selectedPharmacy">
+    <div class="indication">
+      <span class="material-icons infoIcon center">info</span>
+      Seleccione su farmacia de confianza, podrá modificar su selección más
+      tarde en ajustes de cuenta
+    </div>
+    <div v-if="(selectedPharmacy != currentPharmacy) && selectedPharmacy!=null" class="longRow">
       <div class="row">
         <pharma-image-vue :pharmacy="selectedPharmacy"></pharma-image-vue>
         <pharma-contacts-vue :pharmacy="selectedPharmacy"></pharma-contacts-vue>
       </div>
 
-      <button-vue v-if="pharmacyChanged" v-on:click="pickPharmacy()"
-        >Confimar
+      <button-vue v-on:click="pickPharmacy()"
+        >Confirmar <span class="material-icons infoIcon">chevron_right</span>
       </button-vue>
     </div>
-    <div class="indication">
-      <span class="material-icons-outlined infoIcon"> info </span>
-      Seleccione su farmacia de confianza, podrá modificar su selección más
-      tarde en ajustes de cuenta
-    </div>
+    
     <div class="pharmaRow">
       <pharma-widget-vue
         v-for="pharmacy in pharmacies"
@@ -35,7 +36,7 @@ export default {
   name: "Cart",
   data() {
     return {
-      selectedPharmacy: this.$store.state.pharmacy,
+      selectedPharmacy: null,
       currentPharmacy: this.$store.state.pharmacy,
     };
   },
@@ -48,9 +49,6 @@ export default {
   computed: {
     pharmacies() {
       return this.$store.state.activePharmacies;
-    },
-    pharmacyChanged() {
-      return this.currentPharmacy.id !== this.selectedPharmacy.id;
     },
   },
   methods: {
@@ -80,6 +78,18 @@ body {
   gap: 1em;
 }
 
+.longRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 5em;
+}
+
+.center{
+  align-self: center;
+}
+
 #confirmButton {
   width: 15%;
   align-self: flex-end;
@@ -97,7 +107,7 @@ body {
   border-radius: 20px;
   background-color: #e8e1dd;
   margin: 1em 0 1em 0;
-  font-size: 1.15em;
+  font-size: 1em;
   padding: 1em;
   gap: 1em;
   justify-content: flex-start;
@@ -106,5 +116,6 @@ body {
 
 .infoIcon {
   font-size: 1.5em !important;
+  align-self: center;
 }
 </style>
