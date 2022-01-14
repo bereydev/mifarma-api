@@ -24,6 +24,11 @@ img {
   height: 180px;
   margin-bottom: 0.5em;
   box-shadow: 0px 3px 3px 1.5px rgb(211, 211, 211);
+  transition: opacity .5s ease-out;
+    -moz-transition: opacity .5s ease-out;
+    -webkit-transition: opacity .5s ease-out;
+    -o-transition: opacity .5s ease-out;
+    opacity: 1;
 }
 span {
   width: 100px;
@@ -35,5 +40,11 @@ span {
   flex-direction: column;
   align-items: center;
   gap: 0.05em;
+}
+
+img:hover{
+  cursor: pointer;
+  opacity: .8;
+
 }
 </style>

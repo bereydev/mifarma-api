@@ -116,11 +116,15 @@ h2{
   width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 1em;
 }
 .btn-group {
   display: flex;
   gap: 3em;
+}
+
+p{
+  padding-right: 5em;
 }
 
 .pharma {
