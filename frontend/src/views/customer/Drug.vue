@@ -40,8 +40,25 @@
 		},
 		data() {
 			return {
-				drug: null,
-        ammount: 1, 
+				//Add a load screen or something because this is ugly 
+				//TODO 
+				drug: {
+					ean_code: "000",
+					classification_number: "000",
+					name: "Loading",
+					description:
+						"This is a test drug made by the developer team to see if everything looks like it should. If it doesn't well too bad. We'll have to work harder on the hlmnl/css and pray to the code gods",
+					price: 0,
+					pharma_indications:
+						"Do not take this drug unless you're an admin and want to get lots of bugs",
+					type_of_material: 0,
+					magnitude: 10,
+					laboratory: "Test Lab Inc",
+					id: "212e5daf-b94c-4ea1-ac8f-e855a1a1057b",
+					type: "drugs",
+					image_filename: null,
+				},
+				ammount: 1, //TODO with counter
 			};
 		},
 		async created() {
@@ -57,10 +74,9 @@
 		methods: {
 			async addToCart() {
 				try {
-					const response = await axios.post(
-						"/shop/add-to-cart/"+this.drug.id+"?amount="+ this.ammount
+					await axios.post(
+						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.ammount
 					);
-          console.log(response.data); 
 				} catch (error) {
 					console.error(error);
 				}
@@ -70,8 +86,6 @@
 </script>
 
 <style lang="scss" scoped>
-
-
 	body {
 		display: flex;
 		flex-direction: column;

@@ -10,11 +10,12 @@ const initialState = () => {
     employees: [],
     customers: [],
     catalog: [],
-    cart: [], 
-    orders: [], 
+    cart: [],
+    orders: [],
     activePharmacies: [],
     inactivePharmacies: [],
     unverifiedOwners: [],
+    searchText : "Hi guys", 
   }
 }
 
@@ -26,6 +27,9 @@ export default createStore({
     },
     updateCurrentUser(state, user) {
       state.currentUser = user;
+    },
+    updateSearchText(state, text) {
+      state.searchText = text;
     },
     updateCatalog(state, catalog) {
       state.catalog = catalog;
@@ -63,6 +67,9 @@ export default createStore({
       const response = await axios.get("/users/me/");
       commit("updateCurrentUser", response.data);
     },
+    updateSearchText({ commit }, payload) {
+      commit("updateSearchText", payload.text);
+    },
     async updateCatalog({ commit }) {
       const response = await axios.get("/shop/catalog");
       commit("updateCatalog", response.data);
@@ -71,6 +78,7 @@ export default createStore({
       const response = await axios.get("/shop/get-cart");
       commit("updateCart", response.data);
     },
+
     async updateOrders({ commit }) {
       const response = await axios.get("/shop/order/history");
       commit("updateOrders", response.data);
@@ -139,18 +147,11 @@ export default createStore({
       const response = await axios.post("/login/access-token/", params);
       commit("updateToken", response.data.access_token)
       commit("updateCurrentUser", response.data.user);
-      await dispatch("updatePharmacy")
+      if (response.data.user.pharmacy_id)
+        await dispatch("updatePharmacy")
     },
-    async loginNewUser({ commit, dispatch }, payload) {
-      commit("resetAll");
-      const params = new URLSearchParams();
-      params.append("username", payload.username);
-      params.append("password", payload.password);
-      const response = await axios.post("/login/access-token/", params);
-      commit("updateToken", response.data.access_token)
-      commit("updateCurrentUser", response.data.user);
-      //await dispatch("updatePharmacy")
-    },
+  
+
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
         first_name: payload.first_name,
@@ -161,7 +162,7 @@ export default createStore({
         city: payload.city,
         password: payload.password,
       });
-      await dispatch("loginNewUser", {
+      await dispatch("login", {
         username: payload.email,
         password: payload.password,
       });

@@ -7,17 +7,17 @@
           <div class="offers">Sin receta</div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in nonPrescripted"
+            v-for="order in this.$store.state.cart"
             :key="order.id"
           >
             <Drug :order="order"/>
           </div>
           <div class="offers" style="background-color: #a6ffd8">
-            Medicamento con receta
+            Con receta
           </div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in prescripted"
+            v-for="order in this.$store.state.cart"
             :key="order.id"
           >
             <Drug :order="order"/>
@@ -38,6 +38,9 @@ export default {
     return {
       prescripted : [], 
       nonPrescripted :[], 
+      //TODO Need to find a way to compute prescripted and non prescripted 
+      // Using this.store.cart so that any update is applied in real-time
+      
     };
   },
   components: {
@@ -60,12 +63,12 @@ export default {
 .panels {
   display: flex;
   width: 100%;
-  padding: 1.5% 2.5% 5% 2.5%;
+  padding: .5% 2.5% 5% 2.5%;
   gap: 2.5%;
-  background-color: #f5f5f5;
+  background-color: white;
 }
 body {
-  background-color: #f5f5f5;
+  background-color: white;
   height: 100vh;
 }
 
