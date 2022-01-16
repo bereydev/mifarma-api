@@ -61,7 +61,7 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch("updateActivePharmacies");
+    await this.$store.dispatch("updateActivePharmacies", {filter:""});
   },
 };
 </script>

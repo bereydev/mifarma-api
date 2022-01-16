@@ -58,7 +58,7 @@
 					type: "drugs",
 					image_filename: null,
 				},
-				ammount: 1, //TODO with counter
+				amount: 1, //TODO with counter
 			};
 		},
 		async created() {
@@ -75,7 +75,7 @@
 			async addToCart() {
 				try {
 					await axios.post(
-						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.ammount
+						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.amount
 					);
 				} catch (error) {
 					console.error(error);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="padding">
     <ul v-for="(value, name) in pharmacy.schedule" :key="name">
       <li>
         <b>{{ name }}</b> :
@@ -17,4 +17,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.padding{
+  padding-left: 2.5em;
+}
+
 </style>

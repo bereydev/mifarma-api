@@ -58,7 +58,7 @@ export default {
     PharmaScheduleVue,
   },
   async created() {
-    await this.$store.dispatch("updateCatalog");
+    await this.$store.dispatch("updateCatalog", {filter:""});
   },
 };
 </script>
@@ -68,7 +68,7 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 1em;
-  padding: 1em;
+  padding: .5em 2.5em .5em 2.5em ;
 }
 .offers {
   display: flex;

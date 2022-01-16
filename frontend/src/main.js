@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
+import vueDebounce from 'vue-debounce'
 import "@/axios";
 
 /* import the fontawesome core */
@@ -20,4 +21,7 @@ createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
   .use(store)
   .use(router)
+  .use(vueDebounce, {
+    listenTo: ['input', 'keyup']
+  })
   .mount("#app");

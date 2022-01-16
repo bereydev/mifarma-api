@@ -10,8 +10,7 @@
 		</div>
 		<div v-if="isAuth" class="row-center">
 			<input
-				@input="updateSearchText(searchText)"
-				v-model="searchText"
+				v-debounce:500="updateSearchText"
 				class="searchBar"
 				placeholder="Buscar"
 				type="text"
@@ -50,15 +49,20 @@
 		name: "NavBar",
 		data() {
 			return {
-				searchText: "",
+				search: "",
 			};
 		},
 		methods: {
-			updateSearchText(searchText) {
-				this.$store.dispatch("updateSearchText", {
-					text: searchText,
-				});
-				//TODO Use this ! :) 
+			async updateSearchText(text) {
+				this.search = text.toLowerCase().replace(/\p{Diacritic}/gu, ""); 
+
+				await this.$store.dispatch("updateSearchText", { text: this.search });
+
+				if (this.$route.name === "PharmaPicker")
+					await this.$store.dispatch("updateActivePharmacies", { filter: this.search });
+
+				if (this.$route.name === "Catalog")
+					await this.$store.dispatch("updateCatalog", { filter: this.search });
 			},
 		},
 		computed: {

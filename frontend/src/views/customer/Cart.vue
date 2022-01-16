@@ -7,7 +7,7 @@
           <div class="offers">Sin receta</div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in this.$store.state.cart"
+            v-for="order in this.$store.getters.nonPrescriptedDrugs"
             :key="order.id"
           >
             <Drug :order="order"/>
@@ -17,7 +17,7 @@
           </div>
           <div
             style="margin: 0.15em 0 0.15em 0"
-            v-for="order in this.$store.state.cart"
+            v-for="order in this.$store.getters.prescriptedDrugs"
             :key="order.id"
           >
             <Drug :order="order"/>
@@ -34,15 +34,7 @@ import Drug from "../../components/Drug.vue";
 
 export default {
   name: "Cart",
-  data() {
-    return {
-      prescripted : [], 
-      nonPrescripted :[], 
-      //TODO Need to find a way to compute prescripted and non prescripted 
-      // Using this.store.cart so that any update is applied in real-time
-      
-    };
-  },
+  
   components: {
     Drug,
   },

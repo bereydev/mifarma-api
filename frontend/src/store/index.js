@@ -15,8 +15,12 @@ const initialState = () => {
     activePharmacies: [],
     inactivePharmacies: [],
     unverifiedOwners: [],
-    searchText : "Hi guys", 
+    searchText: "",
   }
+}
+
+function containsSearch(text, search){
+  return text.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").includes(search)
 }
 
 export default createStore({
@@ -70,9 +74,15 @@ export default createStore({
     updateSearchText({ commit }, payload) {
       commit("updateSearchText", payload.text);
     },
-    async updateCatalog({ commit }) {
-      const response = await axios.get("/shop/catalog");
-      commit("updateCatalog", response.data);
+    async updateCatalog({ commit }, payload) {
+      try {
+        const response = await axios.get("/shop/catalog/?filter=" + payload.filter + "&skip=0&limit=100");
+        commit("updateCatalog", response.data);
+      } catch (error) {
+        console.log(error)
+      }
+
+
     },
     async updateCart({ commit }) {
       const response = await axios.get("/shop/get-cart");
@@ -119,9 +129,9 @@ export default createStore({
         throw new Error('Unable to get a token.')
       }
     },
-    async updateActivePharmacies({ commit }) {
+    async updateActivePharmacies({ commit }, payload) {
       try {
-        const response = await axios.get("/pharmacies/active/");
+        const response = await axios.get("/pharmacies/active?skip=0&limit=100&filter="+payload.filter);
         commit('updateActivePharmacies', response.data);
       } catch (err) {
         console.log(err)
@@ -150,7 +160,7 @@ export default createStore({
       if (response.data.user.pharmacy_id)
         await dispatch("updatePharmacy")
     },
-  
+
 
     async registerCustomer({ dispatch }, payload) {
       await axios.post("/users/customer", {
@@ -205,10 +215,19 @@ export default createStore({
     activePharmaciesCount: state => {
       return state.activePharmacies.length
     },
+    prescriptedDrugs: state => {
+      return state.cart.filter(drug => containsSearch(drug.product.name,state.searchText))
+      //TODO Add prescripted parameter 
+    },
+    nonPrescriptedDrugs: state => {
+      return state.cart.filter(drug => containsSearch(drug.product.name,state.searchText))
+      //TODO Add prescripted parameter 
+    },
     inactivePharmaciesCount: state => {
       return state.inactivePharmacies.length
     },
   },
   modules: {},
   plugins: [createPersistedState()],
+  
 });
