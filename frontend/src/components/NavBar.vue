@@ -21,7 +21,7 @@
 		<div v-if="isAuth" class="row-right">
 			<router-link style="position: relative" to="/customer/cart">
 				<i class="material-icons" id="navBarCart">shopping_cart</i>
-				<div class="notif">3</div></router-link
+				<div v-if="this.$store.getters.cartItemCount>0" class="notif">{{this.$store.getters.cartItemCount}}</div></router-link
 			>
 
 			<img
@@ -178,13 +178,16 @@
 		align-items: center;
 		justify-content: center;
 		position: absolute;
-		left: 2em;
+		left: 2.5em;
 		bottom: 0em;
 		width: 1em;
 		height: 1em;
-		padding: 0.15em;
+		padding: .75em;
 		border-radius: 100%;
 		background-color: #ffd500;
+		font-size: .75em;
+		font-weight: bold;
+		color: #2e2931;
 	}
 
 	#navBarCart {

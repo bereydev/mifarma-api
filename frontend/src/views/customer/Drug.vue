@@ -77,6 +77,7 @@
 					await axios.post(
 						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.amount
 					);
+					await this.$store.dispatch("updateCart");
 				} catch (error) {
 					console.error(error);
 				}

@@ -226,6 +226,10 @@ export default createStore({
     inactivePharmaciesCount: state => {
       return state.inactivePharmacies.length
     },
+    cartItemCount: state => {
+      console.log("hi")
+      return state.cart.length
+    },
   },
   modules: {},
   plugins: [createPersistedState()],
