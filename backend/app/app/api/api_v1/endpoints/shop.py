@@ -27,7 +27,9 @@ def read_catalog(
             detail="This user has has no pharmacy"
         )
         
-    catalog = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
+    # catalog = crud.product.get_multi_by_pharmacy(db, skip=skip, limit=limit, filter=filter, pharmacy_id=current_user.pharmacy_id)
+    # TODO Ajouter le filre et la bonne logique
+    catalog = crud.product.get_multi(db, skip=skip, limit=limit)
     return catalog
 
 
