@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li>Nombre: {{ pharmacy.name }}</li>
-    <li>Dirección:{{ pharmacy.address }}, {{ pharmacy.address2 }}</li>
+    <li>Dirección: {{ pharmacy.address }} {{ pharmacy.address2 }}</li>
     <li>Ciudad: {{ pharmacy.city }}</li>
     <li>País: {{ pharmacy.country }}</li>
     <li>Email: {{ pharmacy.email }}</li>

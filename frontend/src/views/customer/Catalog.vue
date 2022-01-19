@@ -68,7 +68,7 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 1em;
-  padding: .5em 2.5em .5em 2.5em ;
+  padding: 1.25em 2.5em .5em 2.5em ;
 }
 .offers {
   display: flex;

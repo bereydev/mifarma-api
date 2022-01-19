@@ -19,7 +19,7 @@ export default {
 <style lang="scss" scoped>
 
 .padding{
-  padding-left: 2.5em;
+  padding-right: 2.5em;
 }
 
 </style>

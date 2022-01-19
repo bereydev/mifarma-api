@@ -59,21 +59,6 @@ export default {
       if (id === -1) this.cart = this.$store.state.orders;
       else this.cart = this.$store.state.orders.filter((e) => e.status === id);
     },
-    filterName(text) {
-      text = text
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      if (text === "") this.filtered = this.orders;
-      else
-        this.filtered = this.orders.filter((o) =>
-          o.product.name
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .includes(text)
-        );
-    },
   },
   components: {
     HomeSelector,
