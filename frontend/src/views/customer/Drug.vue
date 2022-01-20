@@ -31,7 +31,7 @@
 
 <script>
 	import axios from "axios";
-	import ButtonVue from "../../components/Button.vue";
+	import ButtonVue from "../../components/CustomButton.vue";
 
 	export default {
 		name: "Drug",

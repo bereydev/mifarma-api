@@ -6,7 +6,7 @@
 
 <script>
 	export default {
-		name: "Button",
+		name: "CustomButton",
 		props: {
 			color: { type: [String], default: "green" },
 			size: { type: [String], default: "" },
@@ -38,10 +38,14 @@
 		cursor: pointer;
 	}
 	.large {
-		padding: 0.5em 5em 0.5em 5em;
+		padding: 0.5em 5em 0.5em 5em !important;
 	}
 	.medium {
-		padding: 0.5em 3em 0.5em 3em;
+		padding: 0.5em 3em 0.5em 3em !important;
+	}
+	.small{
+		width: 75%;
+		padding: 0.5em .5em 0.5em .5em !important;
 	}
 	.btn-green:hover {
 		background-color: $accent-green-hover;

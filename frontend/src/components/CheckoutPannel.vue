@@ -1,31 +1,35 @@
 <template>
-	<div class="order">
-		<div class="row-left">
-			<img
-				class="order-pic"
-				src="https://images.pexels.com/photos/159211/headache-pain-pills-medication-159211.jpeg?cs=srgb&dl=pexels-pixabay-159211.jpg&fm=jpg"
-				alt="Foto de perfil"
-			/>
-			<div class="order-name">{{ order.product.name }}</div>
+	<body>
+		<h1>Resumen de pago</h1>
+		<div class="sub-total">
+			<div class="price-div">
+				<h2>SUB TOTAL</h2>
+				<h2>{{this.$store.getters.cartSubTotal}} €</h2>
+			</div>
+			<div class="price-div">
+				<h2>IVA</h2>
+				<h2>{{this.$store.getters.cartTaxes}} €</h2>
+			</div>
 		</div>
-		<div class="itemCount">
-			<button v-on:click="remove()" class="material-icons customButton">
-				remove
-			</button>
-			<b>{{ order.amount }}</b>
-			<button v-on:click="add()" class="material-icons customButton">add</button>
+		<div class="price-div">
+			<h2>TOTAL DE COMPRA</h2>
+			<h2>{{this.$store.getters.cartTotal}} €</h2>
 		</div>
-
-		<div class="row-right">
-			<div class="price">{{ order.product.price }} $</div>
-			<button v-on:click="clear()" class="material-icons customButton">clear</button>
+		<div class="confirm-button">
+			<button-vue size="small" @click.prevent="addToCart"
+			>Confirmar pedido
+			</button-vue
+		>
 		</div>
-	</div>
+		
+	</body>
 </template>
 
 <script>
-import axios from "axios";
+	import axios from "axios";
+	import ButtonVue from "./CustomButton.vue";
 	export default {
+		components: { ButtonVue },
 		props: ["order"],
 		methods: {
 			async remove() {
@@ -38,34 +42,41 @@ import axios from "axios";
 					console.log(error);
 				}
 			},
-      async clear() {
-				try {
-					await axios.delete(
-						"/shop/delete-from-cart/" + this.order.id + "?amount=" + this.order.amount
-					);
-					await this.$store.dispatch("updateCart");
-				} catch (error) {
-					console.log(error);
-				}
-			},
-			async add() {
-				try {
-					await axios.post(
-						"/shop/add-to-cart/" + this.order.product_id + "?amount=1"
-					);
-					await this.$store.dispatch("updateCart");
-				} catch (error) {
-					console.log(error);
-				}
-			},
 		},
 	};
 </script>
 
 <style scoped>
-	.order-name {
+	body {
+		display: flex;
+		flex-direction: column;
+		border: 0.1em solid #a6ffd8;
+		border-radius: 25px;
+		padding: 0.5em 5em 1em 1.5em;
+		max-height: 75%;
+		height: 100%;
+	}
+	.sub-total {
+		padding-bottom: 7.5em;
+	}
+	.confirm-button{
+		padding-top: 3em;
+	}
+	.price-div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-left: 1em;
+	}
+
+	h1 {
+		font-size: 1.15em;
+		font-weight: normal;
+		padding-bottom: 1em;
+	}
+	h2 {
 		font-size: 1em;
-		width: 150%;
+		font-weight: normal;
 	}
 
 	.customButton {
@@ -106,7 +117,7 @@ import axios from "axios";
 	.row-left {
 		display: flex;
 		gap: 1em;
-		width: 50%;
+		width: 30%;
 		align-items: center;
 		justify-content: flex-start;
 	}

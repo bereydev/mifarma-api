@@ -37,7 +37,7 @@
 <script>
 import HomeSelector from "@/components/HomeSelector.vue";
 import Order from "@/components/Order.vue";
-import ButtonVue from "@/components/Button.vue";
+import ButtonVue from "@/components/CustomButton.vue";
 import PharmaContactsVue from "@/components/PharmaContacts.vue";
 import PharmaImageVue from "@/components/PharmaImage.vue";
 import PharmaScheduleVue from "@/components/PharmaSchedule.vue";

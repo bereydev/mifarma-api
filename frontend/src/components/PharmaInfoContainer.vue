@@ -14,7 +14,7 @@
 
 <script>
 import OwnerInfo from "./OwnerInfo.vue";
-import Button from "./Button.vue";
+import Button from "./CustomButton.vue";
 import PharmaContactsVue from './PharmaContacts.vue';
 
 export default {

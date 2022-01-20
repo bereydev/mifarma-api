@@ -157,8 +157,11 @@ export default createStore({
       const response = await axios.post("/login/access-token/", params);
       commit("updateToken", response.data.access_token)
       commit("updateCurrentUser", response.data.user);
-      if (response.data.user.pharmacy_id)
+      if (response.data.user.pharmacy_id){
         await dispatch("updatePharmacy")
+        await dispatch("updateCart")
+      }
+        
     },
 
 
@@ -227,9 +230,29 @@ export default createStore({
       return state.inactivePharmacies.length
     },
     cartItemCount: state => {
-      console.log("hi")
       return state.cart.length
     },
+    prescriptedCount: state => {
+      return state.cart.length
+      //TODO See prescripted
+    },
+    nonPrescriptedCount: state => {
+      return state.cart.length
+      //TODO See prescripted
+    },
+    cartSubTotal: state => {
+      return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)
+      //TODO See calculation
+    },
+    cartTaxes: state => {
+      return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)*0.2
+      //TODO See calculation
+    },
+    cartTotal: state => {
+      return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)*1.2
+      //TODO See calculation
+    },
+    
   },
   modules: {},
   plugins: [createPersistedState()],

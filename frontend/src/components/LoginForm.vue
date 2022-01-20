@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import ButtonVue from "./Button.vue";
+import ButtonVue from "./CustomButton.vue";
 import { Role } from "@/_helpers/Role";
 
 export default {

@@ -30,7 +30,7 @@
 <script>
 import PharmaWidgetVue from "@/components/PharmaCard.vue";
 import PharmaContactsVue from "@/components/PharmaContacts.vue";
-import ButtonVue from "@/components/Button.vue";
+import ButtonVue from "@/components/CustomButton.vue";
 import PharmaImageVue from "@/components/PharmaImage.vue";
 export default {
   name: "Cart",

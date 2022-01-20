@@ -76,7 +76,7 @@
 
 <script>
 import axios from "axios";
-import Button from "./Button.vue";
+import Button from "./CustomButton.vue";
 
 export default {
   name: "RegisterForm",

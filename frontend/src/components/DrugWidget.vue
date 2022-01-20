@@ -5,8 +5,8 @@
 				src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80"
 				alt="Foto Medicamento"
 			/>
-			<span>{{ drug.name }}</span>
-			<span>NO PRICE</span>
+			<span class="drug-name">{{ drug.name }}</span>
+			<span>{{drug.price}} €</span>
 		</div>
 	</router-link>
 </template>
@@ -31,16 +31,22 @@
 		height: 125px;
 		margin-bottom: 5px;
 		box-shadow: 0px 3px 3px 1.5px rgb(211, 211, 211);
-		transition: opacity .5s ease-out;
-    -moz-transition: opacity .5s ease-out;
-    -webkit-transition: opacity .5s ease-out;
-    -o-transition: opacity .5s ease-out;
-    opacity: 1;
+		transition: opacity 0.5s ease-out;
+		-moz-transition: opacity 0.5s ease-out;
+		-webkit-transition: opacity 0.5s ease-out;
+		-o-transition: opacity 0.5s ease-out;
+		opacity: 1;
 	}
-	span {
-		width: 100px;
+	.drug-name {
+		width: 125px;
 		white-space: pre-wrap;
 		text-align: center;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 1; /* number of lines to show */
+		line-clamp: 1;
+		-webkit-box-orient: vertical;
 	}
 	.col {
 		display: flex;
@@ -49,8 +55,7 @@
 		gap: 0.05em;
 	}
 
-	img:hover{
-		opacity: .8;
+	img:hover {
+		opacity: 0.8;
 	}
-
 </style>

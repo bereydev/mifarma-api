@@ -44,7 +44,7 @@
 
 <script>
 import axios from "axios";
-import Button from "../../components/Button.vue";
+import Button from "../../components/CustomButton.vue";
 
 const DEFAULT_SCHEDULE = {
   Lunes: ["09:00-14:30", "17:30-21:00"],
