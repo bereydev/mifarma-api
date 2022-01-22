@@ -241,14 +241,17 @@ export default createStore({
       //TODO See prescripted
     },
     cartSubTotal: state => {
+      if(state.cart.length==0) return 0; 
       return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)
       //TODO See calculation
     },
     cartTaxes: state => {
+      if(state.cart.length==0) return 0; 
       return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)*0.2
       //TODO See calculation
     },
     cartTotal: state => {
+      if(state.cart.length==0) return 0; 
       return state.cart.map((order) => order.product.price*order.amount).reduce((a,b)=> a+b)*1.2
       //TODO See calculation
     },

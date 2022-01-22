@@ -16,7 +16,7 @@
 			<h2>{{this.$store.getters.cartTotal}} €</h2>
 		</div>
 		<div class="confirm-button">
-			<button-vue size="small" @click.prevent="addToCart"
+			<button-vue size="small" @click.prevent="confirmOrder"
 			>Confirmar pedido
 			</button-vue
 		>
@@ -32,12 +32,13 @@
 		components: { ButtonVue },
 		props: ["order"],
 		methods: {
-			async remove() {
+			async confirmOrder() {
 				try {
-					await axios.delete(
-						"/shop/delete-from-cart/" + this.order.id + "?amount=1"
+					await axios.post(
+						"/shop/place-order"
 					);
 					await this.$store.dispatch("updateCart");
+					await this.$store.dispatch("updateOrders");
 				} catch (error) {
 					console.log(error);
 				}

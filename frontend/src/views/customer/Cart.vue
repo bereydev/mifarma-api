@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="order-pannel">
+      <div v-if="this.$store.getters.cartItemCount>0" class="order-pannel">
         <checkout-pannel/>
       </div>
     </div>

@@ -23,13 +23,14 @@
 	@import "../assets/styles/colors.scss";
 
 	.btn {
+		
 		display: flex;
 		padding: 0.5em 1em 0.5em 1em;
 		border-radius: 38px;
 		border: none;
 		justify-content: center;
 		align-items: center;
-		gap: .5em;
+		gap: 0.5em;
 		box-shadow: 0px 3px 6px -3.5px grey;
 		font-size: 18px;
 		-webkit-transition: all 0.3s ease-in-out;
@@ -41,11 +42,11 @@
 		padding: 0.5em 5em 0.5em 5em !important;
 	}
 	.medium {
-		padding: 0.5em 3em 0.5em 3em !important;
+		padding: 0.5em 2.5em 0.5em 2.5em !important;
 	}
-	.small{
+	.small {
 		width: 75%;
-		padding: 0.5em .5em 0.5em .5em !important;
+		padding: 0.5em 0.5em 0.5em 0.5em !important;
 	}
 	.btn-green:hover {
 		background-color: $accent-green-hover;
@@ -66,7 +67,7 @@
 	}
 
 	.btn-dark:hover {
-		background-color: $black-hover
+		background-color: $black-hover;
 	}
 	.btn-dark {
 		background-color: $black;

@@ -1,11 +1,11 @@
 <template>
   <div class="panels">
     <div class="order-pannel">
-      <HomeSelector @selector-click="filterStatus" />
+      <HomeSelector  />
       <div class="scroll">
         <div
           style="margin: 0.15em 0 0.15em 0"
-          v-for="order in cart"
+          v-for="order in this.$store.state.orders"
           :key="order.id"
         >
           <Order :order="order" />
@@ -44,22 +44,21 @@ import PharmaScheduleVue from "@/components/PharmaSchedule.vue";
 
 export default {
   name: "Register",
-  data() {
-    return {
-      cart: [],
-    };
-  },
+  
   computed: {
     pharmacy() {
       return this.$store.state.pharmacy
     }
   },
+  //TODO 
+  /*
   methods: {
     filterStatus(id) {
       if (id === -1) this.cart = this.$store.state.orders;
       else this.cart = this.$store.state.orders.filter((e) => e.status === id);
     },
   },
+  */
   components: {
     HomeSelector,
     Order,
@@ -72,7 +71,7 @@ export default {
     await this.$store.dispatch("updatePharmacy");
     await this.$store.dispatch("updateCurrentUser");
     await this.$store.dispatch("updateOrders");
-    this.cart = this.$store.state.orders;
+
   },
 };
 </script>

@@ -8,20 +8,28 @@
 			<div class="text-div">
 				<h1>{{ drug.name }}</h1>
 				<h2>Descripción</h2>
-				<p>
-					{{ drug.description }}
+				<p class="description">
+					{{
+						drug.description
+							? drug.description
+							: "This drug does not provide a description"
+					}}
 				</p>
-				<p>
-					{{ drug.pharma_indications }}
+				<p class="warning">
+					{{
+						drug.pharma_indications
+							? drug.pharma_indications
+							: "This drug does not provide any warning or indications"
+					}}
 				</p>
 			</div>
 			<div class="buy-div">
 				<div style="display: flex; gap: 1em">
-					<h2 class="price">{{ drug.price }} $</h2>
+					<h2 class="price">{{ drug.price }} €</h2>
 				</div>
 				<button-vue size="medium" @click.prevent="addToCart"
-					>Añadir al carrito
-					<div class="material-icons" id="cart">shopping_cart</div></button-vue
+					>{{ buttonText }}
+					<div v-bind:class="{ active: isActive }" class="material-icons">shopping_cart</div></button-vue
 				>
 				<h2 class="price">ADD A COUNTER</h2>
 			</div>
@@ -40,8 +48,9 @@
 		},
 		data() {
 			return {
-				//Add a load screen or something because this is ugly 
-				//TODO 
+				//Add a load screen or something because this is ugly
+				//TODO
+				isActive: false,
 				drug: {
 					ean_code: "000",
 					classification_number: "000",
@@ -58,6 +67,7 @@
 					type: "drugs",
 					image_filename: null,
 				},
+				buttonText: "Añadir al carrito",
 				amount: 1, //TODO with counter
 			};
 		},
@@ -78,6 +88,7 @@
 						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.amount
 					);
 					await this.$store.dispatch("updateCart");
+					this.isActive = !this.isActive; 
 				} catch (error) {
 					console.error(error);
 				}
@@ -91,6 +102,31 @@
 		display: flex;
 		flex-direction: column;
 		padding: 3.5% 2.5% 2.5% 2.5%;
+	}
+	.active {
+		transform: translateX(100px);
+		color: white !important; 
+		transition: all ease-in-out 1s ;
+	}
+	h1 {
+		font-size: 1.85em;
+		padding: 0;
+		margin: 0;
+	}
+	h2 {
+		font-size: 1.35em;
+		padding: 0;
+		margin: 0;
+		color: #adadad;
+	}
+	.description {
+		font-size: 1em;
+		padding: 0 0 1em 0.25em;
+	}
+	.warning {
+		font-size: 1em;
+		margin: 0 0 1em 0.25em;
+		color: #ffa192;
 	}
 	img {
 		border-radius: 10%;
