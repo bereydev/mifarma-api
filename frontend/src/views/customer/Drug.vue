@@ -24,14 +24,21 @@
 				</p>
 			</div>
 			<div class="buy-div">
-				<div style="display: flex; gap: 1em">
-					<h2 class="price">{{ drug.price }} €</h2>
+				<div class="itemCount">
+					<button v-on:click="remove()" class="material-icons customButton">
+						remove
+					</button>
+					<b>{{ this.amount }}</b>
+					<button v-on:click="add()" class="material-icons customButton">
+						add
+					</button>
 				</div>
 				<button-vue size="medium" @click.prevent="addToCart"
 					>{{ buttonText }}
-					<div v-bind:class="{ active: isActive }" class="material-icons">shopping_cart</div></button-vue
-				>
-				<h2 class="price">ADD A COUNTER</h2>
+					<div v-bind:class="{ activeCart: isActive }" class="material-icons">
+						shopping_cart
+					</div>
+				</button-vue>
 			</div>
 		</div>
 	</body>
@@ -50,6 +57,7 @@
 			return {
 				//Add a load screen or something because this is ugly
 				//TODO
+				amount: 1,
 				isActive: false,
 				drug: {
 					ean_code: "000",
@@ -68,7 +76,6 @@
 					image_filename: null,
 				},
 				buttonText: "Añadir al carrito",
-				amount: 1, //TODO with counter
 			};
 		},
 		async created() {
@@ -82,13 +89,22 @@
 			}
 		},
 		methods: {
+			async remove() {
+				if (this.amount > 1) this.amount--;
+			},
+			async add() {
+				this.amount++;
+			},
 			async addToCart() {
 				try {
 					await axios.post(
 						"/shop/add-to-cart/" + this.drug.id + "?amount=" + this.amount
 					);
 					await this.$store.dispatch("updateCart");
-					this.isActive = !this.isActive; 
+					this.isActive = !this.isActive;
+					setTimeout(() => {
+						this.isActive = !this.isActive;
+					}, 1500);
 				} catch (error) {
 					console.error(error);
 				}
@@ -98,15 +114,35 @@
 </script>
 
 <style lang="scss" scoped>
+	@import "../../assets/styles/colors.scss";
+
 	body {
 		display: flex;
 		flex-direction: column;
 		padding: 3.5% 2.5% 2.5% 2.5%;
 	}
-	.active {
+	.activeCart {
 		transform: translateX(100px);
-		color: white !important; 
-		transition: all ease-in-out 1s ;
+		color: white !important;
+		transition: all 1s;
+	}
+	.customButton {
+		padding: 0;
+		background-color: white;
+		border: none;
+		color: #afafaf;
+		font-size: 1.75em !important;
+		justify-self: center;
+		align-self: center;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+	.itemCount {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 50%;
+		margin: 0 0 .75em 0;
 	}
 	h1 {
 		font-size: 1.85em;
@@ -142,6 +178,7 @@
 	}
 	.price {
 		font-size: 1.5em;
+		color: $black;
 	}
 	.addButton {
 		padding: 0.5em;

@@ -30,6 +30,7 @@
 	import ButtonVue from "./CustomButton.vue";
 	export default {
 		components: { ButtonVue },
+		emits: ['orderConfirmed'], 
 		props: ["order"],
 		methods: {
 			async confirmOrder() {
@@ -37,6 +38,8 @@
 					await axios.post(
 						"/shop/place-order"
 					);
+					this.$emit('orderConfirmed');
+					console.log("emitted")
 					await this.$store.dispatch("updateCart");
 					await this.$store.dispatch("updateOrders");
 				} catch (error) {
@@ -61,6 +64,8 @@
 		padding-bottom: 7.5em;
 	}
 	.confirm-button{
+		display: flex;
+		flex-direction: row;
 		padding-top: 3em;
 	}
 	.price-div {

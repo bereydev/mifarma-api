@@ -1,8 +1,8 @@
 <template>
   <body>
-    <div v-if="this.$store.getters.cartItemCount==0" class="center">
-      <i class="material-icons icon" >shopping_cart</i>
-      <span class="warning">Su carrito está vacío</span>
+    <div  v-if="this.$store.getters.cartItemCount==0" class="center">
+      <i class="material-icons icon" v-bind:class="{ activeCart: animation }" >shopping_cart</i>
+      <span class="warning">{{this.warningText}}</span>
     </div>
      
     <div class="panels">
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div v-if="this.$store.getters.cartItemCount>0" class="order-pannel">
-        <checkout-pannel/>
+        <checkout-pannel @orderConfirmed="animate"/>
       </div>
     </div>
   </body>
@@ -44,6 +44,12 @@ import Drug from "../../components/Drug.vue";
 export default {
   name: "Cart",
   
+  data(){
+    return {
+      warningText : "Su carrito está vacío", 
+      animation : false, 
+    }; 
+  }, 
   components: {
     Drug,
     CheckoutPannel, 
@@ -54,6 +60,13 @@ export default {
     this.prescripted = this.$store.state.cart; 
     this.nonPrescripted = this.$store.state.cart; 
   },
+  methods:{
+    animate(){
+      this.warningText = "Pedido realizado"; 
+      setTimeout(()=>{this.animation = true;},500); 
+      setTimeout(()=>{this.$router.push("/Customer/dashboard");},2500); 
+    }
+  }
 };
 </script>
 
@@ -63,6 +76,11 @@ export default {
   padding-top: 3em;
   width: 30%;
 }
+.activeCart {
+		transform: translateX(800px);
+    color : white !important; 
+		transition: all 2s;
+	}
 .scroll {
   display: flex;
   flex-direction: column;
@@ -83,7 +101,7 @@ export default {
 .icon{
   
   font-size: 7.5em !important;
-  color: #00DD7C !important;
+  color: #00DD7C ;
 
 }
 .panels {
