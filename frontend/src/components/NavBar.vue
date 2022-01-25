@@ -21,14 +21,18 @@
 		<div v-if="isAuth" class="row-right">
 			<router-link style="position: relative" to="/customer/cart">
 				<i class="material-icons" id="navBarCart">shopping_cart</i>
-				<div v-if="this.$store.getters.cartItemCount>0" class="notif">{{this.$store.getters.cartItemCount}}</div></router-link
+				<div v-if="this.$store.getters.cartItemCount > 0" class="notif">
+					{{ this.$store.getters.cartItemCount }}
+				</div></router-link
 			>
 
-			<img
-				class="profile-pic"
-				src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2960&q=80"
-				alt="Foto de perfil"
-			/>
+			<router-link style="display:flex; justify-content:center; align-items:center" to="/customer/profile">
+				<img
+					class="profile-pic"
+					src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2960&q=80"
+					alt="Foto de perfil"
+				/>
+			</router-link>
 		</div>
 
 		<div v-if="!isAuth" class="group">
@@ -54,12 +58,14 @@
 		},
 		methods: {
 			async updateSearchText(text) {
-				this.search = text.toLowerCase().replace(/\p{Diacritic}/gu, ""); 
+				this.search = text.toLowerCase().replace(/\p{Diacritic}/gu, "");
 
 				await this.$store.dispatch("updateSearchText", { text: this.search });
 
 				if (this.$route.name === "PharmaPicker")
-					await this.$store.dispatch("updateActivePharmacies", { filter: this.search });
+					await this.$store.dispatch("updateActivePharmacies", {
+						filter: this.search,
+					});
 
 				if (this.$route.name === "Catalog")
 					await this.$store.dispatch("updateCatalog", { filter: this.search });
@@ -182,10 +188,10 @@
 		bottom: 0em;
 		width: 1em;
 		height: 1em;
-		padding: .75em;
+		padding: 0.75em;
 		border-radius: 100%;
 		background-color: #ffd500;
-		font-size: .75em;
+		font-size: 0.75em;
 		font-weight: bold;
 		color: #2e2931;
 	}

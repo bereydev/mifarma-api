@@ -1,22 +1,24 @@
 <template>
-	<div class="login">
-		<login-form-vue />
+	<div class="profile">
+		<profile-form />
 	</div>
 </template>
 
+
+
 <script>
-	import LoginFormVue from "@/components/LoginForm.vue";
+	import ProfileForm from "@/components/ProfileForm.vue";
 
 	export default {
-		name: "Login",
+		name: "CustomerProfile",
 		components: {
-			LoginFormVue,
+			ProfileForm,
 		},
 	};
 </script>
 
 <style lang="scss" scoped>
-	.login {
+	.profile {
 		width: 30%;
 		margin: auto;
 	}

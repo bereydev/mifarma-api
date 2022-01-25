@@ -4,7 +4,7 @@
       <HomeSelector  />
       <div class="scroll">
         <div
-          style="margin: 0.15em 0 0.15em 0"
+          style="margin: .25em 0 .25em 0"
           v-for="order in this.$store.state.orders"
           :key="order.id"
         >

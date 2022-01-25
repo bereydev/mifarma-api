@@ -9,8 +9,8 @@ const Welcome = () =>
   import(/* webpackChunkName: "welcome" */ "../views/customer/Welcome.vue");
 const Login = () =>
   import(/* webpackChunkName: "login" */ "../views/auth/Login.vue");
-const Profile = () =>
-  import(/* webpackChunkName: "profile" */ "../views/auth/Profile.vue");
+const CustomerProfile = () =>
+  import(/* webpackChunkName: "customer-profile" */ "../views/customer/CustomerProfile.vue");
 const PasswordRecovery = () =>
   import(
     /* webpackChunkName: "password-recovery" */ "../views/auth/PasswordRecovery.vue"
@@ -70,14 +70,11 @@ const routes = [
     component: Login,
   },
   {
-    path: "/profile",
-    name: "Profile",
-    meta: {
-      authorize: [Role.Customer, Role.Admin, Role.Employee, Role.Owner],
-      pharmaRequired: false,
-    },
+    path: "/customer/profile",
+    name: "CustomerProfile",
+    
 
-    component: Profile,
+    component: CustomerProfile,
   },
   {
     path: "/password-recovery",

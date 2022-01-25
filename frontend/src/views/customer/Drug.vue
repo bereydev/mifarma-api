@@ -1,10 +1,20 @@
 <template>
 	<body>
 		<div class="drug-info">
-			<img
-				src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80"
-				alt="Foto Medicamento"
-			/>
+			<div class="image-price">
+				<img
+					src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80"
+					alt="Foto Medicamento"
+				/>
+				<div class="price">
+					<p class="price-tag">{{ drug.price }}€</p>
+					<p class="price-tag">-</p>
+					<p class="price-tag">
+						<s> {{ drug.price }} </s>€
+					</p>
+				</div>
+			</div>
+
 			<div class="text-div">
 				<h1>{{ drug.name }}</h1>
 				<h2>Descripción</h2>
@@ -12,14 +22,14 @@
 					{{
 						drug.description
 							? drug.description
-							: "This drug does not provide a description"
+							: "Este medicamento o producto no tiene descripción"
 					}}
 				</p>
 				<p class="warning">
 					{{
 						drug.pharma_indications
 							? drug.pharma_indications
-							: "This drug does not provide any warning or indications"
+							: "Este medicamento o producto no tiene contra indicaciones o advertencias"
 					}}
 				</p>
 			</div>
@@ -41,17 +51,36 @@
 				</button-vue>
 			</div>
 		</div>
+		<div style="display: flex; flex-direction: column; padding-top: 3em">
+			<p class="similar">Productos similares</p>
+			<div class="drugRow">
+				<DrugWidget
+					:drug="drug"
+					v-for="drug in $store.state.catalog"
+					:key="drug.ean"
+				/>
+			</div>
+			<div class="drugRow">
+				<DrugWidget
+					:drug="drug"
+					v-for="drug in $store.state.catalog"
+					:key="drug.ean"
+				/>
+			</div>
+		</div>
 	</body>
 </template>
 
 <script>
 	import axios from "axios";
 	import ButtonVue from "../../components/CustomButton.vue";
+	import DrugWidget from "@/components/DrugWidget.vue";
 
 	export default {
 		name: "Drug",
 		components: {
 			ButtonVue,
+			DrugWidget,
 		},
 		data() {
 			return {
@@ -116,6 +145,24 @@
 <style lang="scss" scoped>
 	@import "../../assets/styles/colors.scss";
 
+	.drugRow {
+		display: flex;
+		margin: 1em 0 1em 0;
+		gap: 1em;
+		flex-direction: row;
+		overflow: auto;
+	}
+	.similar {
+		font-size: 1.25em;
+		background-color: $green-light;
+
+		display: flex;
+		padding: 0.15em 0 0.15em 1em;
+		border-radius: 20px;
+		justify-items: flex-start;
+		margin: 0;
+	}
+
 	body {
 		display: flex;
 		flex-direction: column;
@@ -142,7 +189,14 @@
 		justify-content: space-between;
 		align-items: center;
 		width: 50%;
-		margin: 0 0 .75em 0;
+		margin: 0 0 0.75em 0;
+	}
+	.image-price {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 0.75em;
 	}
 	h1 {
 		font-size: 1.85em;
@@ -177,6 +231,11 @@
 		white-space: pre-wrap;
 	}
 	.price {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+	}
+	.price-tag {
 		font-size: 1.5em;
 		color: $black;
 	}
