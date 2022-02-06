@@ -74,6 +74,18 @@ a, a:link, a:visited, a:focus, a:hover, a:active{
   box-sizing: border-box;
 }
 
+input{
+  width: 50%; 
+  outline: none; 
+  border: none;
+  color: $light-grey; 
+}
+input::-webkit-inner-spin-button, 
+input::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 
 .double-field {
   padding: 0;
@@ -92,6 +104,7 @@ a, a:link, a:visited, a:focus, a:hover, a:active{
   background-color: white;
   border: 2px solid #adadad;
   justify-content: flex-start;
+  align-content: space-between;
   text-align: start;
   width: 100%;
 }
@@ -104,4 +117,35 @@ a, a:link, a:visited, a:focus, a:hover, a:active{
   border: 2px solid #00dd7c;
   outline: none;
 }
+
+input[type=date] {
+  outline: none;
+  border: 0;
+  color: $light-grey; 
+  
+  
+  &::-webkit-clear-button {
+    font-size: 18px;
+    height: 30px;
+    position: relative;
+    right: 5px;
+    margin-right: 4px;
+  }
+  &::-webkit-inner-spin-button {
+    height: 30px;
+  }
+  &::-webkit-calendar-picker-indicator {
+    font-size: 18px;
+    color: $light-grey !important; 
+    
+        
+    &:hover {
+      cursor: pointer;
+    }
+    &:active {
+      color: $accent-green;
+    }
+  }
+}
+
 </style>
